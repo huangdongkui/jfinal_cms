@@ -71,16 +71,17 @@ function oper_save(){
 		success:function(data){
 			if(data.status==1){
 				alert('保存成功');
+                $.cookie('beginDate',null);
 				var prePage = $('[name="pre_page"]').val();
 				if (prePage=='') {
 					prePage = "/";
 				}
 				window.top.location.href = prePage;
 			} else {
-				loadPicimageCode();
-				$('[name="imageCode"]').val('');
-				$('[name="password"]').val('');
-				$('[name="password2"]').val('');
+				//loadPicimageCode();
+				//$('[name="imageCode"]').val('');
+				//$('[name="password"]').val('');
+				//$('[name="password2"]').val('');
 				alert('保存失败：'+data.msg);
 			}
 		},
@@ -90,4 +91,45 @@ function oper_save(){
 			alert("服务器忙，提交数据失败，请联系管理员！");
 		}
 	});
+}
+
+var max = 60;
+var $btnGetCode;
+var text = "验证码有效秒数：";
+
+function beginCount() {
+
+    $.get(jflyfox.BASE_PATH + 'front/image_code?ran=' + Math.random(),{});
+
+    //记下开始计数时间到cookie中，当页面刷新了也可以继续记数
+    $.cookie('beginDate', new Date().getTime(), { expires: 60 });
+
+    //设置最大秒数
+    max = 60;
+    //倒数
+    count();
+}
+
+$(function myfunction() {
+    $btnGetCode = $("#btnGetCode");
+    //最近点击时间
+    var beginDate = parseInt($.cookie('beginDate'));
+    //已过秒数
+    var currentCount=Math.floor((new Date().getTime() - beginDate) / 1000);
+    //剩下秒数
+    max = max - currentCount;
+    //倒数
+    count();
+});
+
+//递归记数
+function count() {
+
+    if (max > 0 && max <= 60) {
+        $btnGetCode.val(text + max--);
+        timeoutID = setTimeout("count()", 1000);
+    } else if (max==0) {
+        $btnGetCode.val("重新获取");
+    }
+
 }

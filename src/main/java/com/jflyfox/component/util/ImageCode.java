@@ -150,4 +150,31 @@ public class ImageCode extends HttpServlet {
 		// 输出图象到页面
 		ImageIO.write(image, "PNG", response.getOutputStream());
 	}
+
+	/**
+	 * 发送验证码到手机
+	 * @param request
+	 * @param response
+	 */
+	public void genSendMsgVailCode(HttpServletRequest request, HttpServletResponse response) {
+
+		// 生成随机类
+		Random random = new Random();
+
+		// 取随机产生的认证码(4位数字)
+		String sRand = "";
+
+		char[] selectChar = new char[] { '0','1', '2', '3', '4', '5', '6', '7', '8', '9' };
+		for (int i = 0; i < 4; i++) {
+			int charIndex = random.nextInt(selectChar.length);
+			String rand = String.valueOf(selectChar[charIndex]);
+			sRand += rand;
+
+		}
+
+		// 将认证码存入SESSION
+		request.getSession().setAttribute(ImageCode.class.getName(), sRand);
+		request.getSession().setMaxInactiveInterval(60);
+		System.out.println(sRand);
+	}
 }
