@@ -28,11 +28,36 @@ include("/template/mtg/includes/header_menu.html"){} %>
 						    </div>
 						  </div>
 						  <div class="form-group">
-						    <label for="realname" class="col-sm-2 control-label">昵称</label>
+						    <label for="realname" class="col-sm-2 control-label">真实姓名</label>
 						    <div class="col-sm-10">
-						      <input name="model.realname" class="form-control" id="realname" placeholder="昵称">
+						      <input name="model.realname" class="form-control" id="realname" placeholder="真实姓名">
 						    </div>
 						  </div>
+
+					<div class="form-group">
+						<label for="departid" class="col-sm-2 control-label">单位</label>
+						<div class="col-sm-10">
+							<select id="departid" name="model.departid" class="form-control"   >
+								<option value="-1" >--请选择单位--</option>
+						<option value="0">广州供电局</option>
+							</select>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="departid" class="col-sm-2 control-label">所属专业领域</label>
+						<div class="col-sm-10">
+						<label class="checkbox-inline">
+							<input type="checkbox" id="inlineCheckbox1" value="option1">发电技术
+						</label>
+						<label class="checkbox-inline">
+							<input type="checkbox" id="inlineCheckbox2" value="option2">输电技术
+						</label>
+						<label class="checkbox-inline">
+							<input type="checkbox" id="inlineCheckbox3" value="option3">变电技术
+						</label>
+						</div>
+					</div>
 						  <div class="form-group">
 						    <label for="password" class="col-sm-2 control-label">新密码</label>
 						    <div class="col-sm-10">

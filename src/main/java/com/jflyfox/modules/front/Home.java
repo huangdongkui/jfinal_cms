@@ -42,11 +42,16 @@ public class Home extends BaseProjectController {
 	 * 
 	 * 2015年2月28日 下午1:50:25 flyfox 369191470@qq.com
 	 */
-	public void image_code() {
-		//new ImageCode().doGet(getRequest(), getResponse());
-		new ImageCode().genSendMsgVailCode(getRequest(), getResponse());
-
+	public void image_code() throws ServletException, IOException {
+		new ImageCode().doGet(getRequest(), getResponse());
 		renderNull();
 	}
 
+	/**
+	 * 手机验证码
+	 */
+	public void moblie_code() {
+		new ImageCode().genSendMsgVailCode(getRequest(), getResponse());
+		renderNull();
+	}
 }

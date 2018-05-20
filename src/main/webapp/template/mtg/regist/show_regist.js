@@ -99,7 +99,7 @@ var text = "验证码有效秒数：";
 
 function beginCount() {
 
-    $.get(jflyfox.BASE_PATH + 'front/image_code?ran=' + Math.random(),{});
+    $.get(jflyfox.BASE_PATH + 'front/moblie_code?ran=' + Math.random(),{});
 
     //记下开始计数时间到cookie中，当页面刷新了也可以继续记数
     $.cookie('beginDate', new Date().getTime(), { expires: 60 });
