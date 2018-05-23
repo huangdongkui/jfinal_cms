@@ -81,8 +81,8 @@ public class ActivityController extends BaseProjectController {
         final List<BusiActivitySlave> byWhere = BusiActivitySlave.dao.findByWhere(" where busi_activity_id=?", busi_activity_id);
         //json.put()
         //String jsons = "{\"total\":" + byWhere.size() + ",\"rows\":" + byWhere.toString() + "}";
-        json.put("total",byWhere.size());
-        json.put("rows",byWhere);
-        renderJson(json);
+       // json.put("total",byWhere.size());
+       // json.put("rows",byWhere);
+        renderJson(byWhere);
     }
 }
