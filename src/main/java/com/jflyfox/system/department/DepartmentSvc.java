@@ -13,6 +13,39 @@ public class DepartmentSvc extends BaseService {
 
 	/**
 	 * 获取部门下拉框
+	 *
+	 * 2015年1月28日 下午5:28:40 flyfox 369191470@qq.com
+	 *
+	 * @return
+	 */
+	public String selectDepartByParentId(Integer selected, Integer parent_id ) {
+		String where = " where 1 = 1 ";
+		if (parent_id != null && parent_id > 0) {
+			where += "and parent_id =" + parent_id;
+		}
+		List<SysDepartment> list = SysDepartment.dao.find(" select * from sys_department " //
+				+ where + " order by sort,create_time desc ");
+		StringBuffer sb = new StringBuffer("");
+		if (list != null && list.size() > 0) {
+			for (SysDepartment department : list) {
+					int id = department.getInt("id");
+					sb.append("<option value=\"");
+					sb.append(id);
+					sb.append("\" ");
+					boolean flag = (selected != null && id == selected);
+					sb.append(flag ? "selected" : "");
+					sb.append(">");
+					sb.append(department.getStr("name"));
+					sb.append("</option>");
+					sb.append(recursionTree(id, selected, 1, list));
+			}
+		}
+		return sb.toString();
+	}
+
+
+	/**
+	 * 获取部门下拉框
 	 * 
 	 * 2015年4月28日 上午11:42:54 flyfox 369191470@qq.com
 	 * 

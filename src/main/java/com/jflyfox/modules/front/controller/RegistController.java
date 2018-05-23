@@ -8,6 +8,7 @@ import com.jflyfox.component.util.JFlyFoxUtils;
 import com.jflyfox.jfinal.component.annotation.ControllerBind;
 import com.jflyfox.modules.admin.site.TbSite;
 import com.jflyfox.modules.front.interceptor.FrontInterceptor;
+import com.jflyfox.system.department.DepartmentSvc;
 import com.jflyfox.system.user.SysUser;
 import com.jflyfox.system.user.UserCache;
 import com.jflyfox.util.StrUtils;
@@ -36,6 +37,7 @@ public class RegistController extends BaseProjectController {
 		if (user != null) {
 			redirect(prePage);
 		} else {
+			setAttr("departSelect", new DepartmentSvc().selectDepartByParentId(10,9));
 			renderAuto(path + "show_regist.html");
 		}
 	}

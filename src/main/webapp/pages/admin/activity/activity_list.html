@@ -149,21 +149,10 @@ var bodyContent = {
     <div class="tableSearch">
         <% //查询列表 %>
         <div class="form-group">
-            <input class="form-control" type="text" name="attr.username" value="${attr.username!''}"
-                   placeholder="请输入用户名" required='required'/>
+            <input class="form-control" type="text" name="attr.activity_name" value="${attr.activity_name!''}"
+                   placeholder="活动名称" required='required'/>
         </div>
-        <div class="form-group">
-            <input class="form-control" type="text" name="attr.qq" value="${attr.qq!''}"
-                   placeholder="请输入qq" required='required'/>
-        </div>
-        <div class="form-group">
-            <input class="form-control" type="text" name="attr.email" value="${attr.email!''}"
-                   placeholder="请输入邮箱" required='required'/>
-        </div>
-        <div class="form-group">
-            <input class="form-control" type="text" name="attr.telphone" value="${attr.telphone!''}"
-                   placeholder="请输入手机号" required='required'/>
-        </div>
+
 
         <button type="button" class="btn btn-default" onclick="oper.list();" name="search">
             <span class="glyphicon glyphicon-search"></span> 查 询
