@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../jquery/jquery-2.1.4.min.js"></script>
+    <script src="bootstrap-treeview.min.js"></script>
+    <link rel="stylesheet" href="bootstrap-treeview.min.css">
+    <link rel="stylesheet" href="../bootstrap/css/bootstrap.css">
+<script type="text/javascript">
+
+    function getTree() {
+        // Some logic to retrieve, or generate tree structure
+        var data = [
+            {
+                text: "Parent 1",
+                nodes: [
+                    {
+                        text: "Child 1",
+                        nodes: [
+                            {
+                                text: "Grandchild 1"
+                            },
+                            {
+                                text: "Grandchild 2"
+                            }
+                        ]
+                    },
+                    {
+                        text: "Child 2"
+                    }
+                ]
+            },
+            {
+                text: "Parent 2"
+            },
+            {
+                text: "Parent 3"
+            },
+            {
+                text: "Parent 4"
+            },
+            {
+                text: "Parent 5"
+            }
+        ];
+        return data;
+    }
+
+    $(function () {
+        $('#tree').treeview({data: getTree()});
+    });
+</script>
+</head>
+<body>
+<div id="tree"></div>
+</body>
+</html>

@@ -37,7 +37,7 @@ public class RegistController extends BaseProjectController {
 		if (user != null) {
 			redirect(prePage);
 		} else {
-			setAttr("departSelect", new DepartmentSvc().selectDepartByParentId(10,9));
+			setAttr("departSelect", new DepartmentSvc().selectDepartByParentId(17,16));
 			renderAuto(path + "show_regist.html");
 		}
 	}

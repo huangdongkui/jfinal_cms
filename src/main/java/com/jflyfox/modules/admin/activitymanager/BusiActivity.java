@@ -1,8 +1,7 @@
-package com.jflyfox.modules.activitymanager;
+package com.jflyfox.modules.admin.activitymanager;
 
 import com.jflyfox.component.base.BaseProjectModel;
 import com.jflyfox.jfinal.component.annotation.ModelBind;
-import com.jflyfox.modules.admin.article.TbArticle;
 
 /**
  * 〈活动对象〉
