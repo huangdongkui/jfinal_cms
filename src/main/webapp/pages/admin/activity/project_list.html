@@ -150,7 +150,7 @@ var bodyContent = {
         <% //查询列表 %>
         <div class="form-group">
             <input class="form-control" type="text" name="attr.activity_name" value="${attr.activity_name!''}"
-                   placeholder="活动名称" required='required'/>
+                   placeholder="状态" />
         </div>
 
 
@@ -160,9 +160,7 @@ var bodyContent = {
         <button type="button" class="btn btn-default" onclick="resetForm();">
             <span class="glyphicon glyphicon-refresh"></span> 重 置
         </button>
-        <button type="button" class="btn btn-default" onclick="oper.add();">
-            <span class="glyphicon glyphicon-plus"></span> 新 增
-        </button>
+
     </div>
     <div>
         <!-- 数据列表 -->
@@ -171,49 +169,21 @@ var bodyContent = {
             <tr>
                 <th>序号</th>
                 <% // 列表头部 %>
-                <th name="activity_name" class="sorting">活动名称</th>
-                <th name="activity_status" class="sorting">状态</th>
-                <th name="scoretpl_id" class="sorting">评分模板名</th>
-                <th name="create_time" class="sorting">创建时间</th>
-                <th>备注</th>
+                <th name="project_name" class="sorting">项目名称</th>
+                <th name="project_no" class="sorting">项目编号</th>
+                <th name="scoretpl_id" class="sorting">申请单位</th>
+                <th name="chan_name" class="sorting">负责人</th>
+                <th name="score" class="sorting">分数</th>
+                <th name="status" class="sorting">状态</th>
                 <th>操作</th>
             </tr>
             </thead>
             <tbody>
-            <% for(item in page.list){ %>
-            <tr onclick="selectActivity(${item.id})">
-                <td>${itemLP.index }</td>
-                <% // 列表内容 %>
-                <td>${item.activity_name}</td>
-                <td>${item.activity_status}</td>
-                <td>${item.scoretpl_id}</td>
 
-                <td>${item.create_time}</td>
-                <td>${item.remarks}</td>
-                <td>
-
-                    <a href="javascript:void(0);" class="btn btn-sm btn-primary" onclick="oper.edit(${item.id});">修改</a>
-                    <a href="javascript:void(0);" class="btn btn-sm btn-danger" onclick="oper.del(${item.id});">删除</a>
-                <a href="javascript:void(0);" class="btn btn-sm btn-success" onclick="oper.view(${item.id});">发布</a>
-
-
-                </td>
-            </tr>
-            <% } %>
             </tbody>
         </table>
 
-        <%include("/pages/includes/paginator.html"){} %>
-    </div>
 
-    <div class="panel panel-success">
-        <div class="panel-heading">
-            <h3 class="panel-title">赛事详情</h3>
-        </div>
-        <div class="panel-body">
-            <table id="tb_slave"  data-mobile-responsive="true" class="table-bordered table-condensed table-hover table" ></table>
-
-        </div>
     </div>
 
 </form>

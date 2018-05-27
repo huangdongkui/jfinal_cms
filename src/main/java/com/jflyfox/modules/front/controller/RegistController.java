@@ -9,9 +9,14 @@ import com.jflyfox.jfinal.component.annotation.ControllerBind;
 import com.jflyfox.modules.admin.site.TbSite;
 import com.jflyfox.modules.front.interceptor.FrontInterceptor;
 import com.jflyfox.system.department.DepartmentSvc;
+import com.jflyfox.system.dict.DictSvc;
 import com.jflyfox.system.user.SysUser;
 import com.jflyfox.system.user.UserCache;
+import com.jflyfox.system.userrole.SysUserRole;
 import com.jflyfox.util.StrUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @ControllerBind(controllerKey = "/front/regist")
 public class RegistController extends BaseProjectController {
@@ -23,6 +28,16 @@ public class RegistController extends BaseProjectController {
 	 */
 	@Before(FrontInterceptor.class)
 	public void index() {
+
+		//拦截请求
+		final String registSwitch = getPara("registSwitch");
+		if(registSwitch!=null){
+			renderAuto(path + "regist_switch.html");
+			return;
+		}
+
+		setAttr("registtype", getPara("registtype"));
+
 		// 目录列表
 		setAttr("folders_selected", "regist");
 
@@ -38,6 +53,11 @@ public class RegistController extends BaseProjectController {
 			redirect(prePage);
 		} else {
 			setAttr("departSelect", new DepartmentSvc().selectDepartByParentId(17,16));
+
+			//List<String> listValue=new ArrayList<>();
+
+			setAttr("belongfieldselect", new DictSvc().checkboxSysDictDetail(null,"belongfield"));
+
 			renderAuto(path + "show_regist.html");
 		}
 	}
@@ -53,7 +73,7 @@ public class RegistController extends BaseProjectController {
 		String password = getPara("password");
 		String password2 = getPara("password2");
 		String key = user.getStr("email");
-
+		String registtype=getPara("registtype");
 		// 获取验证码
 		String imageCode = getSessionAttr(ImageCode.class.getName());
 		String checkCode = this.getPara("imageCode");
@@ -82,17 +102,25 @@ public class RegistController extends BaseProjectController {
 			return;
 		}
 
-		SysUser newUser = SysUser.dao.findFirstByWhere("where username = ? ", key);
+		SysUser newUser = SysUser.dao.findFirstByWhere("where email = ? ", key);
 		if (newUser != null) {
 			json.put("msg", "邮箱已存在，请重新输入");
 			renderJson(json.toJSONString());
 			return;
 		}
 
-		user.set("username", key);
+		newUser = SysUser.dao.findFirstByWhere("where username = ? ", key);
+		if (newUser != null) {
+			json.put("msg", "存登陆名已存在，请重新输入");
+			renderJson(json.toJSONString());
+			return;
+		}
+
+		user.set("username", user.getStr("username"));
 		user.set("password", JFlyFoxUtils.passwordEncrypt(password));
-		user.set("usertype", JFlyFoxUtils.USER_TYPE_FRONT);
-		user.set("departid", JFlyFoxUtils.DEPART_REGIST_ID);
+		user.set("usertype", JFlyFoxUtils.USER_TYPE_NORMAL);
+		user.set("departid", user.getInt("departid"));
+		user.set("busitype",registtype);
 		user.set("state", 2); // 需要认证
 		// 站点设置
 		TbSite site = getSessionSite().getModel();
@@ -101,7 +129,22 @@ public class RegistController extends BaseProjectController {
 		
 		user.set("create_time", getNow());
 		user.set("create_id", 1);
-		user.save();
+		user.set("belongfieldtype",getPara("belongfieldtype"));
+		//setAttr("registtype",registtype);
+
+		if(user.save()){
+			SysUserRole sysUserRole=new SysUserRole();
+			sysUserRole.set("userid",user.get("userid"));
+			if(registtype.equals("0")){
+				sysUserRole.set("roleid",4);
+			}
+			else if(registtype.equals("1")){
+				sysUserRole.set("roleid",2);
+			}
+
+			sysUserRole.save();
+
+		}
 		
 		UserCache.init(); // 设置缓存
 		setSessionUser(user); // 设置session

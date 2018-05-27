@@ -67,7 +67,25 @@ public class BaseProjectModel<M extends Model<M>> extends BaseModel<M> {
 		return flag;
 	}
 
+	/**
+	 * 逻辑删除
+	 * @param id
+	 * @return
+	 */
+	public boolean deletelogicByIdLog(Object id) {
+		String tableName = getTable().getName();
+
+		final String sql = "update "+tableName +" set deleted=1 where id=?";
+		final int updateCount = Db.update(sql, id);
+
+		boolean flag = updateCount>0?true:false;
+
+		Integer primaryId = (id != null) ? NumberUtils.parseInt(id) : null;
+		saveLog(tableName, primaryId, SysLog.MODEL_DELETE);
+		return flag;
+	}
 	public boolean updateLog() {
+
 		boolean flag = super.update();
 		String tableName = getTable().getName();
 		String[] keys = getTable().getPrimaryKey();

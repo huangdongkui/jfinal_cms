@@ -9,6 +9,7 @@ import com.jflyfox.modules.admin.article.TbArticle;
 import com.jflyfox.modules.admin.comment.TbComment;
 import com.jflyfox.modules.admin.pageview.TbPageView;
 import com.jflyfox.system.user.SysUser;
+import com.jflyfox.system.user.UserSvc;
 
 @ControllerBind(controllerKey = "/admin/home")
 public class AdminHomeController extends BaseProjectController {
@@ -49,8 +50,10 @@ public class AdminHomeController extends BaseProjectController {
 		Page<TbPageView> pageViewPage = TbPageView.dao.paginate(new Paginator(1, 10), "select t.*", //
 				" from tb_pageview t order by id desc ");
 		setAttr("pageViews", pageViewPage.getList());
-		
-		
-		render(path + "home.html");
+		String roleids = new UserSvc().getRoleids((int)user.get("userid"));
+
+		setAttr("roleids",roleids);
+
+		render(path + "myhome.html");
 	}
 }

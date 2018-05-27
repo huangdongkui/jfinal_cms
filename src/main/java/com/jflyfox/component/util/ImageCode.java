@@ -1,5 +1,8 @@
 package com.jflyfox.component.util;
 
+import com.aliyuncs.exceptions.ClientException;
+import com.jflyfox.api.util.MessageApiUtils;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
@@ -156,7 +159,7 @@ public class ImageCode extends HttpServlet {
 	 * @param request
 	 * @param response
 	 */
-	public void genSendMsgVailCode(HttpServletRequest request, HttpServletResponse response) {
+	public void genSendMsgVailCode(String sendto,HttpServletRequest request, HttpServletResponse response) {
 
 		// 生成随机类
 		Random random = new Random();
@@ -175,6 +178,14 @@ public class ImageCode extends HttpServlet {
 		// 将认证码存入SESSION
 		request.getSession().setAttribute(ImageCode.class.getName(), sRand);
 		request.getSession().setMaxInactiveInterval(60);
-		System.out.println(sRand);
+		//todo 调用发送验证码到手机
+
+		//System.out.println(sRand);
+		try {
+			MessageApiUtils.SendMsg(sendto,sRand);
+		} catch (ClientException e) {
+			e.printStackTrace();
+		}
+
 	}
 }

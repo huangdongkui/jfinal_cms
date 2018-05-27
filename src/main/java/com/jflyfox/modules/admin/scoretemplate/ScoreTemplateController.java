@@ -3,6 +3,7 @@ package com.jflyfox.modules.admin.scoretemplate;
 import com.jfinal.template.ext.directive.Str;
 import com.jflyfox.component.base.BaseProjectController;
 import com.jflyfox.jfinal.component.annotation.ControllerBind;
+import com.jflyfox.jfinal.component.db.SQLUtils;
 import com.sun.javafx.scene.control.skin.VirtualFlow;
 import jdk.nashorn.internal.ir.ReturnNode;
 
@@ -44,10 +45,14 @@ public class ScoreTemplateController extends BaseProjectController {
     }
 
     private List getScoretemplateByParentId(String parentId) {
-      //  List listResults=new ArrayList();
-     //   List<BusiScoreTemplate> busiScoreTemplates = BusiScoreTemplate.dao.findByWhere("parentId");
-        List<BusiScoreTemplate> busiScoreTemplates= BusiScoreTemplate.dao.findByWhereAndColumns(" where parentId="+parentId,"id,parentId,scorce_contents as text,'[]' as notes");
 
+        String sql="select id,scorce_contents as text,exists(select * from busi_score_template t where t.parentId=t1.id) as nodes\n" +
+                "from busi_score_template t1\n" +
+                "where t1.parentId=?";
+
+        BusiScoreTemplate.dao.find(sql,parentId);
+
+        List<BusiScoreTemplate> busiScoreTemplates= BusiScoreTemplate.dao.find(sql,parentId);
         return busiScoreTemplates;
     }
 

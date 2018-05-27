@@ -51,7 +51,8 @@ public class Home extends BaseProjectController {
 	 * 手机验证码
 	 */
 	public void moblie_code() {
-		new ImageCode().genSendMsgVailCode(getRequest(), getResponse());
+		String sendto=getPara("sendto");
+		new ImageCode().genSendMsgVailCode(sendto,getRequest(), getResponse());
 		renderNull();
 	}
 }

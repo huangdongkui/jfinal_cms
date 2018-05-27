@@ -4,77 +4,63 @@ include("/pages/template/head.html"){}
 %>
 
 
-
 <script src="${BASE_PATH }static/component/jquery/jquery-2.1.4.min.js"></script>
 <link rel="stylesheet" href="${BASE_PATH }static/component/bootstrap-treeview/bootstrap-treeview.min.css">
-<script src="${BASE_PATH }static/component/bootstrap-treeview/bootstrap-treeview.min.js"></script>
+<script src="${BASE_PATH }static/component/bootstrap-treeview/bootstrap-treeview.js"></script>
 <link rel="stylesheet" href="${BASE_PATH }static/component/bootstrap/css/bootstrap.css">
 
 <script type="text/javascript">
 
     function getTree(parentId) {
-        // Some logic to retrieve, or generate tree structure
-//        var data = [
-//            {
-//                id:1,
-//                text: "Parent 1",
-//                nodes: [
-//                    {
-//                        text: "Child 1",
-//                        nodes: [
-//                            {
-//                                text: "Grandchild 1"
-//                            },
-//                            {
-//                                text: "Grandchild 2"
-//                            }
-//                        ]
-//                    },
-//                    {
-//                        text: "Child 2"
-//                    }
-//                ]
-//            },
-//            {
-//                text: "Parent 2",
-//                nodes: [
-//                ]
-//            },
-//            {
-//                text: "Parent 3"
-//            },
-//            {
-//                text: "Parent 4"
-//            },
-//            {
-//                text: "Parent 5"
-//            }
-//        ];
+
         var data;
         $.ajax({
-            url : 'admin/scoretemplate/children',
-            type : 'get',
+            url: 'admin/scoretemplate/children',
+            type: 'get',
             async: false,//使用同步的方式,true为异步方式
-            data : {'parentId':parentId},//这里使用json对象
-            success : function(result){
-                data=result;
+            data: {'parentId': parentId},//这里使用json对象
+            success: function (result) {
+                data = result;
             },
-            fail:function(){
-//code here...
+            fail: function () {
+                //code here...
             }
         });
+
+        for (d in data) {
+            var tempItem = data[d];
+
+            if (tempItem.nodes == true) {
+                tempItem.nodes = [{id: 10000, nodeId: 10000, text: ""}];
+                tempItem.state = {
+                    expanded: false
+                }
+            }
+        }
 
         return data;
     }
 
     $(function () {
-        $('#tree').treeview({data: getTree(0),  onNodeSelected:function(event, data) {
-            // 事件代码...
-            alert(data.id);
-        }});
-        $('#tree').on("nodeExpanded", function(event, data) {
-            // 事件代码...
-            alert(data.id);
+        $('#tree').treeview({
+            data: getTree(0), onNodeSelected: function (event, data) {
+                // 事件代码...
+                //   alert(data.id);
+                //$("#tree").treeview("addNode", [1, { node: {id:7,text: "新加的菜单" } }]);
+            }
+
+        });
+        $('#tree').on("nodeExpanded", function (event, data) {
+
+            var currNode = $('#tree').treeview('getNode', data.nodeId);
+            if (currNode.nodes&&currNode.nodes.length>0&&currNode.nodes[0].id === 10000) {
+                var tmpData = getTree(data.id)
+
+                $("#tree").treeview("addNode",
+
+                    [data.nodeId, {nodes: tmpData}]
+                );
+            }
         });
 
     });
@@ -93,27 +79,27 @@ var bodyContent = {
         <div class="panel-heading">
             <h3 class="panel-title">模版维护</h3>
         </div>
-        <div class="panel-body" >
+        <div class="panel-body">
             <div style="width: 50%;float: left;">
                 <div id="tree"></div>
             </div>
             <div style="width: 50%;float: left;">
-<table class="table">
-    <thead>
-    <tr>
-        <td>评分内容</td>
-        <td>分值</td>
-        <td>操作</td>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-        <td>评分内容</td>
-        <td>分值</td>
-        <td>操作</td>
-    </tr>
-    </tbody>
-</table>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <td>评分内容</td>
+                        <td>分值</td>
+                        <td>操作</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>评分内容</td>
+                        <td>分值</td>
+                        <td>操作</td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
 
         </div>

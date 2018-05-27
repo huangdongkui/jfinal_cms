@@ -66,6 +66,7 @@ public class JFlyFoxUtils {
 	 */
 	public static final int USER_TYPE_OTHER = 9;
 
+
 	/**
 	 * session唯一Key
 	 */

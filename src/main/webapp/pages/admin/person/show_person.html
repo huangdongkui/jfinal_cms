@@ -6,6 +6,7 @@
 <script type="text/javascript">
 var oper;
 
+
 $(function() {
 	// 头像展示
 	$('[name="model.title_url"]').change(function(){
@@ -27,13 +28,28 @@ $(function() {
 			this.form.submit();
 		}
 	};
+
+
+    var arrIds = [];
+    $(".divbelongfieldtype").find(":checkbox:checked").each(function (o) {
+        arrIds.push($(this).val())
+    });
+
+    $("#belongfieldtype").val(arrIds.join(","));
+
+
+   var busitype = '${user.busitype}';
+	if(busitype=="0"){
+	    $(".divbelongfieldtype").hide();
+	}
+
 });
 
 function oper_save(){
-	if($('[name="old_password"]').val()==''){
-		alert('密码不能为空');
-		return;
-	}
+//	if($('[name="old_password"]').val()==''){
+//		alert('密码不能为空');
+//		return;
+//	}
 	
 	jQuery.ajax({
 		type:'POST',
@@ -45,9 +61,9 @@ function oper_save(){
 			} else {
 				alert('保存失败：'+data.msg);
 			}
-			$('[name="old_password"]').val('');
-			$('[name="new_password"]').val('');
-			$('[name="new_password2"]').val('');
+//			$('[name="old_password"]').val('');
+//			$('[name="new_password"]').val('');
+//			$('[name="new_password2"]').val('');
 		},
 		error:function(html){
 			var flag = (typeof console != 'undefined');
@@ -114,23 +130,23 @@ var bodyContent = {
 						<input type="hidden" name="model.userid" value="${model.userid}" />
 						
 						<!-- 主题 -->
-						<div class="form-group">
-						    <label for="username" class="col-sm-2 control-label">主题设置</label>
-						    <div class="col-sm-10">
-						    	<div class="dropdown" >
-								  <button class="btn btn-link dropdown-toggle" title="主题" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-								    <span class="glyphicon glyphicon-th-list"></span> ${session.session_user.theme!'default'} <span class="caret"></span>
-								  </button>
-								  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-								    <li><a href="#" onclick="oper_theme('default');return false;">default（白色）</a></li>
-								    <li><a href="#" onclick="oper_theme('inverse');return false;">inverse（黑色）</a></li>
-								    <li><a href="#" onclick="oper_theme('flat-ui');return false;">flat-ui（绿色）</a></li>
-								    <li><a href="#" onclick="oper_theme('flat');return false;">flat（绿色）</a></li>
-								  </ul>
-								</div>
-						    </div>
-						  </div>
-						
+						<!--<div class="form-group">-->
+						    <!--<label for="username" class="col-sm-2 control-label">主题设置</label>-->
+						    <!--<div class="col-sm-10">-->
+						    	<!--<div class="dropdown" >-->
+								  <!--<button class="btn btn-link dropdown-toggle" title="主题" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">-->
+								    <!--<span class="glyphicon glyphicon-th-list"></span> ${session.session_user.theme!'default'} <span class="caret"></span>-->
+								  <!--</button>-->
+								  <!--<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">-->
+								    <!--<li><a href="#" onclick="oper_theme('default');return false;">default（白色）</a></li>-->
+								    <!--<li><a href="#" onclick="oper_theme('inverse');return false;">inverse（黑色）</a></li>-->
+								    <!--<li><a href="#" onclick="oper_theme('flat-ui');return false;">flat-ui（绿色）</a></li>-->
+								    <!--<li><a href="#" onclick="oper_theme('flat');return false;">flat（绿色）</a></li>-->
+								  <!--</ul>-->
+								<!--</div>-->
+						    <!--</div>-->
+						  <!--</div>-->
+						<!---->
 						 <div class="form-group">
 						    <label for="username" class="col-sm-2 control-label">登录名</label>
 						    <div class="col-sm-10">
@@ -138,33 +154,53 @@ var bodyContent = {
 						    </div>
 						  </div>
 						  <div class="form-group">
-						    <label for="realname" class="col-sm-2 control-label">昵称</label>
+						    <label for="realname" class="col-sm-2 control-label">姓名</label>
 						    <div class="col-sm-10">
 						      <input name="model.realname" class="form-control" id="realname" 
-						      	value="${model.realname!''}" placeholder="昵称">
+						      	value="${model.realname!''}" placeholder="姓名">
 						    </div>
 						  </div>
 						  
-							<div class="form-group">
-							    <label for="old_password" class="col-sm-2 control-label">原始密码</label>
-							    <div class="col-sm-10">
-							      <input name="old_password" type="password"class="form-control" id="old_password" placeholder="原始密码">
-							    </div>
-							  </div>
-							  <div class="form-group">
-							    <label for="new_password" class="col-sm-2 control-label">新密码</label>
-							    <div class="col-sm-10">
-							      <input name="new_password" type="password"class="form-control" id="new_password" placeholder="新密码">
-							    </div>
-							  </div>
-							  <div class="form-group">
-							    <label for="new_password2" class="col-sm-2 control-label">重复密码</label>
-							    <div class="col-sm-10">
-							      <input name="new_password2" type="password" class="form-control" id="new_password2" placeholder="重复密码">
-							    </div>
-							  </div>
-							
-							<div class="form-group">
+							<!--<div class="form-group">-->
+							    <!--<label for="old_password" class="col-sm-2 control-label">原始密码</label>-->
+							    <!--<div class="col-sm-10">-->
+							      <!--<input name="old_password" type="password"class="form-control" id="old_password" placeholder="原始密码">-->
+							    <!--</div>-->
+							  <!--</div>-->
+							  <!--<div class="form-group">-->
+							    <!--<label for="new_password" class="col-sm-2 control-label">新密码</label>-->
+							    <!--<div class="col-sm-10">-->
+							      <!--<input name="new_password" type="password"class="form-control" id="new_password" placeholder="新密码">-->
+							    <!--</div>-->
+							  <!--</div>-->
+							  <!--<div class="form-group">-->
+							    <!--<label for="new_password2" class="col-sm-2 control-label">重复密码</label>-->
+							    <!--<div class="col-sm-10">-->
+							      <!--<input name="new_password2" type="password" class="form-control" id="new_password2" placeholder="重复密码">-->
+							    <!--</div>-->
+							  <!--</div>-->
+							<!---->
+
+
+
+					<div class="form-group">
+						<label for="departid" class="col-sm-2 control-label">单位</label>
+						<div class="col-sm-10">
+							<select id="departid" name="model.departid" class="form-control">
+								<option value="-1">--请选择单位--</option>
+								${departSelect}
+							</select>
+
+						</div>
+					</div>
+					<div class="form-group divbelongfieldtype">
+						<label class="col-sm-2 control-label">所属专业领域</label>
+						<div class="col-sm-10">
+							${belongfieldselect}
+						</div>
+					</div>
+
+					<div class="form-group">
 							    <label for="email" class="col-sm-2 control-label">email</label>
 							    <div class="col-sm-10">
 							    	<input name="model.email" class="form-control" type="email" id="email" 

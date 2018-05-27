@@ -17,11 +17,18 @@ import com.jflyfox.modules.admin.comment.CommentService;
 import com.jflyfox.modules.admin.tags.TbTags;
 import com.jflyfox.modules.front.interceptor.FrontInterceptor;
 import com.jflyfox.modules.front.service.FrontCacheService;
+import com.jflyfox.system.department.DepartmentSvc;
+import com.jflyfox.system.dict.DictSvc;
 import com.jflyfox.system.user.SysUser;
 import com.jflyfox.system.user.UserCache;
 import com.jflyfox.util.DateUtils;
 import com.jflyfox.util.StrUtils;
 import com.jflyfox.util.extend.HtmlUtils;
+import org.apache.commons.lang.ArrayUtils;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * 个人信息
@@ -374,6 +381,15 @@ public class PersonController extends BaseProjectController {
 		// 活动目录
 		setAttr("folders_selected", "person");
 
+
+		//部门字典
+		setAttr("departSelect", new DepartmentSvc().selectDepartByParentId(17,16));
+
+		String[] belongfieldtypes = user.get("belongfieldtype").toString().split(",");
+
+		List<String> listValues=Arrays.asList(belongfieldtypes);
+		//领域字典
+		setAttr("belongfieldselect", new DictSvc().checkboxSysDictDetail(listValues,"belongfield"));
 		renderAuto(path + "show_person.html");
 	}
 

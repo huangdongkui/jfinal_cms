@@ -1,3 +1,5 @@
+
+
 <base href="${BASE_PATH }">
 <title>${HEAD_TITLE! }</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -22,6 +24,8 @@
 <!-- bootstrap -->
 <% include("/pages/includes/bootstrap.html"){} %>
 <!-- 分页 -->
+<link href="http://www.jq22.com/jquery/font-awesome.4.6.0.css"
+	  rel="stylesheet">
 <link rel="stylesheet" id='skin' type="text/css" href="static/component/smartpaginator/smartpaginator.css" />
 <script type="text/javascript" src="static/component/smartpaginator/smartpaginator.js"></script>
 <!-- 主JS -->
@@ -37,7 +41,11 @@
 
 <script type="text/javascript" src="static/component/bootstrap-table/bootstrap-table.js"></script>
 <script type="text/javascript" src="static/component/bootstrap-table/locale/bootstrap-table-zh-CN.js"></script>
+<script src="static/component/bootstrap/moment.js"></script>
+<script src="static/component/bootstrap/daterangepicker.js"></script>
 
+
+<link rel="stylesheet" href="static/component/bootstrap/css/daterangepicker-bs3.css">
 <!-- 系统样式 -->
 <% 
 	var theme_file = "/static/theme/" + jflyfox_theme + ".html";

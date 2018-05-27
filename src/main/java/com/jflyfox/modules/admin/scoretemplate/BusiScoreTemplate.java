@@ -122,8 +122,5 @@ public class BusiScoreTemplate extends BaseProjectModel<BusiScoreTemplate> {
     private String deleted = "deleted";
 
 
-    @Override
-    public String toString() {
-        return super.toString().replaceAll("#","[]");
-    }
+
 }
