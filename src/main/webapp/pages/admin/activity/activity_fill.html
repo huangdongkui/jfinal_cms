@@ -84,15 +84,9 @@ var bodyContent = {
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">项目类型</label>
                                 <div class="col-sm-10">
-                                    <label class="checkbox-inline">
-                                        <input type="checkbox" id="inlineCheckbox1" value="option1">科技项目
-                                    </label>
-                                    <label class="checkbox-inline">
-                                        <input type="checkbox" id="inlineCheckbox2" value="option2">职工技术创新项目
-                                    </label>
-                                    <label class="checkbox-inline">
-                                        <input type="checkbox" id="inlineCheckbox3" value="option3">其他创意
-                                    </label>
+                                    <div class="col-sm-10">
+                                        ${projecttypeselect}
+                                    </div>
                                 </div>
 
                             </div>
@@ -147,15 +141,7 @@ var bodyContent = {
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">项目所属专业</label>
                                 <div class="col-sm-10">
-                                    <label class="checkbox-inline">
-                                        <input type="checkbox" id="inlineCheckbox11" value="option1">科技项目
-                                    </label>
-                                    <label class="checkbox-inline">
-                                        <input type="checkbox" id="inlineCheckbox21" value="option2">职工技术创新项目
-                                    </label>
-                                    <label class="checkbox-inline">
-                                        <input type="checkbox" id="inlineCheckbox214" value="option2">其他创意
-                                    </label>
+${belongfieldselect}
 
                                 </div>
 
@@ -165,20 +151,25 @@ var bodyContent = {
                                 <label class="col-sm-2 control-label">项目自评价</label>
                                 <div class="col-sm-10">
 
-                                    <select class="form-control">
+                                    <select class="form-control" id="tech_maturity" name="tech_maturity">
                                         <option>请选择技术成熟度</option>
+                                        ${tech_maturityselect}
                                     </select>
-                                    <select class="form-control">
+                                    <select class="form-control" id="core_tech" name="core_tech">
                                         <option>请选择核心技术掌握情况</option>
+                                        ${core_techselect}
                                     </select>
-                                    <select class="form-control">
+                                    <select class="form-control" id="intell_right" name="intell_right">
                                         <option>请选择知识产权权属情况</option>
+                                        ${intell_rightselect}
                                     </select>
-                                    <select class="form-control">
+                                    <select class="form-control" id="market_competitive" name="market_competitive">
                                         <option>请选择市场竞争力</option>
+                                        ${market_competitiveselect}
                                     </select>
-                                    <select class="form-control">
+                                    <select class="form-control" id="projected_returns" name="projected_returns">
                                         <option>请选择预计转化收益</option>
+                                        ${projected_returnsselect}
                                     </select>
                                 </div>
 
