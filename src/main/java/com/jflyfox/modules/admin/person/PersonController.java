@@ -43,7 +43,7 @@ public class PersonController extends BaseProjectController {
 		setAttr("folders_selected", "person");
 
 
-		setAttr("departSelect", new DepartmentSvc().selectDepartByParentId((int)user.get("departid"),16));
+		setAttr("departSelect", new DepartmentSvc().selectDepartByParentId((int)user.get("departid"),9));
 
 
 		String[] belongfieldtypes = user.get("belongfieldtype").toString().split(",");

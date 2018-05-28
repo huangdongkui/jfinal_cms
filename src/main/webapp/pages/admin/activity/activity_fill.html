@@ -20,231 +20,215 @@ var bodyContent = {
 %>
 
 <form name="form1" action="" method="post" class="form-horizontal" role="form">
+    <input type="hidden" name="model.id" value="${model.id}" />
     <div class="container-fluid">
 
         <div class="col-md-1">
         </div>
-            <div class="col-md-10">
-                <!-- 菜单 -->
-                <% include("/pages/template/menu.html"){} %>
+        <div class="col-md-10">
+            <!-- 菜单 -->
+            <% include("/pages/template/menu.html"){} %>
 
-                <fieldset>
+            <fieldset>
 
-                    <div id="legend" class="">
-                        <legend class="">报名基本信息填写</legend>
+                <div id="legend" class="">
+                    <legend class="">报名基本信息填写</legend>
+                </div>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            项目来源
+                        </h3>
                     </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">项目类型</label>
+                            <div class="col-sm-10">
+                                <div class="col-sm-10">
+                                    <input name="model.project_type" id="model.project_type"
+                                           value="${model.project_type}" type="hidden">
 
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">
-                                项目负责人信息
-                            </h3>
-                        </div>
-                        <div class="panel-body">
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">姓名</label>
-                                <div class="col-sm-2">
-                                    <p class="form-control-static">张三</p>
-                                </div>
-                                <label class="col-sm-2 control-label">职务</label>
-                                <div class="col-sm-2">
-                                    <p class="form-control-static">经理</p>
-                                </div>
-                                <label class="col-sm-2 control-label">工作单位</label>
-                                <div class="col-sm-2">
-                                    <p class="form-control-static">广州供电局</p>
-                                </div>
-
-
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">电话</label>
-                                <div class="col-sm-2">
-                                    <p class="form-control-static">13167876546</p>
-                                </div>
-                                <label class="col-sm-2 control-label">邮箱</label>
-                                <div class="col-sm-2">
-                                    <p class="form-control-static">13167876546@qq.com</p>
-                                </div>
-                                <label class="col-sm-2 control-label">职称</label>
-                                <div class="col-sm-2">
-                                    <p class="form-control-static">高级专家</p>
+                                    ${projecttypeselect}
                                 </div>
                             </div>
 
                         </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">项目编号</label>
+                            <div class="col-sm-10">
+                                <input type="text" placeholder="项目编号" id="model.project_no" class="form-control"
+                                       name="model.project_no"
+                                       value="${model.project_no}"/>
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">项目名称</label>
+                            <div class="col-sm-10">
+                                <input type="text" placeholder="项目名称" id="model.from_project_name" class="form-control"
+                                       name="model.from_project_name"
+                                       value="${model.from_project_name}"/>
+                            </div>
+
+                        </div>
+
                     </div>
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">
-                                项目来源
-                            </h3>
-                        </div>
-                        <div class="panel-body">
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">项目类型</label>
-                                <div class="col-sm-10">
-                                    <div class="col-sm-10">
-                                        ${projecttypeselect}
-                                    </div>
-                                </div>
+                </div>
 
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">项目编号</label>
-                                <div class="col-sm-10">
-                                    <input type="text" placeholder="项目编号" id="pn" class="form-control" name="pn"
-                                           value=""/>
-                                </div>
 
-                            </div>
-
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">项目名称</label>
-                                <div class="col-sm-10">
-                                    <input type="text" placeholder="项目名称" id="p11" class="form-control" name="p11"
-                                           value=""/>
-                                </div>
-
-                            </div>
-
-                        </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            项目基本信息填写
+                        </h3>
                     </div>
+                    <div class="panel-body">
 
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">项目名称</label>
+                            <div class="col-sm-10">
+                                <input type="text" placeholder="项目名称" id="model.project_name" class="form-control"
+                                       name="model.project_name"
+                                       value="${model.project_name}"/>
+                            </div>
 
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">
-                                项目基本信息填写
-                            </h3>
                         </div>
-                        <div class="panel-body">
 
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">项目名称</label>
-                                <div class="col-sm-10">
-                                    <input type="text" placeholder="项目名称" id="p111" class="form-control" name="p111"
-                                           value=""/>
-                                </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">项目团队其他人员</label>
+                            <div class="col-sm-10">
+                                <input type="text" placeholder="项目团队其他人员" id="model.from_other_menbers"
+                                       class="form-control" name="model.from_other_menbers"
+                                       value="${model.from_other_menbers}"/>
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">项目所属专业</label>
+                            <div class="col-sm-10">
+                                <input name="model.from_belongfields" id="model.from_belongfields"
+                                       value="${model.from_belongfields}" type="hidden">
+
+                                ${belongfieldselect}
 
                             </div>
 
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">项目团队其他人员</label>
-                                <div class="col-sm-10">
-                                    <input type="text" placeholder="项目团队其他人员" id="pn1" class="form-control" name="pn1"
-                                           value=""/>
-                                </div>
+                        </div>
 
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">项目自评价</label>
+                            <div class="col-sm-10">
+                                <input name="model.tech_maturity" id="model.tech_maturity"
+                                       value="${model.tech_maturity}" type="hidden">
+
+
+                                <select class="form-control" id="tech_maturity" name="tech_maturity">
+                                    <option>请选择技术成熟度</option>
+                                    ${tech_maturityselect!}
+                                </select>
+                                <input name="model.core_tech" id="model.core_tech"
+                                       value="${model.core_tech}" type="hidden">
+                                <select class="form-control" id="core_tech" name="core_tech">
+                                    <option>请选择核心技术掌握情况</option>
+                                    ${core_techselect!}
+                                </select>
+                                <input name="model.intell_right" id="model.intell_right"
+                                       value="${model.intell_right}" type="hidden">
+                                <select class="form-control" id="intell_right" name="intell_right">
+                                    <option>请选择知识产权权属情况</option>
+                                    ${intell_rightselect!}
+                                </select>
+                                <input name="model.market_competitive" id="model.market_competitive"
+                                       value="${model.market_competitive}" type="hidden">
+                                <select class="form-control" id="market_competitive" name="market_competitive">
+                                    <option>请选择市场竞争力</option>
+                                    ${market_competitiveselect!}
+                                </select>
+                                <input name="model.projected_returns" id="model.projected_returns"
+                                       value="${model.projected_returns}" type="hidden">
+                                <select class="form-control" id="projected_returns" name="projected_returns">
+                                    <option>请选择预计转化收益</option>
+                                    ${projected_returnsselect!}
+                                </select>
                             </div>
 
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">项目所属专业</label>
-                                <div class="col-sm-10">
-${belongfieldselect}
+                        </div>
 
-                                </div>
 
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">核心技术</label>
+                            <div class="col-sm-9">
+                                <input type="text" placeholder="核心技术" id="model.core_tech_contents" class="form-control"
+                                       name="model.core_tech_contents"
+                                       value="${model.core_tech_contents}"/>
+                            </div>
+                            <div class="col-sm-1">
+                                <button class="btn">添加</button>
                             </div>
 
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">项目自评价</label>
-                                <div class="col-sm-10">
-
-                                    <select class="form-control" id="tech_maturity" name="tech_maturity">
-                                        <option>请选择技术成熟度</option>
-                                        ${tech_maturityselect}
-                                    </select>
-                                    <select class="form-control" id="core_tech" name="core_tech">
-                                        <option>请选择核心技术掌握情况</option>
-                                        ${core_techselect}
-                                    </select>
-                                    <select class="form-control" id="intell_right" name="intell_right">
-                                        <option>请选择知识产权权属情况</option>
-                                        ${intell_rightselect}
-                                    </select>
-                                    <select class="form-control" id="market_competitive" name="market_competitive">
-                                        <option>请选择市场竞争力</option>
-                                        ${market_competitiveselect}
-                                    </select>
-                                    <select class="form-control" id="projected_returns" name="projected_returns">
-                                        <option>请选择预计转化收益</option>
-                                        ${projected_returnsselect}
-                                    </select>
-                                </div>
-
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">已授权专利数量</label>
+                            <div class="col-sm-10">
+                                <input type="text" placeholder="已授权专利数量" id="model.has_patent_count" class="form-control"
+                                       name="model.has_patent_count"
+                                       value="${model.has_patent_count}"/>
                             </div>
 
-
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">核心技术</label>
-                                <div class="col-sm-9">
-                                    <input type="text" placeholder="核心技术" id="p111131" class="form-control"
-                                           name="p11111"
-                                           value=""/>
-                                </div>
-                                <div class="col-sm-1">
-                                    <button class="btn">添加</button>
-                                </div>
-
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">已授权专利数量</label>
-                                <div class="col-sm-10">
-                                    <input type="text" placeholder="已授权专利数量" id="p1111" class="form-control"
-                                           name="p1111"
-                                           value=""/>
-                                </div>
-
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">在申请专利数量</label>
-                                <div class="col-sm-10">
-                                    <input type="text" placeholder="在申请专利数量" id="p111121" class="form-control"
-                                           name="p11111"
-                                           value=""/>
-                                </div>
-
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">预计所需资金</label>
-                                <div class="col-sm-10">
-                                    <input type="text" placeholder="预计所需资金" id="p11111" class="form-control"
-                                           name="p11111"
-                                           value=""/>
-                                </div>
-
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">项目文件</label>
-                                <div class="col-sm-10">
-                                    <input type="text" placeholder="项目文件" id="p111111" class="form-control"
-                                           name="p111111"
-                                           value=""/>
-                                    <button class="btn">选择文件</button>
-                                </div>
-
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">在申请专利数量</label>
+                            <div class="col-sm-10">
+                                <input type="text" placeholder="在申请专利数量" id="model.apply_patent_count" class="form-control"
+                                       name="model.apply_patent_count"
+                                       value="${model.apply_patent_count}"/>
                             </div>
 
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">项目摘要</label>
-                                <div class="col-sm-10">
-                                    <textarea class="form-control" rows="3"></textarea>
-                                </div>
-
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">预计所需资金</label>
+                            <div class="col-sm-10">
+                                <input type="text" placeholder="预计所需资金" id="model.plan_need_money" class="form-control"
+                                       name="model.plan_need_money"
+                                       value="${model.plan_need_money}"/>
                             </div>
+
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">项目文件</label>
+                            <div class="col-sm-10">
+                                <input type="text" placeholder="项目文件" id="p111111" class="form-control"
+                                       name="p111111"
+                                       value=""/>
+                                <button class="btn">选择文件</button>
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">项目摘要</label>
+                            <div class="col-sm-10">
+                                <textarea class="form-control" rows="3" id="model.project_abstract" name="model.project_abstract">
+                                    ${model.project_abstract}
+                                </textarea>
+                            </div>
+
                         </div>
                     </div>
-                </fieldset>
+                </div>
+            </fieldset>
 
-                <div style="height: 50px;clear: both;">&nbsp;</div>
-                <nav class="navbar navbar-default navbar-fixed-bottom">
-                    <div class="container" style="padding: 5px 0px 5px 0px;text-align: center;">
-                        <button class="btn btn-primary" onclick="oper.save(${model.id!'0'});return false;">保 存</button>
-                        <button class="btn btn-default" onclick="closeIframe();return false;">关 闭</button>
-                    </div>
-                </nav>
-            </div>
+            <div style="height: 50px;clear: both;">&nbsp;</div>
+            <nav class="navbar navbar-default navbar-fixed-bottom">
+                <div class="container" style="padding: 5px 0px 5px 0px;text-align: center;">
+                    <button class="btn btn-primary" onclick="oper.save(${model.id!'0'});return false;">保 存</button>
+                    <button class="btn btn-default" onclick="closeIframe();return false;">关 闭</button>
+                </div>
+            </nav>
+        </div>
 
         <div class="col-md-1">
         </div>

@@ -383,7 +383,7 @@ public class PersonController extends BaseProjectController {
 
 
 		//部门字典
-		setAttr("departSelect", new DepartmentSvc().selectDepartByParentId(17,16));
+		setAttr("departSelect", new DepartmentSvc().selectDepartByParentId(17,9));
 
 		String[] belongfieldtypes = user.get("belongfieldtype").toString().split(",");
 

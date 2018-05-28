@@ -4,6 +4,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.jfinal.template.ext.directive.Str;
 import com.jflyfox.jfinal.base.BaseService;
 import org.apache.commons.lang.ArrayUtils;
 import org.beetl.ext.fn.ArrayUtil;
@@ -49,6 +50,22 @@ public class DictSvc extends BaseService {
             sb.append(dict.getStr("dict_type").equals(selected) ? "selected" : "");
             sb.append(">");
             sb.append(dict.getStr("dict_name"));
+            sb.append("</option>");
+        }
+        return sb.toString();
+    }
+
+    public String selectDictDetailType(String selectDictDetailCode, String dictType) {
+        List<SysDictDetail> list = new ArrayList<SysDictDetail>();
+        list = SysDictDetail.dao.find("select * from sys_dict_detail where dict_type='" + dictType+"'");
+        StringBuffer sb = new StringBuffer();
+        for (SysDictDetail dict : list) {
+            sb.append("<option value=\"");
+            sb.append(dict.getStr("detail_code"));
+            sb.append("\" ");
+            sb.append(dict.getStr("detail_code").equals(selectDictDetailCode) ? "selected" : "");
+            sb.append(">");
+            sb.append(dict.getStr("detail_name"));
             sb.append("</option>");
         }
         return sb.toString();
