@@ -1,16 +1,60 @@
 <%
+DIRECTIVE SAFE_OUTPUT_OPEN;
 var headContent = {
 include("/pages/template/head.html"){}
 %>
 
 <script type="text/javascript">
 
-    var oper;
-    jQuery(function ($) {
+    var oper = {
+        save: function (id) {
+            if (!validForm()) {
+                return false;
+            }
 
-    });
+            //获取model.core_tech_contents
+
+            var litoarr=[];
+            $("#ul_core_tech_contents li").each(function (e) {
+                litoarr.push($(this).find("span").text());
+            });
+
+            $('#modelcore_tech_contents').val(litoarr.join(","));
 
 
+
+            //获取model.project_type
+
+            var arrIds = [];
+            $(".divbelongfieldtype").find(":checkbox:checked").each(function (o) {
+                arrIds.push($(this).val())
+            });
+
+            $("#modelproject_type").val(arrIds.join(","));
+
+            id = id || '0';
+            var url = 'admin/activityfill/save/' + id;
+            form1.action = url;
+            form1.submit();
+            return true;
+        }
+    };
+
+    function closeIframeReload() {
+        var url = 'admin/home';
+        form1.action = url;
+        form1.submit();
+    }
+    //添加核心技术
+    function addItem() {
+        var v= $("#core_tech_contents").val();
+        if(v==""){alert("请输入核心技术");return;}
+        $("#ul_core_tech_contents").append('<li class="list-group-item"><span>' + v + '</span><a style="float: right;" href="javascript:(0);" onclick="deleteLi(this);return false;">删除</a></li>');
+        $("#core_tech_contents").val('');
+    }
+    function deleteLi(o) {
+        $(o).parent().remove();
+    }
 </script>
 
 <%
@@ -20,7 +64,12 @@ var bodyContent = {
 %>
 
 <form name="form1" action="" method="post" class="form-horizontal" role="form">
-    <input type="hidden" name="model.id" value="${model.id}" />
+    <input type="hidden" name="model.id" value="${model.id!}"/>
+    <input type="hidden" name="model.busi_activity_id" value="${model.busi_activity_id!}"/>
+
+    <input type="hidden" id="modelcore_tech_contents"
+           name="model.core_tech_contents" value=""/>
+
     <div class="container-fluid">
 
         <div class="col-md-1">
@@ -44,14 +93,14 @@ var bodyContent = {
                     <div class="panel-body">
                         <div class="form-group">
                             <label class="col-sm-2 control-label">项目类型</label>
-                            <div class="col-sm-10">
-                                <div class="col-sm-10">
-                                    <input name="model.project_type" id="model.project_type"
-                                           value="${model.project_type}" type="hidden">
+
+                                <div class="col-sm-10 divbelongfieldtype">
+                                    <input name="model.project_type" id="modelproject_type"
+                                           value="${model.project_type!}" type="hidden">
 
                                     ${projecttypeselect}
                                 </div>
-                            </div>
+
 
                         </div>
                         <div class="form-group">
@@ -59,7 +108,7 @@ var bodyContent = {
                             <div class="col-sm-10">
                                 <input type="text" placeholder="项目编号" id="model.project_no" class="form-control"
                                        name="model.project_no"
-                                       value="${model.project_no}"/>
+                                       value="${model.project_no!}"/>
                             </div>
 
                         </div>
@@ -69,7 +118,7 @@ var bodyContent = {
                             <div class="col-sm-10">
                                 <input type="text" placeholder="项目名称" id="model.from_project_name" class="form-control"
                                        name="model.from_project_name"
-                                       value="${model.from_project_name}"/>
+                                       value="${model.from_project_name!}"/>
                             </div>
 
                         </div>
@@ -90,8 +139,9 @@ var bodyContent = {
                             <label class="col-sm-2 control-label">项目名称</label>
                             <div class="col-sm-10">
                                 <input type="text" placeholder="项目名称" id="model.project_name" class="form-control"
+                                       valid="vtext"
                                        name="model.project_name"
-                                       value="${model.project_name}"/>
+                                       value="${model.project_name!}"/>
                             </div>
 
                         </div>
@@ -101,7 +151,7 @@ var bodyContent = {
                             <div class="col-sm-10">
                                 <input type="text" placeholder="项目团队其他人员" id="model.from_other_menbers"
                                        class="form-control" name="model.from_other_menbers"
-                                       value="${model.from_other_menbers}"/>
+                                       value="${model.from_other_menbers!}"/>
                             </div>
 
                         </div>
@@ -110,7 +160,7 @@ var bodyContent = {
                             <label class="col-sm-2 control-label">项目所属专业</label>
                             <div class="col-sm-10">
                                 <input name="model.from_belongfields" id="model.from_belongfields"
-                                       value="${model.from_belongfields}" type="hidden">
+                                       value="${model.from_belongfields!}" type="hidden">
 
                                 ${belongfieldselect}
 
@@ -122,7 +172,7 @@ var bodyContent = {
                             <label class="col-sm-2 control-label">项目自评价</label>
                             <div class="col-sm-10">
                                 <input name="model.tech_maturity" id="model.tech_maturity"
-                                       value="${model.tech_maturity}" type="hidden">
+                                       value="${model.tech_maturity!}" type="hidden">
 
 
                                 <select class="form-control" id="tech_maturity" name="tech_maturity">
@@ -130,25 +180,25 @@ var bodyContent = {
                                     ${tech_maturityselect!}
                                 </select>
                                 <input name="model.core_tech" id="model.core_tech"
-                                       value="${model.core_tech}" type="hidden">
+                                       value="${model.core_tech!}" type="hidden">
                                 <select class="form-control" id="core_tech" name="core_tech">
                                     <option>请选择核心技术掌握情况</option>
                                     ${core_techselect!}
                                 </select>
                                 <input name="model.intell_right" id="model.intell_right"
-                                       value="${model.intell_right}" type="hidden">
+                                       value="${model.intell_right!}" type="hidden">
                                 <select class="form-control" id="intell_right" name="intell_right">
                                     <option>请选择知识产权权属情况</option>
                                     ${intell_rightselect!}
                                 </select>
                                 <input name="model.market_competitive" id="model.market_competitive"
-                                       value="${model.market_competitive}" type="hidden">
+                                       value="${model.market_competitive!}" type="hidden">
                                 <select class="form-control" id="market_competitive" name="market_competitive">
                                     <option>请选择市场竞争力</option>
                                     ${market_competitiveselect!}
                                 </select>
                                 <input name="model.projected_returns" id="model.projected_returns"
-                                       value="${model.projected_returns}" type="hidden">
+                                       value="${model.projected_returns!}" type="hidden">
                                 <select class="form-control" id="projected_returns" name="projected_returns">
                                     <option>请选择预计转化收益</option>
                                     ${projected_returnsselect!}
@@ -159,32 +209,47 @@ var bodyContent = {
 
 
                         <div class="form-group">
+
                             <label class="col-sm-2 control-label">核心技术</label>
                             <div class="col-sm-9">
-                                <input type="text" placeholder="核心技术" id="model.core_tech_contents" class="form-control"
-                                       name="model.core_tech_contents"
-                                       value="${model.core_tech_contents}"/>
+
+                                <input type="text" placeholder="核心技术" id="core_tech_contents" class="form-control"
+                                       name="core_tech_contents"
+                                     />
                             </div>
                             <div class="col-sm-1">
-                                <button class="btn">添加</button>
+                                <button class="btn" onclick="addItem(); return false;">添加</button>
                             </div>
+
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-2"></div>
+                            <div class="col-sm-9">
+                                <ul class="list-group" id="ul_core_tech_contents">
+
+${core_tech_contents_li!}
+                                </ul>
+                            </div>
+
 
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">已授权专利数量</label>
                             <div class="col-sm-10">
-                                <input type="text" placeholder="已授权专利数量" id="model.has_patent_count" class="form-control"
+                                <input type="text" placeholder="已授权专利数量" id="model.has_patent_count"
+                                       class="form-control"
                                        name="model.has_patent_count"
-                                       value="${model.has_patent_count}"/>
+                                       value="${model.has_patent_count!}"/>
                             </div>
 
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">在申请专利数量</label>
                             <div class="col-sm-10">
-                                <input type="text" placeholder="在申请专利数量" id="model.apply_patent_count" class="form-control"
+                                <input type="text" placeholder="在申请专利数量" id="model.apply_patent_count"
+                                       class="form-control"
                                        name="model.apply_patent_count"
-                                       value="${model.apply_patent_count}"/>
+                                       value="${model.apply_patent_count!}"/>
                             </div>
 
                         </div>
@@ -193,7 +258,7 @@ var bodyContent = {
                             <div class="col-sm-10">
                                 <input type="text" placeholder="预计所需资金" id="model.plan_need_money" class="form-control"
                                        name="model.plan_need_money"
-                                       value="${model.plan_need_money}"/>
+                                       value="${model.plan_need_money!}"/>
                             </div>
 
                         </div>
@@ -211,8 +276,9 @@ var bodyContent = {
                         <div class="form-group">
                             <label class="col-sm-2 control-label">项目摘要</label>
                             <div class="col-sm-10">
-                                <textarea class="form-control" rows="3" id="model.project_abstract" name="model.project_abstract">
-                                    ${model.project_abstract}
+                                <textarea class="form-control" rows="3" id="model.project_abstract"
+                                          name="model.project_abstract">
+                                    ${model.project_abstract!}
                                 </textarea>
                             </div>
 
@@ -224,8 +290,10 @@ var bodyContent = {
             <div style="height: 50px;clear: both;">&nbsp;</div>
             <nav class="navbar navbar-default navbar-fixed-bottom">
                 <div class="container" style="padding: 5px 0px 5px 0px;text-align: center;">
-                    <button class="btn btn-primary" onclick="oper.save(${model.id!'0'});return false;">保 存</button>
-                    <button class="btn btn-default" onclick="closeIframe();return false;">关 闭</button>
+                    <button class="btn btn-primary" onclick="oper.save(${model.id!'0'});return false;" id="btnSave">保
+                        存
+                    </button>
+                    <button class="btn btn-default" onclick="closeIframeReload();">返回</button>
                 </div>
             </nav>
         </div>
@@ -239,4 +307,7 @@ var bodyContent = {
 
 
 <% layout("/pages/template/_layout.html",{head:headContent,body:bodyContent}){ %>
-<%} %>
+
+<%}
+DIRECTIVE SAFE_OUTPUT_CLOSE;
+%>

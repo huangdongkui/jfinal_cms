@@ -1,11 +1,17 @@
 package com.jflyfox.modules.admin.activitymanager;
 
+import com.alibaba.fastjson.JSONObject;
 import com.jflyfox.component.base.BaseProjectController;
+import com.jflyfox.component.util.JFlyFoxUtils;
 import com.jflyfox.jfinal.component.annotation.ControllerBind;
+import com.jflyfox.modules.admin.foldernotice.TbFolderNotice;
 import com.jflyfox.system.config.ConfigService;
 import com.jflyfox.system.department.DepartmentSvc;
 import com.jflyfox.system.dict.DictSvc;
+import com.jflyfox.system.user.SysUser;
 import com.jflyfox.util.DateUtils;
+import jdk.nashorn.internal.ir.ReturnNode;
+import org.apache.commons.lang.StringUtils;
 
 import java.util.Arrays;
 import java.util.List;
@@ -21,37 +27,81 @@ import java.util.List;
 public class ActivityFillController  extends BaseProjectController {
     private static final String path = "/pages/admin/activity/activity_";
     public void index() {
-        fill();
+        edit();
     }
 
-    public void fill(){
-        BusiActivityProject model = BusiActivityProject.dao.findById(getParaToInt());
+    public void edit(){
 
-        setAttr("model", model);
-//        String[] belongfieldtypes = user.get("belongfieldtype").toString().split(",");
-        //String[] belongfieldtypes=new String[10];
-       // List<String> listValues= Arrays.asList(belongfieldtypes);
-
-        setAttr("belongfieldselect", new DictSvc().checkboxSysDictDetail(null,"belongfield"));
+        final String busi_activity_id = getPara("busi_activity_id");
+        BusiActivityProject model = BusiActivityProject.dao.findFirstByWhere(" where busi_activity_id=?",busi_activity_id);
 
 
+        String[] belongfieldtypes=model.getStr("from_belongfields").split(",");
+        List<String> listValues= Arrays.asList(belongfieldtypes);
 
-       // String[] belongfieldtypes=new String[10];
-       // List<String> listValues= Arrays.asList(belongfieldtypes);
+        setAttr("belongfieldselect", new DictSvc().checkboxSysDictDetail(listValues,"belongfield"));
 
-        setAttr("projecttypeselect", new DictSvc().checkboxSysDictDetail(null,"projecttype"));
+
+
+        String[] values=model.getStr("project_type").split(",");
+        listValues= Arrays.asList(values);
+
+        setAttr("projecttypeselect", new DictSvc().checkboxSysDictDetail(listValues,"projecttype"));
 
 
         final DictSvc dictSvc = new DictSvc();
 
 
         //departmentSvc
-        setAttr("tech_maturityselect", dictSvc.selectDictDetailType("","tech_maturity"));
-        setAttr("core_techselect", dictSvc.selectDictDetailType("","core_tech"));
-        setAttr("intell_rightselect", dictSvc.selectDictDetailType("","intell_right"));
-        setAttr("market_competitiveselect", dictSvc.selectDictDetailType("","market_competitive"));
-        setAttr("projected_returnsselect", dictSvc.selectDictDetailType("","projected_returns"));
+        setAttr("tech_maturityselect", dictSvc.selectDictDetailType(model.getStr("tech_maturity"),"tech_maturity"));
+        setAttr("core_techselect", dictSvc.selectDictDetailType(model.getStr("core_tech"),"core_tech"));
+        setAttr("intell_rightselect", dictSvc.selectDictDetailType(model.getStr("intell_right"),"intell_right"));
+        setAttr("market_competitiveselect", dictSvc.selectDictDetailType(model.getStr("market_competitive"),"market_competitive"));
+        setAttr("projected_returnsselect", dictSvc.selectDictDetailType(model.getStr("projected_returns"),"projected_returns"));
+
+
+        setAttr("core_tech_contents_li",genHtmlLiCode(model.getStr("core_tech_contents")));
+
+        setAttr("model",model);
         render(path + "fill.html");
+    }
+
+    /**
+     * 生成li代码
+     * @param core_tech_contents  a,b,c
+     * @return
+     */
+    private String genHtmlLiCode(String core_tech_contents) {
+        if(StringUtils.isEmpty(core_tech_contents)){return "";}
+
+        String[] split = core_tech_contents.split(",");
+        StringBuilder sb=new StringBuilder();
+
+        for (String s : split) {
+            sb.append("<li class=\"list-group-item\"><span>"+s+"</span><a style=\"float: right;\" href=\"javascript:(0);\" onclick=\"deleteLi(this);return false;\">删除</a></li>");
+        }
+
+        return sb.toString();
+
+    }
+
+    public void save(){
+
+        Integer pid = getParaToInt();
+        BusiActivityProject model = getModel(BusiActivityProject.class);
+
+        Integer userid = getSessionUser().getUserid();
+        String now = getNow();
+        model.put("update_id", userid);
+        model.put("update_time", now);
+        if (pid != null && pid > 0) { // 更新
+            model.update();
+        } else { // 新增
+            model.remove("id");
+            model.save();
+        }
+
+        renderMessage("保存成功","window.location.href=\"admin/home\"");
     }
 
 }

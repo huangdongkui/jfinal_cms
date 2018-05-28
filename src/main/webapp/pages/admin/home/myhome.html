@@ -75,12 +75,15 @@ include("/pages/template/head.html"){}
     function showPage(busi_activity_id) {
         var projecturl= '/admin/activityproject';
         var fillurl='admin/activityfill';
+        $('#busi_activity_id').val(busi_activity_id);
         if(btnText=="填报"){
-            window.location.href = fillurl;
+            form1.action=fillurl;
         }else if(btnText=="评分"){
-            window.location.href = projecturl;
+            form1.action=projecturl;
+           // window.location.href = projecturl;
         }
 
+        form1.submit();
     }
 
     function initTable() {
@@ -193,6 +196,8 @@ var sessionUserId = isEmpty(session.session_user) ? 0: session.session_user.user
                 </div>
                 <div class="panel-body">
                     <form class="form-horizontal" name="form1" action="" method="post">
+
+                        <input type="hidden" name="busi_activity_id" id="busi_activity_id">
                         <div class="form-group">
                             <label for="username" class="col-sm-3 control-label">登录名</label>
                             <div class="col-sm-9">

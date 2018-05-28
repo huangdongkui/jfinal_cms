@@ -232,6 +232,15 @@ public class BusiActivityProject extends BaseProjectModel<BusiActivityProject> {
         set(project_abstract, value);
         return this;
     }
+    private String busi_activity_id="busi_activity_id";
+    public String getBusiActivityId() {
+        return get(busi_activity_id);
+    }
+
+    public BusiActivityProject setBusiActivityId(String value) {
+        set(busi_activity_id, value);
+        return this;
+    }
     private String update_time = "update_time";
     private String update_id = "update_id";
     private String create_time = "create_time";

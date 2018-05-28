@@ -106,6 +106,7 @@ function WinClose(data,form){
 
 //关闭Iframe
 function closeIframe(obj) {
+    debugger;
 	if(obj){
 		//可以考虑使用window.top.ymPrompt.doHandler("close",true);
 		window.parent.parent.ymPrompt.doHandler("close",true);
@@ -115,10 +116,12 @@ function closeIframe(obj) {
 }
 
 //关闭Iframe 刷新父页面
-function closeIframeReload() { 
+function closeIframeReload() {
+
+    debugger;
 	//刷新父页面
-	window.parent.location.reload();//这个方法会发生页面重载，IE6下面会出现刷新弹窗。
-	window.parent.ymPrompt.doHandler("close",true);  
+	//window.parent.location.reload();//这个方法会发生页面重载，IE6下面会出现刷新弹窗。
+	//window.parent.ymPrompt.doHandler("close",true);
 }
 
 
@@ -132,3 +135,4 @@ ymPrompt.win({
 	titleBar:false,winPos:"rt",showMask:false,fixPosition:true,dragOut:false});
 });
 **/
+
