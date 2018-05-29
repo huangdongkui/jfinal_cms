@@ -9,6 +9,8 @@ import com.jflyfox.jfinal.component.annotation.ControllerBind;
 import com.jflyfox.jfinal.component.db.SQLUtils;
 import com.jflyfox.modules.admin.advicefeedback.TbAdviceFeedback;
 import com.jflyfox.modules.admin.contact.TbContact;
+import com.jflyfox.system.department.DepartmentSvc;
+import com.jflyfox.system.user.SysUser;
 import com.jflyfox.util.DateUtils;
 import com.jflyfox.util.StrUtils;
 
@@ -173,5 +175,37 @@ String sql="select a.id,a.nodeid,\n" +
         setAttr("seconddate", seconddate);
         setAttr("threedate", threedate);
         render(path + "edit.html");
+    }
+
+    public void selectJudge(){
+        SysUser model = getModelByAttr(SysUser.class);
+
+        SQLUtils sql = new SQLUtils(" from sys_user t " //
+                + " left join sys_department d on d.id = t.departid " //
+                + " where 1 = 1 and userid != 1 ");
+
+        if (model.getAttrValues().length != 0) {
+            sql.whereLike("username", model.getStr("username"));
+            sql.whereLike("realname", model.getStr("realname"));
+            sql.whereEquals("usertype", model.getInt("usertype"));
+            sql.whereEquals("departid", model.getInt("departid"));
+        }
+
+        // 排序
+        String orderBy = getBaseForm().getOrderBy();
+        if (StrUtils.isEmpty(orderBy)) {
+            sql.append(" order by userid desc");
+        } else {
+            sql.append(" order by ").append(orderBy);
+        }
+
+        Page<SysUser> page = SysUser.dao.paginate(getPaginator(), "select t.*,d.name as departname ", sql.toString()
+                .toString());
+        // 下拉框
+        setAttr("departSelect", new DepartmentSvc().selectDepartByParentId(0,10));
+
+        setAttr("page", page);
+        setAttr("attr", model);
+        render(path + "selectjudge.html");
     }
 }

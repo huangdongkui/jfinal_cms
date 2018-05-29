@@ -1,0 +1,138 @@
+<%
+DIRECTIVE SAFE_OUTPUT_OPEN;
+var headContent = {
+include("/pages/template/head.html"){}
+%>
+
+<script type="text/javascript">
+    var oper = {
+        save: function (id) {
+            if (!validForm()) {
+                return false;
+            }
+            id = id || '0';
+            var url = 'admin/activityproject/save/' + id;
+            form1.action = url;
+            form1.submit();
+            return true;
+        }
+    };
+    $(document).ready(function () {
+        $('.dateRange').daterangepicker(null, function (start, end, label) {
+            //console.log(start.toISOString(), end.toISOString(), label);
+        });
+
+    });
+
+    function closeIframeReload() {
+        var url = 'admin/activityproject';
+        form1.action = url;
+        form1.submit();
+    }
+</script>
+
+<%
+};
+var bodyContent = {
+%>
+<div class="container">
+
+    <form name="form1" action="" method="post" class="form-horizontal" role="form">
+        <input type="hidden" name="model.id" value="${model.id!}"/>
+        <input type="hidden" name="busi_activity_id" id="busi_activity_id" value="${model.busi_activity_id!}"/>
+
+
+        <div class="container-fluid">
+
+            <div class="col-md-1">
+            </div>
+            <div class="col-md-10">
+                <!-- 菜单 -->
+                <% include("/pages/template/menu.html"){} %>
+
+                <fieldset>
+
+                    <div id="legend" class="">
+                        <legend class="">当前得分99</legend>
+                    </div>
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                项目基本信息
+                            </h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">项目名称</label>
+                                <div class="col-sm-10">
+                                    ${model.project_name!}
+                                </div>
+
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">申请单位</label>
+
+                                <div class="col-sm-10">
+                                    ${department!}
+                                </div>
+
+
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">负责人</label>
+                                <div class="col-sm-10">
+                                    ${createname!}
+                                </div>
+
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">项目摘要</label>
+                                <div class="col-sm-10">
+                                    ${model.project_abstract!}
+                                </div>
+
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">项目方案</label>
+                                <div class="col-sm-10">
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+
+
+                </fieldset>
+
+                <div style="height: 50px;clear: both;">&nbsp;</div>
+                <nav class="navbar navbar-default navbar-fixed-bottom">
+                    <div class="container" style="padding: 5px 0px 5px 0px;text-align: center;">
+                        <button class="btn btn-primary" onclick="oper.save(${model.id!'0'});return false;" id="btnSave">保
+                            存
+                        </button>
+                        <button class="btn btn-default" onclick="closeIframeReload();">返回</button>
+                    </div>
+                </nav>
+            </div>
+
+            <div class="col-md-1">
+            </div>
+
+        </div>
+    </form>
+
+
+</div>
+<%}; %>
+
+<% layout("/pages/template/_layout.html",{head:headContent,body:bodyContent}){ %>
+<%}
+DIRECTIVE SAFE_OUTPUT_CLOSE;
+%>

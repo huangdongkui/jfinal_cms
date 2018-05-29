@@ -52,7 +52,7 @@ public class RegistController extends BaseProjectController {
 		if (user != null) {
 			redirect(prePage);
 		} else {
-			setAttr("departSelect", new DepartmentSvc().selectDepartByParentId(17,9));
+			setAttr("departSelect", new DepartmentSvc().selectDepartByParentId(0,10));
 
 			//List<String> listValue=new ArrayList<>();
 

@@ -73,14 +73,13 @@ include("/pages/template/head.html"){}
     }
 
     function showPage(busi_activity_id) {
-        var projecturl= '/admin/activityproject';
-        var fillurl='admin/activityfill';
+        var projecturl= '${BASE_PATH }admin/activityproject';
+        var fillurl='${BASE_PATH }admin/activityfill';
         $('#busi_activity_id').val(busi_activity_id);
         if(btnText=="填报"){
             form1.action=fillurl;
         }else if(btnText=="评分"){
             form1.action=projecturl;
-           // window.location.href = projecturl;
         }
 
         form1.submit();

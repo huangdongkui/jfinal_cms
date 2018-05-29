@@ -2,11 +2,13 @@ package com.jflyfox.system.dict;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.jfinal.template.ext.directive.Str;
 import com.jflyfox.jfinal.base.BaseService;
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.beetl.ext.fn.ArrayUtil;
 
 /**
@@ -87,7 +89,14 @@ public class DictSvc extends BaseService {
         DictCache.initDict();
     }
 
-    public String checkboxSysDictDetail(List<String> selectedIds, String dictType) {
+    public String checkboxSysDictDetail(String selectedValues, String dictType) {
+
+        List<String> selectedIds=new ArrayList<>();
+        if(StringUtils.isNotBlank(selectedValues)){
+            String[] belongfieldtypes = selectedValues.split(",");
+            selectedIds= Arrays.asList(belongfieldtypes);
+        }
+
         List<SysDictDetail> list = new ArrayList<SysDictDetail>();
         list = SysDictDetail.dao.find("select * from sys_dict_detail where dict_type='" + dictType+"'");
         StringBuffer sb = new StringBuffer();

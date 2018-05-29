@@ -39,7 +39,13 @@ include("/pages/template/head.html"){}
                     form1.action = url;
                     form1.submit();
                 });
+            },
+            selectPerson:function (id) {
+                var url = 'admin/activity/selectJudge/' + id;
+                var title = '选择评委';
+                Iframe(url, this.width, this.height, title);
             }
+
         };
         //显示Menu索引
         //showMenu('page_advicefeedback');
@@ -82,10 +88,13 @@ include("/pages/template/head.html"){}
             uniqueId: "id",                     //每一行的唯一标识，一般为主键列
 
             columns: [{
-                field: 'id',
+                field: 'idsort',
                 title: '序号',
                 align:'center',
-                width:'5%'
+                width:'5%',
+                formatter: function (value, row, index) {
+                    return index+1;
+                }
             }, {
                 field: 'nodeid',
                 title: '活动节点',
@@ -111,12 +120,12 @@ include("/pages/template/head.html"){}
                 align:'center',
                 width:'35%'
             }, {
-                field: 'operation',
+                field: 'id',
                 title: '操作',
                 align:'center',
                 width:'10%',
                 formatter:function formatter (value, row, index, field) {
-            return '<a href="javascript:void(0);" class="btn btn-sm btn-primary" onclick="">选择评委</a>';
+            return '<a href="javascript:void(0);" class="btn btn-sm btn-primary" onclick="oper.selectPerson('+value+')">选择评委</a>';
         }
 
 

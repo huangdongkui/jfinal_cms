@@ -383,13 +383,10 @@ public class PersonController extends BaseProjectController {
 
 
 		//部门字典
-		setAttr("departSelect", new DepartmentSvc().selectDepartByParentId(17,9));
+		setAttr("departSelect", new DepartmentSvc().selectDepartByParentId(0,10));
 
-		String[] belongfieldtypes = user.get("belongfieldtype").toString().split(",");
-
-		List<String> listValues=Arrays.asList(belongfieldtypes);
 		//领域字典
-		setAttr("belongfieldselect", new DictSvc().checkboxSysDictDetail(listValues,"belongfield"));
+		setAttr("belongfieldselect", new DictSvc().checkboxSysDictDetail(user.get("belongfieldtype").toString(),"belongfield"));
 		renderAuto(path + "show_person.html");
 	}
 

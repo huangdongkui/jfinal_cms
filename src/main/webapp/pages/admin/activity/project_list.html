@@ -4,7 +4,8 @@ include("/pages/template/head.html"){}
 %>
 
 <script type="text/javascript">
-
+    var $bootstrapTable;
+    var keyid;
     var oper;
     jQuery(function ($) {
         // 页面方法
@@ -39,32 +40,34 @@ include("/pages/template/head.html"){}
                     form1.action = url;
                     form1.submit();
                 });
+            },
+            dojudge:function (id) {
+                var url = 'admin/activityproject/edit/' + id;
+                this.form.action = url;
+                this.form.submit();
             }
         };
         //显示Menu索引
         //showMenu('page_advicefeedback');
-
-       initTable();
+        keyid = ${busi_activity_id}
+            initTable();
     });
 
     //分页
     var paginator = function (page) {
         oper.list();
     };
-    var $bootstrapTable;
-    var keyid;
+
 
     function selectActivity(id) {
         keyid = id;
         $bootstrapTable.bootstrapTable("refresh");
-      //  alert("fefe");
-       // $bootstrapTable=$('#tb_slave');
-       // $bootstrapTable.bootstrapTable("reload",{busi_activity_id: id});
+
     }
 
     function initTable() {
-        $bootstrapTable = $('#tb_slave').bootstrapTable({
-            url: 'admin/activity/busiActivitySlaveBy',         //请求后台的URL（*）
+        $bootstrapTable = $('#projectlist').bootstrapTable({
+            url: 'admin/activityproject/list',         //请求后台的URL（*）
             method: 'get',                      //请求方式（*）
             striped: true,                      //是否显示行间隔色
             queryParams: function (params) {
@@ -82,45 +85,52 @@ include("/pages/template/head.html"){}
             uniqueId: "id",                     //每一行的唯一标识，一般为主键列
 
             columns: [{
-                field: 'id',
+                field: 'idsort',
                 title: '序号',
-                align:'center',
-                width:'5%'
-            }, {
-                field: 'nodeid',
-                title: '活动节点',
-                align:'center',
-                width:'10%',
-                formatter:function formatter(value, row, index, field) {
-                    var values=['报名','初赛','复赛','决赛']
-                    return values[value];
+                align: 'center',
+                width: '5%',
+                formatter: function (value, row, index) {
+                    return index + 1;
                 }
             }, {
-                field: 'from_time',
-                title: '开始日期',
-                align:'center',
-                width:'20%'
+                field: 'project_name',
+                title: '项目名称',
+                align: 'center',
+                width: '10%'
+
             }, {
-                field: 'to_time',
-                title: '结束日期',
-                align:'center',
-                width:'20%'
+                field: 'departname',
+                title: '申请单位',
+                align: 'center',
+                width: '40%'
             }, {
-                field: 'JudgesUid',
-                title: '专家列表',
-                align:'center',
-                width:'35%'
+                field: 'realname',
+                title: '申请人',
+                align: 'center',
+                width: '10%'
             }, {
-                field: 'operation',
-                title: '操作',
-                align:'center',
-                width:'10%',
-                formatter:function formatter (value, row, index, field) {
-            return '<a href="javascript:void(0);" class="btn btn-sm btn-primary" onclick="">选择评委</a>';
-        }
+                field: 'score',
+                title: '分数',
+                align: 'center',
+                width: '10%'
+            },
+                {
+                    field: 'projectstatus',
+                    title: '状态',
+                    align: 'center',
+                    width: '10%'
+                }, {
+                    field: 'id',
+                    title: '操作',
+                    align: 'center',
+                    width: '10%',
+                    formatter: function formatter(value, row, index, field) {
+                        return '<a href="javascript:void(0);" class="btn btn-sm btn' +
+                            '-primary" onclick="oper.dojudge(' + value + ')">评分</a>';
+                    }
 
 
-    }]
+                }]
         });
 
         var queryParams = function (params) {
@@ -132,6 +142,7 @@ include("/pages/template/head.html"){}
             return temp;
         };
     }
+
 
 </script>
 
@@ -150,7 +161,7 @@ var bodyContent = {
         <% //查询列表 %>
         <div class="form-group">
             <input class="form-control" type="text" name="attr.activity_name" value="${attr.activity_name!''}"
-                   placeholder="状态" />
+                   placeholder="状态"/>
         </div>
 
 
@@ -164,23 +175,8 @@ var bodyContent = {
     </div>
     <div>
         <!-- 数据列表 -->
-        <table class="table table-striped table-bordered table-hover">
-            <thead>
-            <tr>
-                <th>序号</th>
-                <% // 列表头部 %>
-                <th name="project_name" class="sorting">项目名称</th>
-                <th name="project_no" class="sorting">项目编号</th>
-                <th name="scoretpl_id" class="sorting">申请单位</th>
-                <th name="chan_name" class="sorting">负责人</th>
-                <th name="score" class="sorting">分数</th>
-                <th name="status" class="sorting">状态</th>
-                <th>操作</th>
-            </tr>
-            </thead>
-            <tbody>
+        <table id="projectlist">
 
-            </tbody>
         </table>
 
 

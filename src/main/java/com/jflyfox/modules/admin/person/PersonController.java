@@ -43,14 +43,9 @@ public class PersonController extends BaseProjectController {
 		setAttr("folders_selected", "person");
 
 
-		setAttr("departSelect", new DepartmentSvc().selectDepartByParentId((int)user.get("departid"),9));
+		setAttr("departSelect", new DepartmentSvc().selectDepartByParentId((int)user.get("departid"),10));
 
-
-		String[] belongfieldtypes = user.get("belongfieldtype").toString().split(",");
-
-		List<String> listValues= Arrays.asList(belongfieldtypes);
-
-		setAttr("belongfieldselect", new DictSvc().checkboxSysDictDetail(listValues,"belongfield"));
+		setAttr("belongfieldselect", new DictSvc().checkboxSysDictDetail(user.get("belongfieldtype").toString(),"belongfield"));
 
 		render(path + "show_person.html");
 	}
