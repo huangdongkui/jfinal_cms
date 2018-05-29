@@ -5,31 +5,49 @@ include("/pages/template/head.html"){}
 
 <script type="text/javascript">
     var oper;
-    jQuery(function($) {
+    jQuery(function ($) {
         // 页面方法
         oper = {
-            width : 450,
-            height : 500,
-            form : document.form1,
-            list : function() {
-                var url = 'admin/activity/selectJudge';
+            width: 450,
+            height: 500,
+            form: document.form1,
+            list: function () {
+                var url = '/admin/activityselect/list';
                 this.form.action = url;
                 this.form.submit();
             },
-            add : function() {
-                var url = 'system/user/add';
-                var title = '添加用户';
-                Iframe(url, this.width, this.height, title);
+            save: function () {
+                var arrchecked = [];
+                $(".table :checkbox:checked").each(function (e) {
+                    arrchecked.push($(this).val());
+                })
+                $("#JudgesUid").val(arrchecked.join(","));
+
+                var url = '${BASE_PATH }admin/activityselect/save';
+                form1.action = url;
+                form1.submit();
+                return true;
             },
 
 
-
         };
-        showMenu('page_user');
+
+        initCheckbox();
     });
 
+    function initCheckbox() {
+        var ids = $("#JudgesUid").val();
+        if (!ids) {
+            return;
+        }
+        var arrids = ids.split(',')
+        for (i in arrids) {
+            $("#cb_"+arrids[i]).attr("checked","checked");
+        }
+    }
+
     //分页
-    var paginator = function(page) {
+    var paginator = function (page) {
         oper.list();
     };
 
@@ -40,18 +58,19 @@ include("/pages/template/head.html"){}
 
 var bodyContent = {
 %>
-<form name="form1" action="" method="post"  class="form-inline" role="form">
-
+<form name="form1" action="" method="post" class="form-inline" role="form">
+    <input type="hidden" name="id" id="id" value="${id}">
+    <input type="hidden" name="JudgesUid" id="JudgesUid" value="${JudgesUid!}">
     <div class="tableSearch">
-        <%  //查询列表 %>
+        <% //查询列表 %>
 
         <div class="form-group">
             <input class="form-control" type="text" name="attr.realname" value="${attr.realname!''}"
-                   placeholder="请输入真实姓名"  />
+                   placeholder="请输入真实姓名"/>
         </div>
         <div class="form-group">
-            <select name="attr.departid" class="form-control"   >
-                <option value="-1" >--请选择部门--</option>
+            <select name="attr.departid" class="form-control">
+                <option value="-1">--请选择部门--</option>
                 ${departSelect}
             </select>
         </div>
@@ -63,7 +82,7 @@ var bodyContent = {
         <button type="button" class="btn btn-default" onclick="resetForm();">
             <span class="glyphicon glyphicon-refresh"></span> 重 置
         </button>
-        <button type="button" class="btn btn-default" onclick="oper.add();">
+        <button type="button" class="btn btn-default" onclick="oper.save();">
             <span class="glyphicon glyphicon-plus"></span> 确 认
         </button>
     </div>
@@ -74,7 +93,7 @@ var bodyContent = {
         <tr>
             <th width="10%">选择</th>
             <th>序号</th>
-            <%  // 列表头部 %>
+            <% // 列表头部 %>
             <th name="departid" class="sorting">部门</th>
             <th name="realname" class="sorting">真实姓名</th>
             <th name="busitype" class="sorting">类型</th>
@@ -85,21 +104,20 @@ var bodyContent = {
         <% for(item in page.list){ %>
         <tr>
 
-            <td><input type="checkbox" value="${item.id}"></td>
+            <td><input type="checkbox" value="${item.userid}" id="cb_${item.userid}"></td>
             <td>${itemLP.index }</td>
-            <%  // 列表内容 %>
+            <% // 列表内容 %>
             <td>${item.departname}</td>
             <td>${item.realname}</td>
             <td>
                 <% if(item.busitype==0) { %>
                 参赛人员
-                <%	} %>
+                <% } %>
                 <% if(item.busitype==1) { %>
                 评委
-                <%	} %>
+                <% } %>
 
             </td>
-
 
 
         </tr>

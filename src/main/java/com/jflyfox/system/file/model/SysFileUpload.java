@@ -24,6 +24,16 @@ public class SysFileUpload extends BaseProjectModel<SysFileUpload> {
 	private String UPDATE_ID = "update_id"; // 更新人
 	private String CREATE_TIME = "create_time"; // 创建时间
 	private String CREATE_ID = "create_id"; // 创建者
+	private String BUSINESS_ID="business_id";//业务表Id
+
+	public SysFileUpload setBusinessId(java.lang.String value) {
+		set(BUSINESS_ID, value);
+		return this;
+	}
+
+	public java.lang.String getBusinessId() {
+		return get(BUSINESS_ID);
+	}
 
 	public SysFileUpload setId(java.lang.Integer value) {
 		set(ID, value);

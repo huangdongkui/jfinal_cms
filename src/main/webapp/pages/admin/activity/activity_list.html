@@ -41,7 +41,7 @@ include("/pages/template/head.html"){}
                 });
             },
             selectPerson:function (id) {
-                var url = 'admin/activity/selectJudge/' + id;
+                var url = 'admin/activityselect/' + id;
                 var title = '选择评委';
                 Iframe(url, this.width, this.height, title);
             }
@@ -115,7 +115,7 @@ include("/pages/template/head.html"){}
                 align:'center',
                 width:'20%'
             }, {
-                field: 'JudgesUid',
+                field: 'judges_names',
                 title: '专家列表',
                 align:'center',
                 width:'35%'

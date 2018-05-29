@@ -29,6 +29,7 @@ import com.jflyfox.modules.admin.site.SiteConstant;
 import com.jflyfox.modules.admin.site.SiteService;
 import com.jflyfox.modules.admin.site.TbSite;
 import com.jflyfox.system.file.model.FileUploadBean;
+import com.jflyfox.system.file.model.SysFileUpload;
 import com.jflyfox.system.file.service.FileUploadService;
 import com.jflyfox.system.file.util.FileUploadUtils;
 import com.jflyfox.system.log.SysLog;
@@ -287,6 +288,16 @@ public abstract class BaseProjectController extends BaseController {
 	public String uploadHandler(TbSite site, File uploadFile, String appendPath) {
 		String fileUrl = "";
 		String projectStorePath = FileUploadUtils.getUploadPath(site, appendPath);
+		FileUploadBean uploadBean = new FileUploadService().uploadHandle(projectStorePath, uploadFile, getSessionUser()
+				.getUserid());
+		if (uploadBean != null) {
+			fileUrl = projectStorePath + File.separator + uploadBean.getName();
+		}
+		return FileUploadUtils.rebuild(fileUrl);
+	}
+	public String uploadHandler(File uploadFile, String appendPath) {
+		String fileUrl = "";
+		String projectStorePath = FileUploadUtils.getUploadPath("ActivityFile//", appendPath);
 		FileUploadBean uploadBean = new FileUploadService().uploadHandle(projectStorePath, uploadFile, getSessionUser()
 				.getUserid());
 		if (uploadBean != null) {

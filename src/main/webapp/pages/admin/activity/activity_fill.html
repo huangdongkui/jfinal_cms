@@ -3,6 +3,7 @@ DIRECTIVE SAFE_OUTPUT_OPEN;
 var headContent = {
 include("/pages/template/head.html"){}
 %>
+<link rel="stylesheet" href="static/component/bootstrap-fileinput-master/css/fileinput.css">
 
 <script type="text/javascript">
 
@@ -55,6 +56,43 @@ include("/pages/template/head.html"){}
     function deleteLi(o) {
         $(o).parent().remove();
     }
+
+    function initFileInput(ctrlName, uploadUrl) {
+        var control = $('#' + ctrlName);
+
+        control.fileinput({
+            language: 'zh', //设置语言
+            uploadUrl: uploadUrl, //上传的地址
+            allowedFileExtensions : ['jpg', 'png','gif'],//接收的文件后缀
+            showUpload: true, //是否显示上传按钮
+            showCaption: true,//是否显示标题
+            browseClass: "btn btn-primary", //按钮样式
+            previewFileIcon: "<i class='glyphicon glyphicon-king'></i>"
+
+        });
+    }
+
+
+    $(function () {
+        initFileInput('inputFile','${BASE_PATH }admin/file/upload/${model.id!}');
+
+
+        //导入文件上传完成之后的事件
+        $("#inputFile").on("fileuploaded", function (event, data, previewId, index) {
+           // $("#myModal").modal("hide");
+//            var data = data.response.lstOrderImport;
+//            if (data == undefined) {
+//                toastr.error('文件格式类型不正确');
+//                return;
+//            }
+            //1.初始化表格
+          //  var oTable = new TableInit();
+           // oTable.Init(data);
+           // $("#div_startimport").show();
+        });
+    });
+
+
 </script>
 
 <%
@@ -265,10 +303,8 @@ ${core_tech_contents_li!}
                         <div class="form-group">
                             <label class="col-sm-2 control-label">项目文件</label>
                             <div class="col-sm-10">
-                                <input type="text" placeholder="项目文件" id="p111111" class="form-control"
-                                       name="p111111"
-                                       value=""/>
-                                <button class="btn">选择文件</button>
+                                <input id="inputFile" name="inputFile" type="file" class="file" data-show-preview="false">
+
                             </div>
 
                         </div>
@@ -304,6 +340,7 @@ ${core_tech_contents_li!}
     </div>
 </form>
 
+<script src="static/component/bootstrap-fileinput-master/js/fileinput.js"></script>
 
 <%}; %>
 

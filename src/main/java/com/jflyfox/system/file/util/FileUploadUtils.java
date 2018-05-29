@@ -61,7 +61,16 @@ public class FileUploadUtils {
 
 		return path;
 	}
+	public static String getUploadPath(String rootPath, String type) {
+		String sitePath = rootPath;//getSitePath(site);
+		String path = JFLYFOX_PATH + sitePath + type;
+		File file = new File(BASE_PATH + path);
+		if (!file.exists()) {
+			file.mkdirs();
+		}
 
+		return path;
+	}
 	/**
 	 * 获取站点路径
 	 * 

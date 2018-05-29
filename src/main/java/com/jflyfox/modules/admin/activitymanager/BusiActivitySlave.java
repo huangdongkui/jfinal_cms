@@ -62,20 +62,29 @@ public class BusiActivitySlave  extends BaseProjectModel<BusiActivitySlave> {
     }
 
     public String getJudgesUid() {
-        return JudgesUid;
+        return get(JudgesUid);
     }
 
     public BusiActivitySlave setJudgesUid(String value) {
         set(JudgesUid,value);
         return this;
     }
+    public String getJudgesNames() {
+        return get(judges_names);
+    }
 
+    public BusiActivitySlave setJudgesNames(String value) {
+        set(judges_names,value);
+        return this;
+    }
     private String id="id";
     private String nodeid="nodeid";
     private String busi_activity_id="busi_activity_id";
     private String from_time="from_time";
     private String to_time="to_time";
-    private String JudgesUid="id";
+    private String JudgesUid="JudgesUid";
+    private String judges_names="judges_names";
+
 
 
 
