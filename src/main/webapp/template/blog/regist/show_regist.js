@@ -43,7 +43,7 @@ function oper_save(){
 				alert('保存成功');
 				//var prePage = $('[name="pre_page"]').val();
 				//if (prePage=='') {
-					prePage = "/jfinal/admin";
+					prePage = "../admin";
 				//}
 				window.top.location.href = prePage;
 			} else {

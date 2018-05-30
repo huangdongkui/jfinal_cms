@@ -32,16 +32,16 @@ function oper_save() {
         alert('昵称不能为空！');
         return;
     }
+    //
+    // if (realname.length < 3) {
+    //     alert('昵称长度必须大于3！');
+    //     return;
+    // }
 
-    if (realname.length < 3) {
-        alert('昵称长度必须大于3！');
-        return;
-    }
-
-    if (realname.length > 15) {
-        alert('昵称长度必须小于16！');
-        return;
-    }
+    // if (realname.length > 15) {
+    //     alert('昵称长度必须小于16！');
+    //     return;
+    // }
 
     var pwd = $('[name="password"]').val();
     var pwd2 = $('[name="password2"]').val();
@@ -89,18 +89,11 @@ function oper_save() {
         data: $("form").serialize(),
         success: function (data) {
             if (data.status == 1) {
-                alert('保存成功');
+                alert('注册成功');
                 $.cookie('beginDate', null);
-                //var prePage = $('[name="pre_page"]').val();
-               // if (prePage == '') {
-                var  prePage = '/jfinal/admin';
-               // }
+
                 window.top.location.href = prePage;
             } else {
-                //loadPicimageCode();
-                //$('[name="imageCode"]').val('');
-                //$('[name="password"]').val('');
-                //$('[name="password2"]').val('');
                 alert('保存失败：' + data.msg);
             }
         },

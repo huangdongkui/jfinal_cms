@@ -77,7 +77,9 @@ public class CommonController extends BaseProjectController {
 		} else if (StrUtils.isNotEmpty(path)) {
 			renderAuto(path);
 		} else {
-			renderAuto(Home.PATH + urlKey + ".html");
+			//renderAuto(Home.PATH + urlKey + ".html");
+			//renderAuto("admin");
+			render("/pages/admin/login.html");
 		}
 
 	}

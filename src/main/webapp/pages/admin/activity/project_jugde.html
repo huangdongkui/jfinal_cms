@@ -85,12 +85,12 @@ include("/pages/template/head.html"){}
                     align: 'center',
                     width: '10%'
                 }, {
-                    field: 'getscorce',
+                    field: 'jugde_score',
                     title: '得分',
                     align: 'center',
                     width: '10%',
                     formatter: function formatter(value, row, index, field) {
-                        return '<input type="text" class="form-control" id="name_"'+value+' placeholder="0">';
+                        return '<input type="text" class="form-control" id="name_'+index+'" placeholder="0" value="'+value+'">';
                     }
                 }, {
                     field: 'remarks',

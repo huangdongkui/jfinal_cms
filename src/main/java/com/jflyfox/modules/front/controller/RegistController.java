@@ -93,7 +93,7 @@ public class RegistController extends BaseProjectController {
 		// 前台都验证了~没必要都进行逐一提示，错误的都是跳过了js验证，不怀好意的人
 		String realname = user.getStr("realname");
 		if (user.getInt("userid") != null || StrUtils.isEmpty(realname) //
-				|| realname.length() < 3 || realname.length() > 20 // 名称长度限制
+				|| realname.length() < 2 || realname.length() > 20 // 名称长度限制
 				|| StrUtils.isEmpty(password) || StrUtils.isEmpty(password2) //
 				|| password.length() < 6 || password.length() > 20 // 密码长度限制
 				|| !password.equals(password2)) {
@@ -108,15 +108,15 @@ public class RegistController extends BaseProjectController {
 			renderJson(json.toJSONString());
 			return;
 		}
-
+		key=user.getStr("tel");
 		newUser = SysUser.dao.findFirstByWhere("where username = ? ", key);
 		if (newUser != null) {
-			json.put("msg", "存登陆名已存在，请重新输入");
+			json.put("msg", "手机号已存在，请重新输入");
 			renderJson(json.toJSONString());
 			return;
 		}
 
-		user.set("username", user.getStr("username"));
+		user.set("username", user.getStr("tel"));
 		user.set("password", JFlyFoxUtils.passwordEncrypt(password));
 		user.set("usertype", JFlyFoxUtils.USER_TYPE_NORMAL);
 		user.set("departid", user.getInt("departid"));

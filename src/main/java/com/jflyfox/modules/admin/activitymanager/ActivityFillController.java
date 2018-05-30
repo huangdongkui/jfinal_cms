@@ -68,7 +68,7 @@ public class ActivityFillController extends BaseProjectController {
 
 
         setAttr("core_tech_contents_li", genHtmlLiCode(model.getStr("core_tech_contents")));
-        setAttr("filelist", ActivityService.genHtmllIFilesbybusinessid(model.getId().toString(),true));
+        setAttr("filelist", ActivityService.genHtmllIFilesbybusinessid(model.get("id","0").toString(),true));
         setAttr("model", model);
         render(path + "fill.html");
     }
