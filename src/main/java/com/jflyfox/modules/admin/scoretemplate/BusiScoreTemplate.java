@@ -3,6 +3,7 @@ package com.jflyfox.modules.admin.scoretemplate;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.jflyfox.component.base.BaseProjectModel;
 import com.jflyfox.jfinal.component.annotation.ModelBind;
+import com.jflyfox.modules.admin.activitymanager.BusiActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,6 +25,7 @@ public class BusiScoreTemplate extends BaseProjectModel<BusiScoreTemplate> {
     public Integer getId() {
         return get(ID);
     }
+
     public BusiScoreTemplate setID(Integer value) {
         set(ID, value);
         return this;
@@ -47,6 +49,7 @@ public class BusiScoreTemplate extends BaseProjectModel<BusiScoreTemplate> {
         set(ID, value);
         return this;
     }
+
     public String getScorceContents() {
         return get(scorce_contents);
     }
@@ -65,17 +68,9 @@ public class BusiScoreTemplate extends BaseProjectModel<BusiScoreTemplate> {
         return this;
     }
 
-    public String getScoretplId() {
-        return get(scoretpl_id);
-    }
-
-    public BusiScoreTemplate setScoretplId(String value) {
-        set(scoretpl_id, value);
-        return this;
-    }
 
     public String getUpdateTime() {
-        return  get(update_time);
+        return get(update_time);
     }
 
     public BusiScoreTemplate setUpdateTime(String value) {
@@ -110,17 +105,36 @@ public class BusiScoreTemplate extends BaseProjectModel<BusiScoreTemplate> {
         return this;
     }
 
+    public String getPath() {
+        return get(path);
+    }
+
+    public BusiScoreTemplate setPath(String value) {
+        set(path, value);
+        return this;
+    }
+
+    public String getRemarks() {
+        return get(remarks);
+    }
+
+    public BusiScoreTemplate setRemarks(String value) {
+        set(remarks, value);
+        return this;
+    }
+
     private String ID = "id"; // id
     private String parentId = "parentId";
+    private String path = "path";
     private String scorce_contents = "scorce_contents";
     private String scorce = "scorce";
-    private String scoretpl_id = "scoretpl_id";
+
     private String update_time = "update_time";
     private String update_id = "update_id";
     private String create_time = "create_time";
     private String create_id = "create_id";
     private String deleted = "deleted";
-
+    private String remarks = "remarks";
 
 
 }

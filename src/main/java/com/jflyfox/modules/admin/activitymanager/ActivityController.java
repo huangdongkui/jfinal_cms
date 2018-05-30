@@ -69,8 +69,7 @@ public class ActivityController extends BaseProjectController {
     }
 
     public void busiActivitySlavesHomes(){
-        JSONObject json = new JSONObject();
-//        final List<BusiActivitySlave> byWhere = BusiActivitySlave.dao.findByWhere(" where busi_activity_id=?", );
+
 String sql="select a.id,a.nodeid,\n" +
         "a.busi_activity_id,\n" +
         "a.from_time,a.to_time,b.activity_name\n" +

@@ -83,17 +83,7 @@ include("/pages/template/head.html"){}
 $("#filelist").append(' <li class="list-group-item"><span>'+data.response.name+'</span>'+
     '<a style="float: right;" target="_blank" href="${BASE_PATH }'+data.response.path+'"> <span class="badge">下载</span></a>'
     +'<a style="float: right;" href="javascript:(0);" onclick="delfile(data.response.id,this);return false;"><span class="badge">删除</span></a></li>');
-           // alert(data.response.);
-           // $("#myModal").modal("hide");
-//            var data = data.response.lstOrderImport
-//            if (data == undefined) {
-//                toastr.error('文件格式类型不正确');
-//                return;
-//            }
-            //1.初始化表格
-          //  var oTable = new TableInit();
-           // oTable.Init(data);
-           // $("#div_startimport").show();
+
         });
     });
 

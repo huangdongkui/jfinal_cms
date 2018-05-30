@@ -22,12 +22,135 @@ include("/pages/template/head.html"){}
             //console.log(start.toISOString(), end.toISOString(), label);
         });
 
+        $(".btn-second").click(function (o) {
+           // $(this).val()
+            initTable('1,4,5');
+        });
     });
 
     function closeIframeReload() {
         var url = 'admin/activityproject';
         form1.action = url;
         form1.submit();
+    }
+
+    function initTable(path) {
+        $bootstrapTable = $('#tb_score').bootstrapTable({
+            url: 'admin/activityproject/scorelist',         //请求后台的URL（*）
+            method: 'get',                      //请求方式（*）//striped: true,
+            onLoadSuccess: function (data) {
+
+                //合并行
+               // mergeTable('pre_node');
+
+            },
+            //是否显示行间隔色
+            queryParams: function (params) {
+                var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                    limit: params.limit,   //页面大小
+                    offset: params.offset,  //页码
+                    path:path
+                };
+                return temp;
+            }
+            ,//传递参数（*）
+            sidePagination: "client",           //分页方式：client客户端分页，server服务端分页（*）
+
+            clickToSelect: true,                //是否启用点击选中行                    //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+            uniqueId: "id",                     //每一行的唯一标识，一般为主键列
+
+            columns: [{
+                field: 'id',
+                title: '序号',
+                align: 'center',
+                width: '10%',
+                formatter: function formatter(value, row, index, field) {
+                    return index+1;
+                }
+            },
+                {
+                    field: 'pre_node',
+                    title: '评分内容',
+                    align: 'center',
+                    width: '20%'
+
+                }, {
+                    field: 'scorce_contents',
+                    title: '评分要点',
+                    align: 'center',
+                    width: '30%'
+                }, {
+                    field: 'scorce',
+                    title: '满分',
+                    align: 'center',
+                    width: '10%'
+                }, {
+                    field: 'getscorce',
+                    title: '得分',
+                    align: 'center',
+                    width: '10%',
+                    formatter: function formatter(value, row, index, field) {
+                        return '<input type="text" class="form-control" id="name_"'+value+' placeholder="0">';
+                    }
+                }, {
+                    field: 'remarks',
+                    title: '备注',
+                    align: 'center',
+                    width: '20%'
+                }
+            ]
+        });
+
+    }
+    function getObjFromTable($table, field) {
+        var obj = [];
+        var maxV = $table.find("th").length;
+
+        var columnIndex = 0;
+        var filedVar;
+        for (columnIndex = 0; columnIndex < maxV; columnIndex++) {
+            filedVar = $table.find("th").eq(columnIndex).attr("data-field");
+            if (filedVar == field) break;
+
+        }
+        var $trs = $table.find("tbody > tr");
+        var $tr;
+        var index = 0;
+        var content = "";
+        var row = 1;
+        for (var i = 0; i < $trs.length; i++) {
+            $tr = $trs.eq(i);
+            var contentItem = $tr.find("td").eq(columnIndex).html();
+            //exist
+            if (contentItem.length > 0 && content == contentItem) {
+                row++;
+            } else {
+                //save
+                if (row > 1) {
+                    obj.push({"index": index, "row": row});
+                }
+                index = i;
+                content = contentItem;
+                row = 1;
+            }
+        }
+        if (row > 1) obj.push({"index": index, "row": row});
+        return obj;
+    }
+    function mergeTable(field) {
+        $table = $("#tb_score");
+        var obj = getObjFromTable($table, field);
+
+        for (var item in obj) {
+            $("#tb_score").bootstrapTable('mergeCells', {
+                index: obj[item].index,
+                field: field,
+                colspan: 1,
+                rowspan: 2,
+            });
+        }
+
+
     }
 </script>
 
@@ -99,22 +222,63 @@ var bodyContent = {
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">项目方案</label>
                                 <div class="col-sm-10">
-
+                                    <ul class="list-group" id="filelist">
+                                        ${filelist!}
+                                    </ul>
                                 </div>
 
                             </div>
 
                         </div>
                     </div>
-
-
-
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                评分列表
+                            </h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="btn-group btn-group-lg">
+                                <button type="button" class="btn btn-info btn-second" value="1,4">技术</button>
+                                <button type="button" class="btn btn-info btn-second">团队</button>
+                                <button type="button" class="btn btn-info btn-second">市场</button>
+                            </div>
+                            <div class="form-group">
+                                <table class="table" id="tb_score">
+                                    <thead>
+                                    <tr>
+                                        <th>评分内容
+                                        </th>
+                                        <th>评分要点
+                                        </th>
+                                        <th>满分
+                                        </th>
+                                        <th>得分
+                                        </th>
+                                        <th>备注
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </fieldset>
 
                 <div style="height: 50px;clear: both;">&nbsp;</div>
                 <nav class="navbar navbar-default navbar-fixed-bottom">
                     <div class="container" style="padding: 5px 0px 5px 0px;text-align: center;">
-                        <button class="btn btn-primary" onclick="oper.save(${model.id!'0'});return false;" id="btnSave">保
+                        <button class="btn btn-primary" onclick="oper.save(${model.id!'0'});return false;" id="btnSave">
+                            保
                             存
                         </button>
                         <button class="btn btn-default" onclick="closeIframeReload();">返回</button>

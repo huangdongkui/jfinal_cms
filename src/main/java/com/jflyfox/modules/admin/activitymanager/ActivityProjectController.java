@@ -27,6 +27,7 @@ public class ActivityProjectController extends BaseProjectController {
     public void index() {
         final String busi_activity_id = getPara("busi_activity_id");
         setAttr("busi_activity_id",busi_activity_id);
+
         render(path + "project_list.html");
     }
 
@@ -49,6 +50,7 @@ public class ActivityProjectController extends BaseProjectController {
 
         final SessionUser user = getSessionUser();
         Integer pid = getParaToInt();
+        setAttr("filelist", ActivityService.genHtmllIFilesbybusinessid(pid.toString(),false));
 
         BusiActivityProject model = BusiActivityProject.dao.findById(pid);
         final SysUser sysUser = SysUser.dao.findById(model.getInt("create_id"));
@@ -57,6 +59,25 @@ public class ActivityProjectController extends BaseProjectController {
         setAttr("department",sysDepartment.getName());
         setAttr("model",model);
         render(path + "project_jugde.html");
+    }
+
+    /**
+     * 评价列表
+     */
+    public void scorelist(){
+
+        String path=getPara("path");
+
+        String sql="select  a.*,\n" +
+                " (select b.scorce_contents\n" +
+                "  from busi_score_template b \n" +
+                "  where b.id=a.parentId) as pre_node \n" +
+                " from busi_score_template a\n" +
+                "where LOCATE('"+path+"',a.path)=1\n" +
+                "and length(a.path)>length('"+path+"')";
+
+        List<Record> records = Db.find(sql);
+        renderJson(records);
     }
     public void save(){
 

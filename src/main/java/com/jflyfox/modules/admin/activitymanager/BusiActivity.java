@@ -2,6 +2,7 @@ package com.jflyfox.modules.admin.activitymanager;
 
 import com.jflyfox.component.base.BaseProjectModel;
 import com.jflyfox.jfinal.component.annotation.ModelBind;
+import com.jflyfox.modules.admin.scoretemplate.BusiScoreTemplate;
 
 /**
  * 〈活动对象〉
@@ -43,14 +44,6 @@ public class BusiActivity extends BaseProjectModel<BusiActivity> {
         return this;
     }
 
-    public String getScoretplId() {
-        return get(scoretpl_id);
-    }
-
-    public BusiActivity setScoretplId(String value) {
-        set(scoretpl_id, value);
-        return this;
-    }
 
     public String getUpdateTime() {
         return  get(update_time);
@@ -96,11 +89,19 @@ public class BusiActivity extends BaseProjectModel<BusiActivity> {
         set(remarks, value);
         return this;
     }
+    public String getBusiScoreTemplateId() {
+        return get(busi_score_template_id);
+    }
+
+    public BusiActivity setBusiScoreTemplateId(String value) {
+        set(busi_score_template_id, value);
+        return this;
+    }
 
     private String ID = "id"; // id
     private String activity_name = "activity_name";
     private String activity_status = "activity_status";
-    private String scoretpl_id = "scoretpl_id";
+    private String busi_score_template_id = "busi_score_template_id";
     private String update_time = "update_time";
     private String update_id = "update_id";
     private String create_time = "create_time";
