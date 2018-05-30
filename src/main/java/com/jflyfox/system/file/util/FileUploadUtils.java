@@ -14,7 +14,7 @@ public class FileUploadUtils {
 	/**
 	 * 基础目录
 	 */
-	private static final String BASE_PATH = PathKit.getWebRootPath() + File.separator;
+	public static final String BASE_PATH = PathKit.getWebRootPath() + File.separator;
 
 	/**
 	 * 基础JFLYFOX目录

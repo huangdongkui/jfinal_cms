@@ -8,6 +8,8 @@ import com.jflyfox.modules.admin.foldernotice.TbFolderNotice;
 import com.jflyfox.system.config.ConfigService;
 import com.jflyfox.system.department.DepartmentSvc;
 import com.jflyfox.system.dict.DictSvc;
+import com.jflyfox.system.file.model.SysFileUpload;
+import com.jflyfox.system.file.util.FileUploadUtils;
 import com.jflyfox.system.user.SysUser;
 import com.jflyfox.util.DateUtils;
 import jdk.nashorn.internal.ir.ReturnNode;
@@ -44,7 +46,7 @@ public class ActivityFillController extends BaseProjectController {
 
         if (model == null) {
             model = new BusiActivityProject();
-            model.set("busi_activity_id",busi_activity_id);
+            model.set("busi_activity_id", busi_activity_id);
         }
 
         setAttr("belongfieldselect", new DictSvc().checkboxSysDictDetail(model.getStr("from_belongfields"), "belongfield"));
@@ -65,9 +67,26 @@ public class ActivityFillController extends BaseProjectController {
 
 
         setAttr("core_tech_contents_li", genHtmlLiCode(model.getStr("core_tech_contents")));
-
+        setAttr("filelist", genHtmllIFilesbybusinessid(model.getId().toString()));
         setAttr("model", model);
         render(path + "fill.html");
+    }
+
+    /**
+     * 生成li代码 文件列表
+     *
+     * @param
+     * @return
+     */
+    public String genHtmllIFilesbybusinessid(final String business_id) {
+
+        StringBuilder sbFilelist = new StringBuilder();
+        final List<SysFileUpload> listSysFileUpload = SysFileUpload.dao.findByWhere("where business_id=?", business_id);
+        for (SysFileUpload sysFileUpload : listSysFileUpload) {
+            sbFilelist.append("<li class=\"list-group-item\"><span>" + sysFileUpload.getName()
+                    + "</span><a style=\"float: right;\" target=\"_blank\" href=\"" + FileUploadUtils.BASE_PATH + sysFileUpload.getPath() + "\"> <span class=\"badge\">下载</span></a><a style=\"float: right;\" href=\"javascript:(0);\" onclick=\"delfile(" + sysFileUpload.getId() + ");return false;\"><span class=\"badge\">删除</span></a></li>");
+        }
+        return sbFilelist.toString();
     }
 
     /**

@@ -63,7 +63,7 @@ include("/pages/template/head.html"){}
         control.fileinput({
             language: 'zh', //设置语言
             uploadUrl: uploadUrl, //上传的地址
-            allowedFileExtensions : ['jpg', 'png','gif'],//接收的文件后缀
+            allowedFileExtensions : ['jpg', 'png','gif','rar','zip'],//接收的文件后缀
             showUpload: true, //是否显示上传按钮
             showCaption: true,//是否显示标题
             browseClass: "btn btn-primary", //按钮样式
@@ -79,8 +79,13 @@ include("/pages/template/head.html"){}
 
         //导入文件上传完成之后的事件
         $("#inputFile").on("fileuploaded", function (event, data, previewId, index) {
+
+$("#filelist").append(' <li class="list-group-item"><span>'+data.response.name+'</span>'+
+    '<a style="float: right;" target="_blank" href="${BASE_PATH }'+data.response.path+'"> <span class="badge">下载</span></a>'
+    +'<a style="float: right;" href="javascript:(0);" onclick="delfile(data.response.id,this);return false;"><span class="badge">删除</span></a></li>');
+           // alert(data.response.);
            // $("#myModal").modal("hide");
-//            var data = data.response.lstOrderImport;
+//            var data = data.response.lstOrderImport
 //            if (data == undefined) {
 //                toastr.error('文件格式类型不正确');
 //                return;
@@ -91,6 +96,11 @@ include("/pages/template/head.html"){}
            // $("#div_startimport").show();
         });
     });
+
+    function delfile(id,thethis) {
+        $(o).parent().remove();
+        //todo删除先不做
+    }
 
 
 </script>
@@ -303,8 +313,10 @@ ${core_tech_contents_li!}
                         <div class="form-group">
                             <label class="col-sm-2 control-label">项目文件</label>
                             <div class="col-sm-10">
-                                <input id="inputFile" name="inputFile" type="file" class="file" data-show-preview="false">
-
+                                <input id="inputFile" name="inputFile" type="file" data-show-preview="false">
+                                <ul class="list-group" id="filelist">
+                                    ${filelist!}
+                                </ul>
                             </div>
 
                         </div>
@@ -341,6 +353,7 @@ ${core_tech_contents_li!}
 </form>
 
 <script src="static/component/bootstrap-fileinput-master/js/fileinput.js"></script>
+<script src="static/component/bootstrap-fileinput-master/js/locales/zh.js"></script>
 
 <%}; %>
 
