@@ -68,13 +68,14 @@ public class ActivityController extends BaseProjectController {
         renderJson(byWhere);
     }
 
-    public void busiActivitySlavesHomes(){
+    public void busiActivitySlavesHomes() {
 
-String sql="select a.id,a.nodeid,\n" +
-        "a.busi_activity_id,\n" +
-        "a.from_time,a.to_time,b.activity_name\n" +
-        "from busi_activity_slave a\n" +
-        "left join busi_activity b on b.id=a.busi_activity_id";
+        String sql = "select a.id,a.nodeid,\n" +
+                "a.busi_activity_id,\n" +
+                "a.from_time,a.to_time,b.activity_name\n" +
+                "from busi_activity_slave a\n" +
+                "left join busi_activity b on b.id=a.busi_activity_id" +
+                " where b.deleted=0 or 1=1";
         List<Record> records = Db.find(sql);
         renderJson(records);
     }
@@ -91,7 +92,7 @@ String sql="select a.id,a.nodeid,\n" +
     }
 
     public void add() {
-       //ender(path + "add.html");
+        //ender(path + "add.html");
         edit();
     }
 
@@ -145,12 +146,12 @@ String sql="select a.id,a.nodeid,\n" +
     public void edit() {
         BusiActivity model = BusiActivity.dao.findById(getParaToInt());
         String enrolldate = DateUtils.getNow();
-        enrolldate=enrolldate+" - "+enrolldate;
+        enrolldate = enrolldate + " - " + enrolldate;
         String firstdate = enrolldate;
         String seconddate = enrolldate;
         String threedate = enrolldate;
 
-        if(model!=null) {
+        if (model != null) {
 
             final List<BusiActivitySlave> busiActivitySlaves = BusiActivitySlave.dao.findByWhere(" where busi_activity_id=? order by nodeid", model.getId());
 
@@ -176,7 +177,7 @@ String sql="select a.id,a.nodeid,\n" +
         render(path + "edit.html");
     }
 
-    public void selectJudge(){
+    public void selectJudge() {
         SysUser model = getModelByAttr(SysUser.class);
 
         SQLUtils sql = new SQLUtils(" from sys_user t " //
@@ -201,7 +202,7 @@ String sql="select a.id,a.nodeid,\n" +
         Page<SysUser> page = SysUser.dao.paginate(getPaginator(), "select t.*,d.name as departname ", sql.toString()
                 .toString());
         // 下拉框
-        setAttr("departSelect", new DepartmentSvc().selectDepartByParentId(0,10));
+        setAttr("departSelect", new DepartmentSvc().selectDepartByParentId(0, 10));
 
         setAttr("page", page);
         setAttr("attr", model);

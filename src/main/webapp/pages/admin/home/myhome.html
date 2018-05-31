@@ -12,16 +12,42 @@ include("/pages/template/head.html"){}
     jQuery(function ($) {
         // 页面方法
         //显示Menu索引
-        showMenu('page_home');
+    //    showMenu('page_home');
         if (roleids.indexOf("4") > -1) {//参赛者
             btnText = "填报";
         } else if (roleids.indexOf("2") > -1) {//评委
             btnText = "评分";
         }
-        initTable();
+
+        var data =  [];
+        $.ajax({url:'admin/activity/busiActivitySlavesHomes',type:'get',
+        async:false,success:function (results) {
+                data=results;
+            }
+        });
+
+        var datagroup = [];
+
+        for (i = 0; i < parseInt(data.length / 4); i++) {
+            datagroup.push([]);
+        }
+
+
+        for (i = 0; i < data.length; i++) {
+            datagroup[parseInt(i / 4)].push(data[i]);
+        }
+
+        for(i in datagroup){
+            var tbid="table"+i;
+            $("#tablediv").append('<table id="'+tbid+'" ></table>');
+            initTable(tbid, datagroup[i]);
+            mergeTable('activity_name', tbid);
+
+        }
 
     });
-    function getObjFromTable($table, field) {
+
+    function getObjFromTable(field, $table) {
         var obj = [];
         var maxV = $table.find("th").length;
 
@@ -56,12 +82,13 @@ include("/pages/template/head.html"){}
         if (row > 1) obj.push({"index": index, "row": row});
         return obj;
     }
-    function mergeTable(field) {
-        $table = $("#tbActivity");
-        var obj = getObjFromTable($table, field);
+
+    function mergeTable(field, tableid) {
+        $table = $('#' + tableid);
+        var obj = getObjFromTable(field, $table);
 
         for (var item in obj) {
-            $("#tbActivity").bootstrapTable('mergeCells', {
+            $table.bootstrapTable('mergeCells', {
                 index: obj[item].index,
                 field: field,
                 colspan: 1,
@@ -73,43 +100,29 @@ include("/pages/template/head.html"){}
     }
 
     function showPage(busi_activity_id) {
-        var projecturl= '${BASE_PATH }admin/activityproject';
-        var fillurl='${BASE_PATH }admin/activityfill';
+        var projecturl = '${BASE_PATH }admin/activityproject';
+        var fillurl = '${BASE_PATH }admin/activityfill';
         $('#busi_activity_id').val(busi_activity_id);
-        if(btnText=="填报"){
-            form1.action=fillurl;
-        }else if(btnText=="评分"){
-            form1.action=projecturl;
+        if (btnText == "填报") {
+            form1.action = fillurl;
+        } else if (btnText == "评分") {
+            form1.action = projecturl;
         }
 
         form1.submit();
     }
 
-    function initTable() {
-        $bootstrapTable = $('#tbActivity').bootstrapTable({
-            url: 'admin/activity/busiActivitySlavesHomes',         //请求后台的URL（*）
-            method: 'get',                      //请求方式（*）
-            //striped: true,
-            onLoadSuccess: function (data) {
+    function initTable(tableid,data) {
+        $bootstrapTable = $('#' + tableid).bootstrapTable({
 
-                //合并行
-                mergeTable('activity_name');
-
-            },
-            //是否显示行间隔色
-            queryParams: function (params) {
-                var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
-                    limit: params.limit,   //页面大小
-                    offset: params.offset  //页码
-                };
-                return temp;
-            }
-            ,//传递参数（*）
             sidePagination: "client",           //分页方式：client客户端分页，server服务端分页（*）
 
             clickToSelect: true,                //是否启用点击选中行                    //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
             uniqueId: "id",                     //每一行的唯一标识，一般为主键列
-
+            silent: true,
+            formatLoadingMessage: function () {
+                return "";
+            },
             columns: [{
                 field: 'id',
                 title: '序号',
@@ -145,17 +158,17 @@ include("/pages/template/head.html"){}
                     align: 'center',
                     width: '20%'
                 }
-            ]
+            ], data:data
         });
 
-        var queryParams = function (params) {
-            var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
-                limit: params.limit,   //页面大小
-                offset: params.offset,  //页码
-                busi_activity_id: keyid
-            };
-            return temp;
-        };
+//        var queryParams = function (params) {
+//            var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+//                limit: params.limit,   //页面大小
+//                offset: params.offset,  //页码
+//                busi_activity_id: keyid
+//            };
+//            return temp;
+//        };
     }
 
 
@@ -179,10 +192,8 @@ var sessionUserId = isEmpty(session.session_user) ? 0: session.session_user.user
 %>
 <div class="container" style="margin-top: 10px;">
     <div class="row">
-        <div class="col-md-8">
-            <table id="tbActivity"></table>
-
-
+        <div class="col-md-8" id="tablediv">
+            <table id="table"></table>
         </div>
 
 
