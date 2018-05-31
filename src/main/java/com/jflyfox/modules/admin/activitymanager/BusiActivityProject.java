@@ -25,7 +25,16 @@ public class BusiActivityProject extends BaseProjectModel<BusiActivityProject> {
         set(ID, value);
         return this;
     }
+    public Integer getProjectStatus() {
+        return get(project_status);
+    }
 
+    public BusiActivityProject setProjectStatus(Integer value) {
+        set(project_status, value);
+        return this;
+    }
+
+    public String  project_status="project_status";
     public String getProjectName() {
         return get(project_name);
     }

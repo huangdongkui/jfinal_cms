@@ -8,51 +8,68 @@ include("/pages/template/head.html"){}
 <script type="text/javascript">
 
     var oper = {
-        save: function (id) {
-            if (!validForm()) {
-                return false;
+            save: function (id) {
+                if (!validForm()) {
+                    return false;
+                }
+
+                //获取model.core_tech_contents
+
+                var litoarr = [];
+                $("#ul_core_tech_contents li").each(function (e) {
+                    litoarr.push($(this).find("span").text());
+                });
+
+                $('#modelcore_tech_contents').val(litoarr.join(","));
+
+
+                //获取model.project_type
+
+                var arrIds = [];
+                $(".divbelongfieldtype").find(":checkbox:checked").each(function (o) {
+                    arrIds.push($(this).val())
+                });
+
+                $("#modelproject_type").val(arrIds.join(","));
+
+                id = id || '0';
+                var url = 'admin/activityfill/save/' + id;
+                form1.action = url;
+                form1.submit();
+                return true;
             }
+            , submit: function (id) {
+                id = id || '0';
+                var url = 'admin/activityfill/submit';
+                $.get(url, {id: id}, function (o) {
+                    if (parseInt(o) > 0) {
+                        Alert("提交填报成功");
+                    } else {
+                        Alert("提交填报失败");
+                    }
 
-            //获取model.core_tech_contents
-
-            var litoarr=[];
-            $("#ul_core_tech_contents li").each(function (e) {
-                litoarr.push($(this).find("span").text());
-            });
-
-            $('#modelcore_tech_contents').val(litoarr.join(","));
-
-
-
-            //获取model.project_type
-
-            var arrIds = [];
-            $(".divbelongfieldtype").find(":checkbox:checked").each(function (o) {
-                arrIds.push($(this).val())
-            });
-
-            $("#modelproject_type").val(arrIds.join(","));
-
-            id = id || '0';
-            var url = 'admin/activityfill/save/' + id;
-            form1.action = url;
-            form1.submit();
-            return true;
+                })
+            }
         }
-    };
+    ;
 
     function closeIframeReload() {
         var url = 'admin/home';
         form1.action = url;
         form1.submit();
     }
+
     //添加核心技术
     function addItem() {
-        var v= $("#core_tech_contents").val();
-        if(v==""){alert("请输入核心技术");return;}
+        var v = $("#core_tech_contents").val();
+        if (v == "") {
+            alert("请输入核心技术");
+            return;
+        }
         $("#ul_core_tech_contents").append('<li class="list-group-item"><span>' + v + '</span><a style="float: right;" href="javascript:(0);" onclick="deleteLi(this);return false;">删除</a></li>');
         $("#core_tech_contents").val('');
     }
+
     function deleteLi(o) {
         $(o).parent().remove();
     }
@@ -63,7 +80,7 @@ include("/pages/template/head.html"){}
         control.fileinput({
             language: 'zh', //设置语言
             uploadUrl: uploadUrl, //上传的地址
-            allowedFileExtensions : ['jpg', 'png','gif','rar','zip'],//接收的文件后缀
+            allowedFileExtensions: ['jpg', 'png', 'gif', 'rar', 'zip'],//接收的文件后缀
             showUpload: true, //是否显示上传按钮
             showCaption: true,//是否显示标题
             browseClass: "btn btn-primary", //按钮样式
@@ -74,20 +91,20 @@ include("/pages/template/head.html"){}
 
 
     $(function () {
-        initFileInput('inputFile','${BASE_PATH }admin/file/upload/${model.id!}');
+        initFileInput('inputFile', '${BASE_PATH }admin/file/upload/${model.id!}');
 
 
         //导入文件上传完成之后的事件
         $("#inputFile").on("fileuploaded", function (event, data, previewId, index) {
 
-$("#filelist").append(' <li class="list-group-item"><span>'+data.response.name+'</span>'+
-    '<a style="float: right;" target="_blank" href="${BASE_PATH }'+data.response.path+'"> <span class="badge">下载</span></a>'
-    +'<a style="float: right;" href="javascript:(0);" onclick="delfile(data.response.id,this);return false;"><span class="badge">删除</span></a></li>');
+            $("#filelist").append(' <li class="list-group-item"><span>' + data.response.name + '</span>' +
+                '<a style="float: right;" target="_blank" href="${BASE_PATH }' + data.response.path + '"> <span class="badge">下载</span></a>'
+                + '<a style="float: right;" href="javascript:(0);" onclick="delfile(data.response.id,this);return false;"><span class="badge">删除</span></a></li>');
 
         });
     });
 
-    function delfile(id,thethis) {
+    function delfile(id, thethis) {
         $(o).parent().remove();
         //todo删除先不做
     }
@@ -132,12 +149,12 @@ var bodyContent = {
                         <div class="form-group">
                             <label class="col-sm-2 control-label">项目类型</label>
 
-                                <div class="col-sm-10 divbelongfieldtype">
-                                    <input name="model.project_type" id="modelproject_type"
-                                           value="${model.project_type!}" type="hidden">
+                            <div class="col-sm-10 divbelongfieldtype">
+                                <input name="model.project_type" id="modelproject_type"
+                                       value="${model.project_type!}" type="hidden">
 
-                                    ${projecttypeselect}
-                                </div>
+                                ${projecttypeselect}
+                            </div>
 
 
                         </div>
@@ -253,7 +270,7 @@ var bodyContent = {
 
                                 <input type="text" placeholder="核心技术" id="core_tech_contents" class="form-control"
                                        name="core_tech_contents"
-                                     />
+                                />
                             </div>
                             <div class="col-sm-1">
                                 <button class="btn" onclick="addItem(); return false;">添加</button>
@@ -265,7 +282,7 @@ var bodyContent = {
                             <div class="col-sm-9">
                                 <ul class="list-group" id="ul_core_tech_contents">
 
-${core_tech_contents_li!}
+                                    ${core_tech_contents_li!}
                                 </ul>
                             </div>
 
@@ -330,6 +347,9 @@ ${core_tech_contents_li!}
                 <div class="container" style="padding: 5px 0px 5px 0px;text-align: center;">
                     <button class="btn btn-primary" onclick="oper.save(${model.id!'0'});return false;" id="btnSave">保
                         存
+                    </button>
+                    <button class="btn btn-primary" onclick="oper.submit(${model.id!'0'});return false;" id="btnSubmit">
+                       提交填报
                     </button>
                     <button class="btn btn-default" onclick="closeIframeReload();">返回</button>
                 </div>

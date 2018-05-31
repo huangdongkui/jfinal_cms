@@ -1,6 +1,7 @@
 package com.jflyfox.modules.admin.activitymanager;
 
 import com.alibaba.fastjson.JSONObject;
+import com.jfinal.plugin.activerecord.Db;
 import com.jflyfox.component.base.BaseProjectController;
 import com.jflyfox.component.util.JFlyFoxUtils;
 import com.jflyfox.jfinal.component.annotation.ControllerBind;
@@ -124,4 +125,10 @@ public class ActivityFillController extends BaseProjectController {
         renderMessage("保存成功", "window.location.href=\"admin/home\"");
     }
 
+    public void submit(){
+        String pid = getPara("id","");
+        final Integer updateCount = Db.update("update busi_activity_project set project_status=1 where id=?", pid);
+        renderText(updateCount.toString());
+
+    }
 }
