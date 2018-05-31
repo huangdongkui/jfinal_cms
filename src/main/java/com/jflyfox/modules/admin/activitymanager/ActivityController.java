@@ -75,7 +75,7 @@ public class ActivityController extends BaseProjectController {
                 "a.from_time,a.to_time,b.activity_name\n" +
                 "from busi_activity_slave a\n" +
                 "left join busi_activity b on b.id=a.busi_activity_id" +
-                " where b.deleted=0 or 1=1";
+                " where b.deleted=0";
         List<Record> records = Db.find(sql);
         renderJson(records);
     }
