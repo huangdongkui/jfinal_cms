@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.jfinal.plugin.activerecord.Db;
 import com.jflyfox.component.base.BaseProjectController;
 import com.jflyfox.component.util.JFlyFoxUtils;
+import com.jflyfox.jfinal.base.SessionUser;
 import com.jflyfox.jfinal.component.annotation.ControllerBind;
 import com.jflyfox.modules.admin.foldernotice.TbFolderNotice;
 import com.jflyfox.system.config.ConfigService;
@@ -42,8 +43,8 @@ public class ActivityFillController extends BaseProjectController {
             redirect("/admin/home");
             return;
         }
-
-        BusiActivityProject model = BusiActivityProject.dao.findFirstByWhere(" where busi_activity_id=?", busi_activity_id);
+        final SessionUser sessionUser = getSessionUser();
+        BusiActivityProject model = BusiActivityProject.dao.findFirstByWhere(" where busi_activity_id = ? and create_id = ?", busi_activity_id,sessionUser.getUserid().toString());
 
 
         if (model == null) {

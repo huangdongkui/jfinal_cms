@@ -7,15 +7,15 @@ include("/pages/template/head.html"){}
 <script type="text/javascript">
     var oper;
     var btnText = '查看';
-    var roleids = '${roleids}';
+    var roleids = '${nowUser.busitype}';
 
     jQuery(function ($) {
         // 页面方法
         //显示Menu索引
         //    showMenu('page_home');
-        if (roleids.indexOf("4") > -1) {//参赛者
+        if (roleids=="0") {//参赛者
             btnText = "填报";
-        } else if (roleids.indexOf("2") > -1) {//评委
+        } else if (roleids=="1") {//评委
             btnText = "评分";
         }
 
@@ -132,8 +132,7 @@ include("/pages/template/head.html"){}
                     width: '15%',
                     formatter: function (value, row, index, field) {
 
- debugger;
-                        if (row.project_status.toString() == "1" && btnText == "填报") {
+                        if (row.project_status == "1" && btnText == "填报") {
                             btnText = "已提交";
                         }
 
