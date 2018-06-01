@@ -68,7 +68,7 @@ public class ActivityController extends BaseProjectController {
         renderJson(byWhere);
     }
 
-    public void busiActivitySlavesHomes() {
+    public void    busiActivitySlavesHomes() {
 
         String sql = "select a.id,a.nodeid,(select c.project_status from busi_activity_project c \n" +
                 "where c.busi_activity_id=a.busi_activity_id and c.create_id=29) as project_status, \n" +

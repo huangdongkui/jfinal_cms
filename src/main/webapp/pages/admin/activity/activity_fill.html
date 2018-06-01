@@ -1,146 +1,135 @@
 <%
+DIRECTIVE SAFE_OUTPUT_OPEN;
 var headContent = {
 include("/pages/template/head.html"){}
 %>
+<link rel="stylesheet" href="static/component/bootstrap-fileinput-master/css/fileinput.css">
 
 <script type="text/javascript">
 
-    var oper;
-    jQuery(function ($) {
-        // 页面方法
-        oper = {
-            width: 800,
-            height: 500,
-            form: document.form1,
-            list: function () {
-                var url = 'admin/activity/list';
-                this.form.action = url;
-                this.form.submit();
-            },
-            view: function (id) {
-                var url = 'admin/advicefeedback/view/' + id;
-                var title = '查看意见反馈';
-                Iframe(url, this.width, this.height, title, false, false, false, EmptyFunc);
-            },
-            add: function () {
-                var url = 'admin/activity/add';
-                var title = '添加';
-                Iframe(url, this.width, this.height, title);
-            },
-            edit: function (id) {
-                var url = 'admin/activity/edit/' + id;
-                var title = '修改';
-                Iframe(url, this.width, this.height, title);
-            },
-            del: function (id) {
-                var url = 'admin/activity/delete/' + id;
-                var title = '确认要删除该活动？';
-                Confirm(title, function () {
-                    form1.action = url;
-                    form1.submit();
+    var oper = {
+            save: function (id) {
+                if (!validForm()) {
+                    return false;
+                }
+
+                //获取model.core_tech_contents
+
+                var litoarr = [];
+                $("#ul_core_tech_contents li").each(function (e) {
+                    litoarr.push($(this).find("span").text());
                 });
-            },
-            selectPerson:function (id) {
-                var url = 'admin/activityselect/' + id;
-                var title = '选择评委';
-                Iframe(url, this.width, this.height, title);
+
+                $('#modelcore_tech_contents').val(litoarr.join(","));
+
+
+                //获取model.project_type
+
+                var arrIds = [];
+                $(".divbelongfieldtype").find(":checkbox:checked").each(function (o) {
+                    arrIds.push($(this).val())
+                });
+
+                $("#modelproject_type").val(arrIds.join(","));
+
+                id = id || '0';
+                var url = 'admin/activityfill/save/' + id;
+                form1.action = url;
+                form1.submit();
+                return true;
             }
+            , submit: function (id) {
+                id = id || '0';
+                var url = 'admin/activityfill/submit';
+                $.get(url, {id: id}, function (o) {
+                    if (parseInt(o) > 0) {
+                        Alert("提交填报成功");
+                    } else {
+                        Alert("提交填报失败");
+                    }
 
-        };
-        //显示Menu索引
-        //showMenu('page_advicefeedback');
+                })
+            }
+        }
+    ;
 
-        initTable();
-    });
-
-    //分页
-    var paginator = function (page) {
-        oper.list();
-    };
-    var $bootstrapTable;
-    var keyid;
-
-    function selectActivity(id) {
-        keyid = id;
-        $bootstrapTable.bootstrapTable("refresh");
-        //  alert("fefe");
-        // $bootstrapTable=$('#tb_slave');
-        // $bootstrapTable.bootstrapTable("reload",{busi_activity_id: id});
+    function closeIframeReload() {
+        var url = 'admin/home';
+        form1.action = url;
+        form1.submit();
     }
 
-    function initTable() {
-        $bootstrapTable = $('#tb_slave').bootstrapTable({
-            url: 'admin/activity/busiActivitySlaveBy',         //请求后台的URL（*）
-            method: 'get',                      //请求方式（*）
-            striped: true,                      //是否显示行间隔色
-            queryParams: function (params) {
-                var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
-                    limit: params.limit,   //页面大小
-                    offset: params.offset,  //页码
-                    busi_activity_id: keyid
-                };
-                return temp;
-            }
-            ,//传递参数（*）
-            sidePagination: "client",           //分页方式：client客户端分页，server服务端分页（*）
+    //添加核心技术
+    function addItem() {
+        var v = $("#core_tech_contents").val();
+        if (v == "") {
+            alert("请输入核心技术");
+            return;
+        }
+        $("#ul_core_tech_contents").append('<li class="list-group-item"><span>' + v + '</span><a style="float: right;" href="javascript:(0);" onclick="deleteLi(this);return false;">删除</a></li>');
+        $("#core_tech_contents").val('');
+    }
 
-            clickToSelect: true,                //是否启用点击选中行                    //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
-            uniqueId: "id",                     //每一行的唯一标识，一般为主键列
+    function deleteLi(o) {
+        $(o).parent().remove();
+    }
 
-            columns: [{
-                field: 'idsort',
-                title: '序号',
-                align:'center',
-                width:'5%',
-                formatter: function (value, row, index) {
-                    return index+1;
-                }
-            }, {
-                field: 'nodeid',
-                title: '活动节点',
-                align:'center',
-                width:'10%',
-                formatter:function formatter(value, row, index, field) {
-                    var values=['报名','初赛','复赛','决赛']
-                    return values[value];
-                }
-            }, {
-                field: 'from_time',
-                title: '开始日期',
-                align:'center',
-                width:'20%'
-            }, {
-                field: 'to_time',
-                title: '结束日期',
-                align:'center',
-                width:'20%'
-            }, {
-                field: 'judges_names',
-                title: '专家列表',
-                align:'center',
-                width:'35%'
-            }, {
-                field: 'id',
-                title: '操作',
-                align:'center',
-                width:'10%',
-                formatter:function formatter (value, row, index, field) {
-                    return '<a href="javascript:void(0);" class="btn btn-sm btn-primary" onclick="oper.selectPerson('+value+')">选择评委</a>';
-                }
+    function initFileInput(ctrlName, uploadUrl) {
+        var control = $('#' + ctrlName);
+
+        control.fileinput({
+            language: 'zh', //设置语言
+            uploadUrl: uploadUrl, //上传的地址
+           // allowedFileExtensions: ['jpg', 'png', 'gif', 'rar', 'zip'],//接收的文件后缀
+            showUpload: true, //是否显示上传按钮
+            showCaption: true,//是否显示标题
+            browseClass: "btn btn-primary", //按钮样式
+            previewFileIcon: "<i class='glyphicon glyphicon-king'></i>",
+            allowedPreviewTypes:['image', 'html', 'text', 'video', 'audio', 'flash','object']
 
 
-            }]
+        });
+    }
+
+
+    $(function () {
+        initFileInput('inputFile', '${BASE_PATH }admin/file/upload/${model.id!}');
+
+
+        //导入文件上传完成之后的事件
+        $("#inputFile").on("fileuploaded", function (event, data, previewId, index) {
+
+            $("#filelist").append(' <li class="list-group-item"><span>' + data.response.name + '</span>' +
+                '<a style="float: right;" target="_blank" href="${BASE_PATH }' + data.response.path + '"> <span class="badge">下载</span></a>'
+                + '<a style="float: right;" href="javascript:(0);" onclick="delfile(data.response.id,this);return false;"><span class="badge">删除</span></a></li>');
+
         });
 
-        var queryParams = function (params) {
-            var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
-                limit: params.limit,   //页面大小
-                offset: params.offset,  //页码
-                busi_activity_id: keyid
-            };
-            return temp;
-        };
+
+
+        var project_status="${model.project_status}";
+        if("1"==project_status){
+            $("#btnSave").hide();
+            $("#btnSubmit").hide();
+            $("#filelist :a").hide();
+        }
+
+    });
+
+    function delfile(id,o) {
+
+        //todo删除先不做
+        var url = '${BASE_PATH }admin/file/delete'
+        $.get(url,{id:id},function (results) {
+            debugger;
+            if(results=="true"){
+                $(o).parent().remove();
+            }else{
+                Alert("删除文件失败");
+            }
+        })
     }
+
 
 </script>
 
@@ -149,68 +138,259 @@ include("/pages/template/head.html"){}
 
 var bodyContent = {
 %>
-<form name="form1" action="" method="post" class="form-inline" role="form">
-    <input type="hidden" name="form.orderColumn" value="${form.orderColumn!''}"/>
-    <input type="hidden" name="form.orderAsc" value="${form.orderAsc!''}"/>
-    <!-- 菜单 -->
-    <% include("/pages/template/menu.html"){} %>
 
+<form name="form1" action="" method="post" class="form-horizontal" role="form">
+    <input type="hidden" name="model.id" value="${model.id!}"/>
+    <input type="hidden" name="model.busi_activity_id" value="${model.busi_activity_id!}"/>
 
-    <div>
-        <!-- 数据列表 -->
-        <table class="table table-striped table-bordered table-hover">
-            <thead>
-            <tr>
-                <th>序号</th>
-                <% // 列表头部 %>
-                <th name="activity_name" class="sorting">活动名称</th>
-                <th name="activity_status" class="sorting">状态</th>
-                <th name="scorce_contents" class="sorting">评分模板名</th>
-                <th name="create_time" class="sorting">创建时间</th>
-                <th>备注</th>
-                <th>操作</th>
-            </tr>
-            </thead>
-            <tbody>
-            <% for(item in page.list){ %>
-            <tr onclick="selectActivity(${item.id})">
-                <td>${itemLP.index }</td>
-                <% // 列表内容 %>
-                <td>${item.activity_name}</td>
-                <td>${item.activity_status}</td>
-                <td>${item.scorce_contents}</td>
+    <input type="hidden" id="modelcore_tech_contents"
+           name="model.core_tech_contents" value=""/>
 
-                <td>${item.create_time}</td>
-                <td>${item.remarks}</td>
-                <td>
+    <div class="container-fluid">
 
-                    <a href="javascript:void(0);" class="btn btn-sm btn-primary" onclick="oper.edit(${item.id});">修改</a>
-                    <a href="javascript:void(0);" class="btn btn-sm btn-danger" onclick="oper.del(${item.id});">删除</a>
-                    <a href="javascript:void(0);" class="btn btn-sm btn-success" onclick="oper.view(${item.id});">发布</a>
-
-
-                </td>
-            </tr>
-            <% } %>
-            </tbody>
-        </table>
-
-        <%include("/pages/includes/paginator.html"){} %>
-    </div>
-
-    <div class="panel panel-success">
-        <div class="panel-heading">
-            <h3 class="panel-title">赛事详情</h3>
+        <div class="col-md-1">
         </div>
-        <div class="panel-body">
-            <table id="tb_slave"  data-mobile-responsive="true" class="table-bordered table-condensed table-hover table" ></table>
+        <div class="col-md-10">
+            <!-- 菜单 -->
+            <% include("/pages/template/menu.html"){} %>
 
+            <fieldset>
+
+                <div id="legend" class="">
+                    <legend class="">报名基本信息填写</legend>
+                </div>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            项目来源
+                        </h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">项目类型</label>
+
+                            <div class="col-sm-10 divbelongfieldtype">
+                                <input name="model.project_type" id="modelproject_type"
+                                       value="${model.project_type!}" type="hidden">
+
+                                ${projecttypeselect}
+                            </div>
+
+
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">项目编号</label>
+                            <div class="col-sm-10">
+                                <input type="text" placeholder="项目编号" id="model.project_no" class="form-control"
+                                       name="model.project_no"
+                                       value="${model.project_no!}"/>
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">项目名称</label>
+                            <div class="col-sm-10">
+                                <input type="text" placeholder="项目名称" id="model.from_project_name" class="form-control"
+                                       name="model.from_project_name"
+                                       value="${model.from_project_name!}"/>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            项目基本信息填写
+                        </h3>
+                    </div>
+                    <div class="panel-body">
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">项目名称</label>
+                            <div class="col-sm-10">
+                                <input type="text" placeholder="项目名称" id="model.project_name" class="form-control"
+                                       valid="vtext"
+                                       name="model.project_name"
+                                       value="${model.project_name!}"/>
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">项目团队其他人员</label>
+                            <div class="col-sm-10">
+                                <input type="text" placeholder="项目团队其他人员" id="model.from_other_menbers" valid="vtext"
+                                       class="form-control" name="model.from_other_menbers"
+                                       value="${model.from_other_menbers!}"/>
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">项目所属专业</label>
+                            <div class="col-sm-10">
+                                <input name="model.from_belongfields" id="model.from_belongfields"
+                                       value="${model.from_belongfields!}" type="hidden">
+
+                                ${belongfieldselect}
+
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">项目自评价</label>
+                            <div class="col-sm-10">
+                                <input name="model.tech_maturity" id="model.tech_maturity" valid="vtext"
+                                       value="${model.tech_maturity!}" type="hidden">
+
+
+                                <select class="form-control" id="tech_maturity" name="tech_maturity">
+                                    <option>请选择技术成熟度</option>
+                                    ${tech_maturityselect!}
+                                </select>
+                                <input name="model.core_tech" id="model.core_tech"
+                                       value="${model.core_tech!}" type="hidden">
+                                <select class="form-control" id="core_tech" name="core_tech">
+                                    <option>请选择核心技术掌握情况</option>
+                                    ${core_techselect!}
+                                </select>
+                                <input name="model.intell_right" id="model.intell_right"
+                                       value="${model.intell_right!}" type="hidden">
+                                <select class="form-control" id="intell_right" name="intell_right">
+                                    <option>请选择知识产权权属情况</option>
+                                    ${intell_rightselect!}
+                                </select>
+                                <input name="model.market_competitive" id="model.market_competitive"
+                                       value="${model.market_competitive!}" type="hidden">
+                                <select class="form-control" id="market_competitive" name="market_competitive">
+                                    <option>请选择市场竞争力</option>
+                                    ${market_competitiveselect!}
+                                </select>
+                                <input name="model.projected_returns" id="model.projected_returns"
+                                       value="${model.projected_returns!}" type="hidden">
+                                <select class="form-control" id="projected_returns" name="projected_returns">
+                                    <option>请选择预计转化收益</option>
+                                    ${projected_returnsselect!}
+                                </select>
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label class="col-sm-2 control-label">核心技术</label>
+                            <div class="col-sm-9">
+
+                                <input type="text" placeholder="核心技术" id="core_tech_contents" class="form-control"
+                                       name="core_tech_contents"
+                                />
+                            </div>
+                            <div class="col-sm-1">
+                                <button class="btn" onclick="addItem(); return false;">添加</button>
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-2"></div>
+                            <div class="col-sm-9">
+                                <ul class="list-group" id="ul_core_tech_contents">
+
+                                    ${core_tech_contents_li!}
+                                </ul>
+                            </div>
+
+
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">已授权专利数量</label>
+                            <div class="col-sm-10">
+                                <input type="text" placeholder="已授权专利数量" id="model.has_patent_count"
+                                       class="form-control"
+                                       name="model.has_patent_count"
+                                       value="${model.has_patent_count!}"/>
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">在申请专利数量</label>
+                            <div class="col-sm-10">
+                                <input type="text" placeholder="在申请专利数量" id="model.apply_patent_count"
+                                       class="form-control"
+                                       name="model.apply_patent_count"
+                                       value="${model.apply_patent_count!}"/>
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">预计所需资金</label>
+                            <div class="col-sm-10">
+                                <input type="text" placeholder="预计所需资金" id="model.plan_need_money" class="form-control"
+                                       name="model.plan_need_money"
+                                       value="${model.plan_need_money!}"/>
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">项目文件</label>
+                            <div class="col-sm-10">
+                                <input id="inputFile" name="inputFile" type="file" data-show-preview="false">
+                                <ul class="list-group" id="filelist">
+                                    ${filelist!}
+                                </ul>
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">项目摘要</label>
+                            <div class="col-sm-10">
+                                <textarea class="form-control" rows="3" id="model.project_abstract"
+                                          name="model.project_abstract">
+                                    ${model.project_abstract!}
+                                </textarea>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+
+            <div style="height: 50px;clear: both;">&nbsp;</div>
+            <nav class="navbar navbar-default navbar-fixed-bottom">
+                <div class="container" style="padding: 5px 0px 5px 0px;text-align: center;">
+                    <button class="btn btn-primary" onclick="oper.save(${model.id!'0'});return false;" id="btnSave">保
+                        存
+                    </button>
+                    <button class="btn btn-primary" onclick="oper.submit(${model.id!'0'});return false;" id="btnSubmit">
+                       提交填报
+                    </button>
+                    <button class="btn btn-default" onclick="closeIframeReload();">返回</button>
+                </div>
+            </nav>
         </div>
-    </div>
 
+        <div class="col-md-1">
+        </div>
+
+    </div>
 </form>
+
+<script src="static/component/bootstrap-fileinput-master/js/fileinput.js"></script>
+<script src="static/component/bootstrap-fileinput-master/js/locales/zh.js"></script>
+
 <%}; %>
 
 
 <% layout("/pages/template/_layout.html",{head:headContent,body:bodyContent}){ %>
-<%} %>
+
+<%}
+DIRECTIVE SAFE_OUTPUT_CLOSE;
+%>
