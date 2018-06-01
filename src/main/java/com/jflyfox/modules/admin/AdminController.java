@@ -21,7 +21,8 @@ import com.jflyfox.util.encrypt.Md5Utils;
 @ControllerBind(controllerKey = "/admin")
 public class AdminController extends BaseProjectController {
 
-	public static final String loginPage = "/pages/admin/login.html";
+	public static final String loginPage = "";
+	//public static final String loginPage = "/pages/admin/login/login.html";
 	public static final String homePage = "/admin/home";
 
 	public void index() {
@@ -41,14 +42,14 @@ public class AdminController extends BaseProjectController {
 	 */
 	public void login() {
 		// 获取验证码
-		String imageCode = getSessionAttr(ImageCode.class.getName());
-		String checkCode = this.getPara("imageCode");
-
-		if (StrUtils.isEmpty(imageCode) || !imageCode.equalsIgnoreCase(checkCode)) {
-			setAttr("msg", "验证码错误！");
-			render(loginPage);
-			return;
-		}
+//		String imageCode = getSessionAttr(ImageCode.class.getName());
+//		String checkCode = this.getPara("imageCode");
+//
+//		if (StrUtils.isEmpty(imageCode) || !imageCode.equalsIgnoreCase(checkCode)) {
+//			setAttr("msg", "验证码错误！");
+//			render(loginPage);
+//			return;
+//		}
 
 		// 初始化数据字典Map
 		String username = getPara("username");
@@ -57,10 +58,12 @@ public class AdminController extends BaseProjectController {
 		if (StrUtils.isEmpty(username)) {
 			setAttr("msg", "用户名不能为空");
 			render(loginPage);
+
 			return;
 		} else if (StrUtils.isEmpty(password)) {
 			setAttr("msg", "密码不能为空");
 			render(loginPage);
+
 			return;
 		}
 		// String encryptPassword = JFlyFoxUtils.passwordEncrypt(password); //
@@ -72,7 +75,8 @@ public class AdminController extends BaseProjectController {
 				username);
 		if (user == null || user.getInt("userid") <= 0) {
 			setAttr("msg", "认证失败，请您重新输入。");
-			render(loginPage);
+		//	render(loginPage);
+			redirect("");
 			return;
 		}
 		
@@ -187,7 +191,8 @@ public class AdminController extends BaseProjectController {
 		}
 
 		setAttr("msg", "您已退出");
-		render(loginPage);
+	//	render(loginPage);
+		redirect("");
 	}
 
 	public void trans() {

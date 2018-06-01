@@ -63,7 +63,7 @@ public class ActivityService extends BaseService {
             sbFilelist.append("<li class=\"list-group-item\"><span>" + sysFileUpload.getName() + "</span><a style=\"float: right;\" target=\"_blank\" href=\"" + FileUploadUtils.BASE_PATH + sysFileUpload.getPath() + "\"> <span class=\"badge\">下载</span></a>");
 
             if(withDelete){
-                sbFilelist.append("<a style=\"float: right;\" href=\"javascript:(0);\" onclick=\"delfile(" + sysFileUpload.getId() + ");return false;\"><span class=\"badge\">删除</span></a></li>");
+                sbFilelist.append("<a style=\"float: right;\" href=\"javascript:(0);\" onclick=\"delfile(" + sysFileUpload.getId() + ",this);return false;\"><span class=\"badge\">删除</span></a></li>");
             }
         }
         return sbFilelist.toString();

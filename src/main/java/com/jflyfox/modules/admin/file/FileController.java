@@ -54,4 +54,10 @@ public class FileController extends BaseProjectController {
         renderJson(sysFileUpload);
     }
 
+    public void delete(){
+        final String id = getPara("id");
+        final Boolean b = SysFileUpload.dao.deleteByIdLog(id);
+        renderText(b.toString()); ;
+
+    }
 }

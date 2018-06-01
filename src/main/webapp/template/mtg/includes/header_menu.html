@@ -18,7 +18,7 @@
       <ul class="nav navbar-nav navbar-right">
       	<% if(isEmpty(session.session_user)){ %>
 
-			<li><a href="${BASE_PATH }admin/login.html">登录</a></li>
+			<li><a href="${BASE_PATH }">登录</a></li>
 			<li class="${'regist'==folders_selected!''?'active':''}"><a href="${BASE_PATH }front/regist.html?registSwitch=true" >注册</a></li>
 		<% } else { %>
 			<li class="${'personhome'==folders_selected!''?'active':''}"><a href="${BASE_PATH }front/person.html" id="myhome" >我的空间</a></li>

@@ -35,7 +35,7 @@ public class ActivityProjectController extends BaseProjectController {
 
         final String busi_activity_id = getPara("busi_activity_id");
 
-        String sql="select a.id,a.project_name,b.realname,c.name as departname,99 as score,'未提交' as projectstatus\n" +
+        String sql="select a.id,a.project_name,b.realname,c.name as departname,99 as score,a.project_status\n" +
                 "from busi_activity_project a\n" +
                 "left join sys_user b on a.create_id=b.userid\n" +
                 "left join sys_department c on b.departid=c.id\n" +

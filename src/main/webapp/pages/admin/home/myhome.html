@@ -12,17 +12,18 @@ include("/pages/template/head.html"){}
     jQuery(function ($) {
         // 页面方法
         //显示Menu索引
-    //    showMenu('page_home');
+        //    showMenu('page_home');
         if (roleids.indexOf("4") > -1) {//参赛者
             btnText = "填报";
         } else if (roleids.indexOf("2") > -1) {//评委
             btnText = "评分";
         }
 
-        var data =  [];
-        $.ajax({url:'admin/activity/busiActivitySlavesHomes',type:'get',
-        async:false,success:function (results) {
-                data=results;
+        var data = [];
+        $.ajax({
+            url: 'admin/activity/busiActivitySlavesHomes', type: 'get',
+            async: false, success: function (results) {
+                data = results;
             }
         });
 
@@ -37,9 +38,9 @@ include("/pages/template/head.html"){}
             datagroup[parseInt(i / 4)].push(data[i]);
         }
 
-        for(i in datagroup){
-            var tbid="table"+i;
-            $("#tablediv").append('<table id="'+tbid+'" ></table>');
+        for (i in datagroup) {
+            var tbid = "table" + i;
+            $("#tablediv").append('<table id="' + tbid + '" class="table-bordered table-condensed table-hover table" ></table>');
             initTable(tbid, datagroup[i]);
             mergeTable('activity_name', tbid);
 
@@ -112,7 +113,7 @@ include("/pages/template/head.html"){}
         form1.submit();
     }
 
-    function initTable(tableid,data) {
+    function initTable(tableid, data) {
         $bootstrapTable = $('#' + tableid).bootstrapTable({
 
             sidePagination: "client",           //分页方式：client客户端分页，server服务端分页（*）
@@ -123,12 +124,7 @@ include("/pages/template/head.html"){}
             formatLoadingMessage: function () {
                 return "";
             },
-            columns: [{
-                field: 'id',
-                title: '序号',
-                align: 'center',
-                width: '8%'
-            },
+            columns: [
                 {
                     field: 'activity_name',
                     title: '活动名',
@@ -136,7 +132,12 @@ include("/pages/template/head.html"){}
                     width: '15%',
                     formatter: function (value, row, index, field) {
 
-                        return value + '</br><a href="javascript:void(0);" class="btn btn-sm btn-primary" onclick="showPage(' + row.busi_activity_id + ');">' + btnText + '</a>';
+ debugger;
+                        if (row.project_status.toString() == "1" && btnText == "填报") {
+                            btnText = "已提交";
+                        }
+
+                        return value + '</br><a href="javascript:void(0);" class="btn btn-sm btn-warning" onclick="showPage(' + row.busi_activity_id + ');">' + btnText + '</a>';
                     }
                 }, {
                     field: 'nodeid',
@@ -158,7 +159,18 @@ include("/pages/template/head.html"){}
                     align: 'center',
                     width: '20%'
                 }
-            ], data:data
+                , {
+                    field: 'id',
+                    title: '是否入围',
+                    align: 'center',
+                    width: '10%',
+                    formatter: function formatter(value, row, index, field) {
+                        var values = ['否', '是']
+                        return values[0];
+                    }
+
+                }
+            ], data: data
         });
 
 //        var queryParams = function (params) {
@@ -192,8 +204,16 @@ var sessionUserId = isEmpty(session.session_user) ? 0: session.session_user.user
 %>
 <div class="container" style="margin-top: 10px;">
     <div class="row">
-        <div class="col-md-8" id="tablediv">
-            <table id="table"></table>
+        <div class="col-md-8">
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h3 class="panel-title">活动列表</h3>
+                </div>
+                <div class="panel-body" id="tablediv">
+                    <table id="table" data-mobile-responsive="true"
+                           class="table-bordered table-condensed table-hover table"></table>
+                </div>
+            </div>
         </div>
 
 
@@ -241,42 +261,6 @@ var sessionUserId = isEmpty(session.session_user) ? 0: session.session_user.user
                     </form>
                 </div>
             </div>
-
-            <% if(!isEmpty(pageViews)){ %>
-            <!-- 最新访客 -->
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">访客TOP10&nbsp;&nbsp;<a href="admin/pageview"
-                                                                  style="font-size: 12px;color:green;">更多</a></h3>
-                </div>
-                <ul class="list-group">
-                    <% for(item in pageViews){ %>
-                    <li class="list-group-item">
-                        <span class="badge">${item.create_time}</span>
-                        ${item.ip}(${item.userid})
-                    </li>
-                    <% } %>
-                </ul>
-            </div>
-            <% } %>
-
-            <% if(!isEmpty(users)){ %>
-            <!-- 最新注册用户 -->
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">注册用户TOP10&nbsp;&nbsp;<a href="system/user/list"
-                                                                    style="font-size: 12px;color:green;">更多</a></h3>
-                </div>
-                <ul class="list-group">
-                    <% for(item in users){ %>
-                    <li class="list-group-item">
-                        <span class="badge">${item.create_time}</span>
-                        用户：${item.realname}<br>邮箱：${item.email}
-                    </li>
-                    <% } %>
-                </ul>
-            </div>
-            <% } %>
 
 
         </div>

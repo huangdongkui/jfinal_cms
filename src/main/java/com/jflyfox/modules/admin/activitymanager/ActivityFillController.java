@@ -100,7 +100,6 @@ public class ActivityFillController extends BaseProjectController {
 
     public void save() {
 
-
         Integer pid = getParaToInt();
         BusiActivityProject model = getModel(BusiActivityProject.class);
 

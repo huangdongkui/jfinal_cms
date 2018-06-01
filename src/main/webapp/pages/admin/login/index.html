@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge"> 
+<meta name="viewport" content="width=device-width, initial-scale=1"> 
+<title>创业大赛平台</title>
+<link type="text/css" rel="stylesheet" href="${BASE_PATH}pages/admin/login/css/normalize.css" />
+<link type="text/css" rel="stylesheet" href="${BASE_PATH}pages/admin/login/css/demo.css" />
+<!--必要样式-->
+<link type="text/css" rel="stylesheet" href="${BASE_PATH}pages/admin/login/css/component.css" />
+<!--[if IE]>
+
+	<script src="${BASE_PATH}pages/admin/login/js/html5.js"></script>
+	<![endif]-->
+
+	<script type="text/javascript">
+
+        function login() {
+
+            var username = $('[name="username"]').val();
+            if(username==''){
+                alert('用户名不能为空！');
+                return;
+            }
+
+            var pwd = $('[name="password"]').val();
+            if(pwd==''){
+                alert('密码不能为空！');
+                return;
+            }
+
+            $('[name="password"]').val(hex_md5(pwd));
+
+            form1.action = "${BASE_PATH}admin/login";
+            form1.submit();
+            // submit_js("login_login.action", "loginform");
+        }
+
+        function clickme(o) {
+            window.location.href=$(o).attr("href");
+        }
+
+	</script>
+
+</head>
+
+<body>
+<form id="form1">
+	<input type="hidden" name="pre_page" value="" />
+<div class="container demo-1">
+	<div class="content">
+		<div id="large-header" class="large-header">
+			<canvas id="demo-canvas"></canvas>
+			<div class="logo_box">
+				<h3>欢迎使用创业大赛平台</h3>
+				<form action="#" name="f" method="post">
+					<div class="input_outer">
+						<span class="u_user"></span>
+						<input name="username" class="text" style="color: #FFFFFF !important" type="text" placeholder="输手机号码">
+					</div>
+					<div class="input_outer">
+						<span class="us_uer"></span>
+						<input name="password" class="text" style="color: #FFFFFF !important; position:absolute; z-index:100;"value="" type="password" placeholder="输入密码">
+					</div>
+					<div class="mb2"><a class="act-but submit" href="javascript:;" style="color: #FFFFFF" onclick="login();">登录</a></div>
+					<div class="mb2"><a class="act-but2 submit" href="${BASE_PATH}front/regist.html?registtype=0"   style="color: #FFFFFF">个人注册</a></div>
+					<div class="mb2"><a class="act-but3 submit" href="${BASE_PATH}front/regist.html?registtype=1" style="color: #FFFFFF">专家注册</a></div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+</form>
+<script src="${BASE_PATH}static/component/jquery/jquery-2.1.4.min.js"></script>
+<script type="text/javascript" src="${BASE_PATH}resources/js/encrypt/md5.js"></script>
+
+<script type="text/javascript" src="${BASE_PATH}pages/admin/login/js/TweenLite.min.js"></script>
+<script type="text/javascript" src="${BASE_PATH}pages/admin/login/js/EasePack.min.js"></script>
+<script type="text/javascript" src="${BASE_PATH}pages/admin/login/js/rAF.js"></script>
+<script type="text/javascript" src="${BASE_PATH}pages/admin/login/js/demo-1.js"></script>
+</body>
+</html>

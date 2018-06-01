@@ -24,7 +24,9 @@ import com.jflyfox.util.StrUtils;
 @ControllerBind(controllerKey = "/")
 public class CommonController extends BaseProjectController {
 
+	//创意登陆
 	public static final String loginPage = "/login.html";
+	//public static final String loginPage = "/login/index.html";
 	public static final String firstPage = "/home";
 
 	/**
@@ -79,7 +81,8 @@ public class CommonController extends BaseProjectController {
 		} else {
 			//renderAuto(Home.PATH + urlKey + ".html");
 			//renderAuto("admin");
-			render("/pages/admin/login.html");
+			//render("/pages/admin/login.html");
+			render("/pages/admin/login/index.html");
 		}
 
 	}
