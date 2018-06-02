@@ -21,7 +21,7 @@ import com.jflyfox.util.encrypt.Md5Utils;
 @ControllerBind(controllerKey = "/admin")
 public class AdminController extends BaseProjectController {
 
-	public static final String loginPage = "";
+	public static final String loginPage = "/pages/admin/login/index.html";
 	//public static final String loginPage = "/pages/admin/login/login.html";
 	public static final String homePage = "/admin/home";
 

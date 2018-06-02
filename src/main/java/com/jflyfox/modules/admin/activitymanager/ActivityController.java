@@ -75,7 +75,7 @@ public class ActivityController extends BaseProjectController {
         final Integer userid = sessionUser.getUserid();
 
         String sql = "select a.id,a.nodeid,(select c.project_status from busi_activity_project c \n" +
-                "where c.busi_activity_id=a.busi_activity_id and c.create_id="+userid+") as project_status, \n" +
+                "where c.busi_activity_id=a.busi_activity_id and c.create_id="+userid+" and c.deleted=0) as project_status, \n" +
                 "a.busi_activity_id,\n" +
                 "a.from_time,a.to_time,b.activity_name\n" +
                 "from busi_activity_slave a\n" +

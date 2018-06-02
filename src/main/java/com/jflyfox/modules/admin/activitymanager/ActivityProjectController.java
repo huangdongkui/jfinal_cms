@@ -2,14 +2,18 @@ package com.jflyfox.modules.admin.activitymanager;
 
 import com.alibaba.fastjson.JSONObject;
 import com.jfinal.plugin.activerecord.Db;
+import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 import com.jflyfox.component.base.BaseProjectController;
 import com.jflyfox.jfinal.base.SessionUser;
 import com.jflyfox.jfinal.component.annotation.ControllerBind;
+import com.jflyfox.jfinal.component.db.SQLUtils;
 import com.jflyfox.system.department.SysDepartment;
+import com.jflyfox.system.file.model.SysFileUpload;
 import com.jflyfox.system.user.SysUser;
 import com.jflyfox.system.user.UserController;
 import com.jflyfox.system.user.UserSvc;
+import com.jflyfox.util.StrUtils;
 
 import java.util.List;
 
@@ -39,7 +43,7 @@ public class ActivityProjectController extends BaseProjectController {
                 "from busi_activity_project a\n" +
                 "left join sys_user b on a.create_id=b.userid\n" +
                 "left join sys_department c on b.departid=c.id\n" +
-                "where a.busi_activity_id = "+busi_activity_id;
+                "where a.deleted=0 and a.project_status=1 and a.busi_activity_id = "+busi_activity_id;
         List<Record> records = Db.find(sql);
 
         renderJson(records);
@@ -81,5 +85,47 @@ public class ActivityProjectController extends BaseProjectController {
     }
     public void save(){
 
+    }
+
+    /**
+     * 报名管理
+     */
+    public void mnglist(){
+
+        SQLUtils sql = new SQLUtils(" from busi_activity_project t "+
+                "left join busi_activity ba on ba.id=t.busi_activity_id\n" +
+                "left join sys_user u on u.userid=t.create_id\n" +
+                "left join sys_department d on d.id=u.departid\n" +
+                " where t.deleted = 0 and t.project_status=1");
+
+        sql.setAlias("t");
+
+        // 排序
+        String orderBy = getBaseForm().getOrderBy();
+        if (StrUtils.isEmpty(orderBy)) {
+            sql.append(" order by t.create_time desc ");
+        } else {
+            sql.append(" order by t.").append(orderBy);
+        }
+
+        Page<BusiActivity> page = BusiActivity.dao.paginate(getPaginator(), "select t.id, t.create_time,activity_name,u.tel,u.realname,d.name as departname,t.project_name,t.from_belongfields ",
+                sql.toString().toString());
+
+        setAttr("page", page);
+
+        render(path + "project_mgnlist.html");
+
+    }
+
+    public void delete(){
+        final String id =getPara("id");
+
+        BusiActivityProject model = new BusiActivityProject();
+        Integer userid = getSessionUser().getUserid();
+        String now = getNow();
+        model.put("update_id", userid);
+        model.put("update_time", now);
+        model.deletelogicByIdLog(id);
+        redirect("/admin/activityproject/mnglist");
     }
 }

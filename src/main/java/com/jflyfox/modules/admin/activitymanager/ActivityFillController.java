@@ -16,6 +16,7 @@ import com.jflyfox.system.user.SysUser;
 import com.jflyfox.util.DateUtils;
 import jdk.nashorn.internal.ir.ReturnNode;
 import org.apache.commons.lang.StringUtils;
+import sun.misc.Request;
 
 import java.util.Arrays;
 import java.util.List;
@@ -33,18 +34,18 @@ public class ActivityFillController extends BaseProjectController {
     private static final String path = "/pages/admin/activity/activity_";
 
     public void index() {
-        edit();
+        String busi_activity_id = getPara("busi_activity_id");
+        edit(busi_activity_id);
     }
 
-    public void edit() {
+    public void edit(String busi_activity_id) {
 
-        final String busi_activity_id = getPara("busi_activity_id");
         if (busi_activity_id == null) {
             redirect("/admin/home");
             return;
         }
         final SessionUser sessionUser = getSessionUser();
-        BusiActivityProject model = BusiActivityProject.dao.findFirstByWhere(" where busi_activity_id = ? and create_id = ?", busi_activity_id,sessionUser.getUserid().toString());
+        BusiActivityProject model = BusiActivityProject.dao.findFirstByWhere(" where busi_activity_id = ? and create_id = ? and deleted=0", busi_activity_id, sessionUser.getUserid().toString());
 
 
         if (model == null) {
@@ -70,11 +71,10 @@ public class ActivityFillController extends BaseProjectController {
 
 
         setAttr("core_tech_contents_li", genHtmlLiCode(model.getStr("core_tech_contents")));
-        setAttr("filelist", ActivityService.genHtmllIFilesbybusinessid(model.get("id","0").toString(),true));
+        setAttr("filelist", ActivityService.genHtmllIFilesbybusinessid(model.get("id", "0").toString(), true));
         setAttr("model", model);
         render(path + "fill.html");
     }
-
 
 
     /**
@@ -101,7 +101,6 @@ public class ActivityFillController extends BaseProjectController {
 
     public void save() {
 
-        Integer pid = getParaToInt();
         BusiActivityProject model = getModel(BusiActivityProject.class);
 
         final String busi_activity_id = model.get("busi_activity_id").toString();
@@ -114,7 +113,7 @@ public class ActivityFillController extends BaseProjectController {
         String now = getNow();
         model.put("update_id", userid);
         model.put("update_time", now);
-        if (pid != null && pid > 0) { // 更新
+        if (model.getId() != null && model.getId() > 0) { // 更新
             model.update();
         } else { // 新增
             model.remove("id");
@@ -122,13 +121,16 @@ public class ActivityFillController extends BaseProjectController {
             model.save();
         }
 
-        renderMessage("保存成功", "window.location.href=\"admin/home\"");
+        //renderMessage("1");
+        renderText(model.getId().toString());
+
     }
 
-    public void submit(){
-        String pid = getPara("id","");
+    public void submit() {
+        String pid = getPara("id", "");
         final Integer updateCount = Db.update("update busi_activity_project set project_status=1 where id=?", pid);
         renderText(updateCount.toString());
 
     }
+
 }
