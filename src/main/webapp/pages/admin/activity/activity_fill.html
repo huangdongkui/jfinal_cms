@@ -69,7 +69,7 @@ include("/pages/template/head.html"){}
             litoarr.push($(this).find("span").text());
         });
 
-        $('#modelcore_tech_contents').val(litoarr.join(","));
+        $('#modelcore_tech_contents').val(litoarr.join("$$"));
 
 
         //获取model.project_type
@@ -350,9 +350,7 @@ var bodyContent = {
                         <div class="form-group">
                             <div class="col-sm-2"></div>
                             <div class="col-sm-9">
-                                <ul class="list-group" id="ul_core_tech_contents">
-
-                                    ${core_tech_contents_li!}
+                                <ul class="list-group" id="ul_core_tech_contents">${core_tech_contents_li!}
                                 </ul>
                             </div>
 
@@ -361,7 +359,7 @@ var bodyContent = {
                         <div class="form-group">
                             <label class="col-sm-2 control-label">已授权专利数量</label>
                             <div class="col-sm-10">
-                                <input type="text" placeholder="已授权专利数量" id="model.has_patent_count" valid="vtext"
+                                <input type="text" placeholder="已授权专利数量" id="model.has_patent_count" valid="vnum_y"
                                        validname="已授权专利数量"
                                        class="form-control"
                                        name="model.has_patent_count"
@@ -372,7 +370,7 @@ var bodyContent = {
                         <div class="form-group">
                             <label class="col-sm-2 control-label">在申请专利数量</label>
                             <div class="col-sm-10">
-                                <input type="text" placeholder="在申请专利数量" id="model.apply_patent_count" valid="vtext"
+                                <input type="text" placeholder="在申请专利数量" id="model.apply_patent_count" valid="vnum_y"
                                        validname="在申请专利数量"
                                        class="form-control"
                                        name="model.apply_patent_count"
@@ -384,7 +382,7 @@ var bodyContent = {
                             <label class="col-sm-2 control-label">预计所需资金</label>
                             <div class="col-sm-10">
                                 <input type="text" placeholder="预计所需资金(万元)" id="model.plan_need_money" class="form-control"
-                                       valid="vtext" validname="预计所需资金"
+                                       valid="vfloat_y" validname="预计所需资金"
                                        name="model.plan_need_money"
                                        value="${model.plan_need_money!}"/>
                             </div>
@@ -405,9 +403,7 @@ var bodyContent = {
                             <label class="col-sm-2 control-label">项目摘要</label>
                             <div class="col-sm-10">
                                 <textarea class="form-control" rows="3" id="model.project_abstract" valid="vtext"
-                                          name="model.project_abstract">
-                                    ${model.project_abstract!}
-                                </textarea>
+                                          name="model.project_abstract">${model.project_abstract!}</textarea>
                             </div>
 
                         </div>

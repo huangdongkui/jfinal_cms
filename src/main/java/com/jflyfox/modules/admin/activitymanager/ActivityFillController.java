@@ -88,7 +88,7 @@ public class ActivityFillController extends BaseProjectController {
             return "";
         }
 
-        String[] split = core_tech_contents.split(",");
+        String[] split = core_tech_contents.split("\\$\\$");
         StringBuilder sb = new StringBuilder();
 
         for (String s : split) {

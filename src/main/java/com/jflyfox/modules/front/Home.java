@@ -27,6 +27,7 @@ public class Home extends BaseProjectController {
 	public void login() {
 		setAttr("pre_page", getPrePage());
 		renderAuto(CommonController.loginPage);
+
 	}
 
 	/**

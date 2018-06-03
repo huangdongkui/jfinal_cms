@@ -104,7 +104,7 @@ include("/pages/template/head.html"){}
         var projecturl = '${BASE_PATH }admin/activityproject';
         var fillurl = '${BASE_PATH }admin/activityfill';
         $('#busi_activity_id').val(busi_activity_id);
-        if (btnText == "填报") {
+        if (btnText == "填报" ||btnText == "已提交") {
             form1.action = fillurl;
         } else if (btnText == "评分") {
             form1.action = projecturl;
@@ -214,7 +214,6 @@ var sessionUserId = isEmpty(session.session_user) ? 0: session.session_user.user
                 </div>
             </div>
         </div>
-    `
         <div class="col-md-4">
             <!-- 用户信息 -->
             <div class="panel panel-default">
