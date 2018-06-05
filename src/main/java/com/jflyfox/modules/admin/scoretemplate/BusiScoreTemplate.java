@@ -5,6 +5,7 @@ import com.jflyfox.component.base.BaseProjectModel;
 import com.jflyfox.jfinal.component.annotation.ModelBind;
 import com.jflyfox.modules.admin.activitymanager.BusiActivity;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -59,7 +60,7 @@ public class BusiScoreTemplate extends BaseProjectModel<BusiScoreTemplate> {
         return this;
     }
 
-    public String getScorce() {
+    public BigDecimal getScorce() {
         return get(scorce);
     }
 

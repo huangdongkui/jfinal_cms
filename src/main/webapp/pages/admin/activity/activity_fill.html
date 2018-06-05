@@ -44,18 +44,20 @@ include("/pages/template/head.html"){}
             , submit: function (id) {
                 id = id || '0';
                 var url = 'admin/activityfill/submit';
+                Confirm("【温馨提示：提交报名后报名资料不可修改】", function () {
+                    $.get(url, {id: id}, function (o) {
+                        if (parseInt(o) > 0) {
+                            Alert("提交填报成功", function () {
+                                window.location.href = "${BASE_PATH}admin/home";
+                            });
 
-                $.get(url, {id: id}, function (o) {
-                    if (parseInt(o) > 0) {
-                        Alert("提交填报成功", function () {
-                            window.location.href = "${BASE_PATH}admin/home";
-                        });
+                        } else {
+                            Alert("提交填报失败");
+                        }
 
-                    } else {
-                        Alert("提交填报失败");
-                    }
+                    });
 
-                })
+                });
             }
         }
     ;
@@ -176,11 +178,11 @@ include("/pages/template/head.html"){}
         })
     }
 
-        function closeIframeReload() {
-            var url = 'admin/home';
-            form1.action = url;
-            form1.submit();
-        }
+    function closeIframeReload() {
+        var url = 'admin/home';
+        form1.action = url;
+        form1.submit();
+    }
 
 </script>
 
@@ -193,7 +195,6 @@ var bodyContent = {
 <form name="form1" action="" method="post" class="form-horizontal" role="form">
     <input type="hidden" name="model.id" id="modelid" value="${model.id!}"/>
     <input type="hidden" name="model.busi_activity_id" id="busi_activity_id" value="${model.busi_activity_id!}"/>
-    <input type="hidden" name="busi_activity_id" id="busi_activity_id" value="${model.busi_activity_id!}"/>
 
     <input type="hidden" id="modelcore_tech_contents" valid="vtext" validname="核心技术"
            name="model.core_tech_contents" value="${model.core_tech_contents}"/>
@@ -223,10 +224,8 @@ var bodyContent = {
                             <label class="col-sm-2 control-label">项目类型</label>
 
                             <div class="col-sm-10 divbelongfieldtype">
-                                <input name="model.project_type" id="modelproject_type"
-                                       value="${model.project_type!}" type="hidden">
-
-                                ${projecttypeselect}
+                                <input name="model.project_type" id="modelproject_type" valid="vtext" validname="项目类型"
+                                       value="${model.project_type!}" type="hidden">${projecttypeselect}
                             </div>
 
                         </div>
@@ -381,7 +380,8 @@ var bodyContent = {
                         <div class="form-group">
                             <label class="col-sm-2 control-label">预计所需资金</label>
                             <div class="col-sm-10">
-                                <input type="text" placeholder="预计所需资金(万元)" id="model.plan_need_money" class="form-control"
+                                <input type="text" placeholder="预计所需资金(万元)" id="model.plan_need_money"
+                                       class="form-control"
                                        name="model.plan_need_money"
                                        value="${model.plan_need_money!0}"/>
                             </div>

@@ -4,12 +4,82 @@ include("/pages/template/head.html"){}
 %>
 
 
-<script src="${BASE_PATH }static/component/jquery/jquery-2.1.4.min.js"></script>
 <link rel="stylesheet" href="${BASE_PATH }static/component/bootstrap-treeview/bootstrap-treeview.min.css">
 <script src="${BASE_PATH }static/component/bootstrap-treeview/bootstrap-treeview.js"></script>
 <link rel="stylesheet" href="${BASE_PATH }static/component/bootstrap/css/bootstrap.css">
 
 <script type="text/javascript">
+
+    $(function () {
+        $('#tree').treeview({
+            data: getTree(0), onNodeSelected: function (event, data) {
+
+                var tmpData = getTree(data.id);
+                $('#tbDetail').bootstrapTable('load',{data:tmpData});
+            }
+
+        });
+
+        $('#tree').on("nodeExpanded", function (event, data) {
+
+            var currNode = $('#tree').treeview('getNode', data.nodeId);
+            if (currNode.nodes && currNode.nodes.length > 0 && currNode.nodes[0].id === 10000) {
+                var tmpData = getTree(data.id);
+
+                $("#tree").treeview("addNode",
+
+                    [data.nodeId, {nodes: tmpData}]
+                );
+            }
+        });
+
+        loadDataToTable("tbDetail", getTree(0));
+    });
+
+    function loadDataToTable(tablename, data) {
+
+        $('#' + tablename).bootstrapTable({
+            toolbar : "#toolbar",
+            data: data,
+            formatLoadingMessage: function () {
+                return "";
+            },
+            columns: [{
+                field: 'id',
+                title: '序号',
+                align: 'center',
+                width: '10%',
+                formatter: function (value, row, index) {
+                    return index + 1;
+                }
+            },
+                {
+                    field: 'text',
+                    title: '评分内容',
+                    align: 'center',
+                    width: '70%'
+
+                },
+                {
+                    field: 'scorce',
+                    title: '分值',
+                    align: 'center',
+                    width: '10%'
+
+                },
+                {
+                    field: 'id',
+                    title: '操作',
+                    align: 'center',
+                    width: '10%',
+                    formatter: function formatter(value, row, index, field) {
+                        return '<button class="btn btn-sm btn-primary" onclick="edit(' + value + '); return false;">修改</button>'
+                    }
+
+                }
+            ]
+        });
+    }
 
     function getTree(parentId) {
 
@@ -41,29 +111,18 @@ include("/pages/template/head.html"){}
         return data;
     }
 
-    $(function () {
-        $('#tree').treeview({
-            data: getTree(0), onNodeSelected: function (event, data) {
-                // 事件代码...
-                //   alert(data.id);
-                //$("#tree").treeview("addNode", [1, { node: {id:7,text: "新加的菜单" } }]);
-            }
-
+    function edit(id) {
+        var url = 'admin/scoretemplate/edit/' + id;
+        var title = '修改';
+        Iframe(url, 800, 300, title,false, false, false, function () {
+            window.location.href=window.location.href;
+           // var tmpData = getTree(0);
+          //  $('#tbDetail').bootstrapTable('load',{data:tmpData});
         });
-        $('#tree').on("nodeExpanded", function (event, data) {
-
-            var currNode = $('#tree').treeview('getNode', data.nodeId);
-            if (currNode.nodes&&currNode.nodes.length>0&&currNode.nodes[0].id === 10000) {
-                var tmpData = getTree(data.id)
-
-                $("#tree").treeview("addNode",
-
-                    [data.nodeId, {nodes: tmpData}]
-                );
-            }
-        });
-
-    });
+    }
+    function add() {
+        
+    }
 </script>
 
 <%
@@ -73,6 +132,16 @@ var bodyContent = {
 %>
 <!-- 菜单 -->
 <% include("/pages/template/menu.html"){} %>
+
+<!-- 工具容器 -->
+<div id="toolbar" class="btn-group">
+    <button id="btn_add" type="button" class="btn btn-default" onclick="add();">
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新增
+    </button>
+    <button id="btn_addTempl" type="button" class="btn btn-default  " onclick="add();">
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新增模版
+    </button>
+</div>
 <form name="form1" action="" method="post" class="form-inline" role="form">
 
     <div class="panel panel-default">
@@ -81,24 +150,15 @@ var bodyContent = {
         </div>
         <div class="panel-body">
             <div style="width: 50%;float: left;">
+                <button id="btn_showTempl" type="button" class="btn btn-default" onclick="addVideoShow();">
+                    显示所有评分模版
+                </button>
                 <div id="tree"></div>
             </div>
             <div style="width: 50%;float: left;">
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <td>评分内容</td>
-                        <td>分值</td>
-                        <td>操作</td>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>评分内容</td>
-                        <td>分值</td>
-                        <td>操作</td>
-                    </tr>
-                    </tbody>
+                <table data-mobile-responsive="true"
+                       class="table-bordered table-condensed table-hover table" id="tbDetail">
+
                 </table>
             </div>
 

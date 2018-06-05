@@ -4,6 +4,7 @@ import com.jfinal.template.ext.directive.Str;
 import com.jflyfox.component.base.BaseProjectController;
 import com.jflyfox.jfinal.component.annotation.ControllerBind;
 import com.jflyfox.jfinal.component.db.SQLUtils;
+import com.jflyfox.system.log.SysLog;
 import com.sun.javafx.scene.control.skin.VirtualFlow;
 import jdk.nashorn.internal.ir.ReturnNode;
 
@@ -34,19 +35,14 @@ public class ScoreTemplateController extends BaseProjectController {
     public void children(){
         String parentId=getPara("parentId");
 
-
-
         List listResults=getScoretemplateByParentId(parentId);
-
-      //  List listResults=new ArrayList();
-     //   listResults.add(hmResult);
 
         renderJson(listResults);
     }
 
     private List getScoretemplateByParentId(String parentId) {
 
-        String sql="select id,scorce_contents as text,exists(select * from busi_score_template t where t.parentId=t1.id) as nodes\n" +
+        String sql="select id,scorce_contents as text,exists(select * from busi_score_template t where t.parentId=t1.id) as nodes,scorce\n" +
                 "from busi_score_template t1\n" +
                 "where t1.parentId=?";
 
@@ -57,4 +53,27 @@ public class ScoreTemplateController extends BaseProjectController {
     }
 
 
+    public void edit(){
+        final Integer paraToInt = getParaToInt();
+        final BusiScoreTemplate model = BusiScoreTemplate.dao.findById(paraToInt);
+        setAttr("model",model);
+        render(path + "edit.html");
+    }
+
+    public void save(){
+        Integer pid = getParaToInt();
+        BusiScoreTemplate model = getModel(BusiScoreTemplate.class);
+        model.setUpdateId(getSessionUser().getUserid().toString());
+        model.setUpdateTime(getNow());
+
+        if (pid != null && pid > 0) { // 更新
+            model.update();
+        } else { // 新增
+            model.remove("id");
+            model.put("create_id", getSessionUser().getUserid());
+            model.put("create_time", getNow());
+            model.save();
+        }
+        renderMessage("保存成功");
+    }
 }
