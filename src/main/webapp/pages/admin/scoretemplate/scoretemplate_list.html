@@ -9,13 +9,13 @@ include("/pages/template/head.html"){}
 <link rel="stylesheet" href="${BASE_PATH }static/component/bootstrap/css/bootstrap.css">
 
 <script type="text/javascript">
-
+    var m_parentId = 0;
     $(function () {
         $('#tree').treeview({
             data: getTree(0), onNodeSelected: function (event, data) {
-
+                m_parentId = data.id;
                 var tmpData = getTree(data.id);
-                $('#tbDetail').bootstrapTable('load',{data:tmpData});
+                $('#tbDetail').bootstrapTable('load', {data: tmpData});
             }
 
         });
@@ -24,6 +24,7 @@ include("/pages/template/head.html"){}
 
             var currNode = $('#tree').treeview('getNode', data.nodeId);
             if (currNode.nodes && currNode.nodes.length > 0 && currNode.nodes[0].id === 10000) {
+
                 var tmpData = getTree(data.id);
 
                 $("#tree").treeview("addNode",
@@ -39,7 +40,7 @@ include("/pages/template/head.html"){}
     function loadDataToTable(tablename, data) {
 
         $('#' + tablename).bootstrapTable({
-            toolbar : "#toolbar",
+            toolbar: "#toolbar",
             data: data,
             formatLoadingMessage: function () {
                 return "";
@@ -57,7 +58,7 @@ include("/pages/template/head.html"){}
                     field: 'text',
                     title: '评分内容',
                     align: 'center',
-                    width: '70%'
+                    width: '60%'
 
                 },
                 {
@@ -71,9 +72,10 @@ include("/pages/template/head.html"){}
                     field: 'id',
                     title: '操作',
                     align: 'center',
-                    width: '10%',
+                    width: '20%',
                     formatter: function formatter(value, row, index, field) {
-                        return '<button class="btn btn-sm btn-primary" onclick="edit(' + value + '); return false;">修改</button>'
+                        return '<button class="btn btn-sm btn-primary" onclick="edit(' + value + '); return false;">修改</button>'+
+                            '<button class="btn btn-sm btn-primary" onclick="del(' + value + '); return false;">删除</button>'
                     }
 
                 }
@@ -114,14 +116,38 @@ include("/pages/template/head.html"){}
     function edit(id) {
         var url = 'admin/scoretemplate/edit/' + id;
         var title = '修改';
-        Iframe(url, 800, 300, title,false, false, false, function () {
-            window.location.href=window.location.href;
-           // var tmpData = getTree(0);
-          //  $('#tbDetail').bootstrapTable('load',{data:tmpData});
+        Iframe(url, 800, 300, title, false, false, false, function () {
+            var tmpData = getTree(m_parentId);
+            $('#tbDetail').bootstrapTable('load',{data:tmpData});
         });
     }
     function add() {
-        
+        var url = 'admin/scoretemplate/add/' + m_parentId;
+        var title = '';
+        if (m_parentId == 0) {
+            title = '添加模版';
+        } else {
+            title = '添加评分项';
+        }
+        Iframe(url, 800, 300, title, false, false, false, function () {
+             var tmpData = getTree(m_parentId);
+             $('#tbDetail').bootstrapTable('load',{data:tmpData});
+        });
+    }
+
+    function doRefresh() {
+        window.location.href = window.location.href;
+    }
+
+    function del(id) {
+        var url = 'admin/scoretemplate/delete/' + id;
+        $.get(url,{},function (o) {
+            Alert(o,function () {
+                var tmpData = getTree(m_parentId);
+                $('#tbDetail').bootstrapTable('load',{data:tmpData});
+            });
+
+        });
     }
 </script>
 
@@ -135,12 +161,10 @@ var bodyContent = {
 
 <!-- 工具容器 -->
 <div id="toolbar" class="btn-group">
-    <button id="btn_add" type="button" class="btn btn-default" onclick="add();">
+    <button id="btn_add" type="button" class="btn btn-default" onclick="add(1);">
         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新增
     </button>
-    <button id="btn_addTempl" type="button" class="btn btn-default  " onclick="add();">
-        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新增模版
-    </button>
+
 </div>
 <form name="form1" action="" method="post" class="form-inline" role="form">
 
@@ -150,8 +174,8 @@ var bodyContent = {
         </div>
         <div class="panel-body">
             <div style="width: 50%;float: left;">
-                <button id="btn_showTempl" type="button" class="btn btn-default" onclick="addVideoShow();">
-                    显示所有评分模版
+                <button id="btn_showTempl" type="button" class="btn btn-default" onclick="doRefresh();return false;">
+                    刷新
                 </button>
                 <div id="tree"></div>
             </div>

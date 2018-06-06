@@ -51,7 +51,9 @@ public class ActivityController extends BaseProjectController {
             sql.append(" order by t.").append(orderBy);
         }
 
-        Page<BusiActivity> page = BusiActivity.dao.paginate(getPaginator(), "select t.* ",
+        Page<BusiActivity> page = BusiActivity.dao.paginate(getPaginator(), "select t.*,( select tl.scorce_contents \n" +
+                        "from busi_score_template tl\n" +
+                        " where tl.id=t.busi_score_template_id) as scorce_contents ",
                 sql.toString().toString());
 
         setAttr("page", page);

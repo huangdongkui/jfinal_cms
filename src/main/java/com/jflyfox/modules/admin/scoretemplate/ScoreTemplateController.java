@@ -24,6 +24,7 @@ import java.util.Map;
 @ControllerBind(controllerKey = "/admin/scoretemplate")
 public class ScoreTemplateController extends BaseProjectController {
     private static final String path = "/pages/admin/scoretemplate/scoretemplate_";
+
     public void index() {
         list();
     }
@@ -32,35 +33,43 @@ public class ScoreTemplateController extends BaseProjectController {
         render(path + "list.html");
     }
 
-    public void children(){
-        String parentId=getPara("parentId");
+    public void children() {
+        String parentId = getPara("parentId");
 
-        List listResults=getScoretemplateByParentId(parentId);
+        List listResults = getScoretemplateByParentId(parentId);
 
         renderJson(listResults);
     }
 
     private List getScoretemplateByParentId(String parentId) {
 
-        String sql="select id,scorce_contents as text,exists(select * from busi_score_template t where t.parentId=t1.id) as nodes,scorce\n" +
+        String sql = "select id,scorce_contents as text,exists(select * from busi_score_template t where t.parentId=t1.id) as nodes,scorce\n" +
                 "from busi_score_template t1\n" +
                 "where t1.parentId=?";
 
-        BusiScoreTemplate.dao.find(sql,parentId);
+        BusiScoreTemplate.dao.find(sql, parentId);
 
-        List<BusiScoreTemplate> busiScoreTemplates= BusiScoreTemplate.dao.find(sql,parentId);
+        List<BusiScoreTemplate> busiScoreTemplates = BusiScoreTemplate.dao.find(sql, parentId);
         return busiScoreTemplates;
     }
 
 
-    public void edit(){
+    public void edit() {
         final Integer paraToInt = getParaToInt();
         final BusiScoreTemplate model = BusiScoreTemplate.dao.findById(paraToInt);
-        setAttr("model",model);
+        setAttr("model", model);
         render(path + "edit.html");
     }
 
-    public void save(){
+    public void add() {
+        final Integer parentId = getParaToInt();
+        final BusiScoreTemplate model = new BusiScoreTemplate();
+        model.set("parentId", parentId);
+        setAttr("model", model);
+        render(path + "edit.html");
+    }
+
+    public void save() {
         Integer pid = getParaToInt();
         BusiScoreTemplate model = getModel(BusiScoreTemplate.class);
         model.setUpdateId(getSessionUser().getUserid().toString());
@@ -75,5 +84,14 @@ public class ScoreTemplateController extends BaseProjectController {
             model.save();
         }
         renderMessage("保存成功");
+    }
+
+    public void delete() {
+        final Integer id = getParaToInt();
+        if (BusiScoreTemplate.dao.deleteByIdLog(id)) {
+            renderText("删除成功");
+        } else {
+            renderText("删除失败");
+        }
     }
 }
