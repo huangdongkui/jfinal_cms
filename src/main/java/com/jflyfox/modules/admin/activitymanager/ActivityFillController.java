@@ -34,19 +34,26 @@ public class ActivityFillController extends BaseProjectController {
     private static final String path = "/pages/admin/activity/activity_";
 
     public void index() {
+
         String busi_activity_id = getPara("busi_activity_id");
-        edit(busi_activity_id);
+        String id = getPara("id");
+        edit(busi_activity_id, id);
     }
 
-    public void edit(String busi_activity_id) {
+    public void edit(String busi_activity_id, String id) {
 
-        if (busi_activity_id == null) {
+        if (StringUtils.isEmpty(busi_activity_id) && StringUtils.isEmpty(id)) {
             redirect("/admin/home");
             return;
         }
         final SessionUser sessionUser = getSessionUser();
-        BusiActivityProject model = BusiActivityProject.dao.findFirstByWhere(" where busi_activity_id = ? and create_id = ? and deleted=0", busi_activity_id, sessionUser.getUserid().toString());
+        BusiActivityProject model=new BusiActivityProject();
 
+        if(StringUtils.isNotBlank(id)){
+            model = BusiActivityProject.dao.findFirstByWhere(" where id = ? and deleted=0", id);
+        } else if(StringUtils.isNotBlank(busi_activity_id)) {
+            model = BusiActivityProject.dao.findFirstByWhere(" where busi_activity_id = ? and create_id = ? and deleted=0", busi_activity_id, sessionUser.getUserid().toString());
+        }
 
         if (model == null) {
             model = new BusiActivityProject();
@@ -73,6 +80,8 @@ public class ActivityFillController extends BaseProjectController {
         setAttr("core_tech_contents_li", genHtmlLiCode(model.getStr("core_tech_contents")));
         setAttr("filelist", ActivityService.genHtmllIFilesbybusinessid(model.get("id", "0").toString(), true));
         setAttr("model", model);
+        setAttr("pre_page",getRequest().getHeader("referer"));
+
         render(path + "fill.html");
     }
 
@@ -122,7 +131,7 @@ public class ActivityFillController extends BaseProjectController {
         }
 
         //renderMessage("1");
-        renderText(model.getId().toString());
+        renderText(model.get("busi_activity_id").toString());
 
     }
 

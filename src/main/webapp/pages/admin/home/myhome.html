@@ -10,9 +10,7 @@ include("/pages/template/head.html"){}
     var roleids = '${nowUser.busitype}';
 
     jQuery(function ($) {
-        // 页面方法
-        //显示Menu索引
-        //    showMenu('page_home');
+
         if (roleids=="0") {//参赛者
             btnText = "填报";
         } else if (roleids=="1") {//评委
@@ -218,33 +216,28 @@ var sessionUserId = isEmpty(session.session_user) ? 0: session.session_user.user
 
                         <input type="hidden" name="busi_activity_id" id="busi_activity_id">
                         <div class="form-group">
-                            <label for="username" class="col-sm-2 control-label">登录名</label>
-                            <div class="col-sm-9">
-                                ${nowUser.username!''}
+                            <label class="col-sm-2 control-label">登录名</label>
+                            <div class="col-sm-9">${nowUser.username!''}
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="realname" class="col-sm-2 control-label">姓名</label>
-                            <div class="col-sm-9">
-                                ${nowUser.realname!''}
+                            <label class="col-sm-2 control-label">姓名</label>
+                            <div class="col-sm-9">${nowUser.realname!''}
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="email" class="col-sm-2 control-label">email</label>
-                            <div class="col-sm-9">
-                                ${nowUser.email!''}
+                            <label class="col-sm-2 control-label">email</label>
+                            <div class="col-sm-9">${nowUser.email!''}
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="tel" class="col-sm-2 control-label">手机号</label>
-                            <div class="col-sm-9">
-                                ${nowUser.tel!''}
+                            <label class="col-sm-2 control-label">手机号</label>
+                            <div class="col-sm-9">${nowUser.tel!''}
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="remark" class="col-sm-2 control-label">备注</label>
-                            <div class="col-sm-9">
-                                ${nowUser.remark!''}
+                            <label class="col-sm-2 control-label">备注</label>
+                            <div class="col-sm-9">${nowUser.remark!''}
                             </div>
                         </div>
                     </form>

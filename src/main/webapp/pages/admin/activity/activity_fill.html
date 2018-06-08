@@ -20,8 +20,8 @@ include("/pages/template/head.html"){}
                     data: $("form").serialize(),
                     success: function (busi_activity_id) {
                         if (busi_activity_id) {
-
-                            $("#busi_activity_id").val(busi_activity_id);
+                           // $("#busi_activity_id").val(busi_activity_id);
+                            $("form").append('<input type="hidden" name="busi_activity_id" value="'+busi_activity_id+'">');
                             Alert("保存成功", function () {
                                 $("form").action = "${BASE_PATH}admin/activityfill";
                                 $("form").submit();
@@ -159,6 +159,7 @@ include("/pages/template/head.html"){}
             $("#btnSave").hide();
             $("#btnSubmit").hide();
             $("#filelist a").hide();
+            $(".file-input").hide()
         }
 
 
@@ -179,7 +180,7 @@ include("/pages/template/head.html"){}
     }
 
     function closeIframeReload() {
-        var url = 'admin/home';
+        var url = '${pre_page}';
         form1.action = url;
         form1.submit();
     }
