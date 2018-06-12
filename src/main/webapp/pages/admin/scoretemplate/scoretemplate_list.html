@@ -14,6 +14,7 @@ include("/pages/template/head.html"){}
         $('#tree').treeview({
             data: getTree(0), onNodeSelected: function (event, data) {
                 m_parentId = data.id;
+                m_path=data.path;
                 var tmpData = getTree(data.id);
                 $('#tbDetail').bootstrapTable('load', {data: tmpData});
             }
@@ -103,7 +104,7 @@ include("/pages/template/head.html"){}
             var tempItem = data[d];
 
             if (tempItem.nodes == true) {
-                tempItem.nodes = [{id: 10000, nodeId: 10000, text: ""}];
+                tempItem.nodes = [{id: 10000, nodeId: 10000, text: "",path:""}];
                 tempItem.state = {
                     expanded: false
                 }
@@ -121,8 +122,10 @@ include("/pages/template/head.html"){}
             $('#tbDetail').bootstrapTable('load',{data:tmpData});
         });
     }
+    var m_path='';
+
     function add() {
-        var url = 'admin/scoretemplate/add/' + m_parentId;
+        var url = 'admin/scoretemplate/add/?parentId=' + m_parentId+'&path='+m_path;
         var title = '';
         if (m_parentId == 0) {
             title = '添加模版';
@@ -161,7 +164,7 @@ var bodyContent = {
 
 <!-- 工具容器 -->
 <div id="toolbar" class="btn-group">
-    <button id="btn_add" type="button" class="btn btn-default" onclick="add(1);">
+    <button id="btn_add" type="button" class="btn btn-default" onclick="add();">
         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新增
     </button>
 

@@ -8,6 +8,7 @@ import com.jflyfox.component.base.BaseProjectController;
 import com.jflyfox.jfinal.base.SessionUser;
 import com.jflyfox.jfinal.component.annotation.ControllerBind;
 import com.jflyfox.jfinal.component.db.SQLUtils;
+import com.jflyfox.modules.admin.scoretemplate.BusiScoreTemplate;
 import com.jflyfox.system.department.SysDepartment;
 import com.jflyfox.system.file.model.SysFileUpload;
 import com.jflyfox.system.user.SysUser;
@@ -62,9 +63,25 @@ public class ActivityProjectController extends BaseProjectController {
         setAttr("createname",sysUser.get("realname"));
         setAttr("department",sysDepartment.getName());
         setAttr("model",model);
+
+        setAttr("secendType",GenHtmlButtion(model.get("busi_activity_id").toString()));
         render(path + "project_jugde.html");
     }
 
+    private String GenHtmlButtion(String busiActivityid){
+        String btnHtml="<button type=\"button\" class=\"btn btn-info btn-second\" value=\"%s\">%s</button>";
+        BusiActivity busiActivity=BusiActivity.dao.findById(busiActivityid);
+        final Object busi_score_template_id = busiActivity.get("busi_score_template_id");
+
+        final List<BusiScoreTemplate> byWhereList = BusiScoreTemplate.dao.findByWhere(" where parentId=?", busi_score_template_id);
+        StringBuilder sb=new StringBuilder();
+
+        for (BusiScoreTemplate busiScoreTemplate : byWhereList) {
+            sb.append(String.format(btnHtml,busiScoreTemplate.getPath(),busiScoreTemplate.getScorceContents()));
+        }
+
+        return sb.toString();
+    }
     /**
      * 评价列表
      */
@@ -78,7 +95,7 @@ public class ActivityProjectController extends BaseProjectController {
                 "  where b.id=a.parentId) as pre_node \n" +
                 " from busi_score_template a\n" +
                 "where LOCATE('"+path+"',a.path)=1\n" +
-                "and length(a.path)>length('"+path+"')";
+                "and length(a.path)>length('"+path+"') and level=3";
 
         List<Record> records = Db.find(sql);
         renderJson(records);

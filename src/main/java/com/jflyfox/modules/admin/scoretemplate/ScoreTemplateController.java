@@ -43,7 +43,7 @@ public class ScoreTemplateController extends BaseProjectController {
 
     private List getScoretemplateByParentId(String parentId) {
 
-        String sql = "select id,scorce_contents as text,exists(select * from busi_score_template t where t.parentId=t1.id) as nodes,scorce\n" +
+        String sql = "select id,scorce_contents as text,exists(select * from busi_score_template t where t.parentId=t1.id) as nodes,scorce,path\n" +
                 "from busi_score_template t1\n" +
                 "where t1.parentId=?";
 
@@ -62,11 +62,16 @@ public class ScoreTemplateController extends BaseProjectController {
     }
 
     public void add() {
-        final Integer parentId = getParaToInt();
+        final Integer parentId =getParaToInt("parentId");
+        final String path = getPara("path");
+
         final BusiScoreTemplate model = new BusiScoreTemplate();
-        model.set("parentId", parentId);
+
+        model.set("parentId",parentId);
+        model.set("path",path);
+
         setAttr("model", model);
-        render(path + "edit.html");
+        render(ScoreTemplateController.path + "edit.html");
     }
 
     public void save() {
@@ -81,6 +86,7 @@ public class ScoreTemplateController extends BaseProjectController {
             model.remove("id");
             model.put("create_id", getSessionUser().getUserid());
             model.put("create_time", getNow());
+
             model.save();
         }
         renderMessage("保存成功");
