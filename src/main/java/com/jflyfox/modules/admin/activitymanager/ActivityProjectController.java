@@ -1,6 +1,5 @@
 package com.jflyfox.modules.admin.activitymanager;
 
-import com.alibaba.fastjson.JSONObject;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
@@ -10,10 +9,7 @@ import com.jflyfox.jfinal.component.annotation.ControllerBind;
 import com.jflyfox.jfinal.component.db.SQLUtils;
 import com.jflyfox.modules.admin.scoretemplate.BusiScoreTemplate;
 import com.jflyfox.system.department.SysDepartment;
-import com.jflyfox.system.file.model.SysFileUpload;
 import com.jflyfox.system.user.SysUser;
-import com.jflyfox.system.user.UserController;
-import com.jflyfox.system.user.UserSvc;
 import com.jflyfox.util.StrUtils;
 
 import java.util.List;
@@ -77,7 +73,7 @@ public class ActivityProjectController extends BaseProjectController {
         StringBuilder sb=new StringBuilder();
 
         for (BusiScoreTemplate busiScoreTemplate : byWhereList) {
-            sb.append(String.format(btnHtml,busiScoreTemplate.getPath(),busiScoreTemplate.getScorceContents()));
+            sb.append(String.format(btnHtml,busiScoreTemplate.getPath()+","+busiScoreTemplate.getId(),busiScoreTemplate.getScorceContents()));
         }
 
         return sb.toString();
@@ -92,7 +88,8 @@ public class ActivityProjectController extends BaseProjectController {
         String sql="select  a.*,\n" +
                 " (select b.scorce_contents\n" +
                 "  from busi_score_template b \n" +
-                "  where b.id=a.parentId) as pre_node \n" +
+                "  where b.id=a.parentId) as pre_node, \n" +
+                "   0 as jugde_score  "+
                 " from busi_score_template a\n" +
                 "where LOCATE('"+path+"',a.path)=1\n" +
                 "and length(a.path)>length('"+path+"') and level=3";

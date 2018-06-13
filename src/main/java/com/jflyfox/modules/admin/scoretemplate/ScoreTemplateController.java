@@ -1,18 +1,9 @@
 package com.jflyfox.modules.admin.scoretemplate;
 
-import com.jfinal.template.ext.directive.Str;
 import com.jflyfox.component.base.BaseProjectController;
 import com.jflyfox.jfinal.component.annotation.ControllerBind;
-import com.jflyfox.jfinal.component.db.SQLUtils;
-import com.jflyfox.system.log.SysLog;
-import com.sun.javafx.scene.control.skin.VirtualFlow;
-import jdk.nashorn.internal.ir.ReturnNode;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 〈评分模版〉
@@ -62,13 +53,13 @@ public class ScoreTemplateController extends BaseProjectController {
     }
 
     public void add() {
-        final Integer parentId =getParaToInt("parentId");
+        final Integer parentId = getParaToInt("parentId");
         final String path = getPara("path");
 
         final BusiScoreTemplate model = new BusiScoreTemplate();
 
-        model.set("parentId",parentId);
-        model.set("path",path);
+        model.set("parentId", parentId);
+        model.set("path", path);
 
         setAttr("model", model);
         render(ScoreTemplateController.path + "edit.html");
@@ -87,6 +78,12 @@ public class ScoreTemplateController extends BaseProjectController {
             model.put("create_id", getSessionUser().getUserid());
             model.put("create_time", getNow());
 
+            String path=model.getPath();
+            if(path.startsWith("null")){//去除null
+                path=path.replace("null,","");
+            }
+            model.setPath(path);
+            model.setLevel(path.split(",").length);
             model.save();
         }
         renderMessage("保存成功");

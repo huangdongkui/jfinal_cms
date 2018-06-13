@@ -24,6 +24,9 @@ include("/pages/template/head.html"){}
 
         $(".btn-second").click(function (o) {
             initTable($(this).val());
+            setTimeout(function () {
+                mergeTable('pre_node','tb_score');
+            },500);
 
             return false;
         });
@@ -114,7 +117,7 @@ include("/pages/template/head.html"){}
         });
 
     }
-    function getObjFromTable($table, field) {
+    function getObjFromTable(field, $table) {
         var obj = [];
         var maxV = $table.find("th").length;
 
@@ -149,21 +152,23 @@ include("/pages/template/head.html"){}
         if (row > 1) obj.push({"index": index, "row": row});
         return obj;
     }
-    function mergeTable(field) {
-        $table = $("#tb_score");
-        var obj = getObjFromTable($table, field);
+
+    function mergeTable(field, tableid) {
+        $table = $('#' + tableid);
+        var obj = getObjFromTable(field, $table);
 
         for (var item in obj) {
-            $("#tb_score").bootstrapTable('mergeCells', {
+            $table.bootstrapTable('mergeCells', {
                 index: obj[item].index,
                 field: field,
                 colspan: 1,
-                rowspan: 2,
+                rowspan: obj[item].row,
             });
         }
 
 
     }
+
 </script>
 
 <%
@@ -179,9 +184,8 @@ var bodyContent = {
 
         <div class="container-fluid">
 
-            <div class="col-md-1">
-            </div>
-            <div class="col-md-10">
+
+            <div class="col-md-12">
                 <!-- 菜单 -->
                 <% include("/pages/template/menu.html"){} %>
 
@@ -258,9 +262,11 @@ var bodyContent = {
                                 ${secendType}
                             </div>
                             <div class="form-group">
-                                <table class="table" id="tb_score">
+                                <table data-mobile-responsive="true"
+                                       class="table-bordered table-condensed table-hover table" id="tb_score">
                                     <thead>
                                     <tr>
+                                        <th>序号</th>
                                         <th>评分内容
                                         </th>
                                         <th>评分要点
@@ -280,6 +286,7 @@ var bodyContent = {
                                         <td></td>
                                         <td></td>
                                         <td></td>
+                                        <td></td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -292,16 +299,14 @@ var bodyContent = {
                 <nav class="navbar navbar-default navbar-fixed-bottom">
                     <div class="container" style="padding: 5px 0px 5px 0px;text-align: center;">
                         <button class="btn btn-primary" onclick="oper.save(${model.id!'0'});return false;" id="btnSave">
-                            保
-                            存
+                            保存
                         </button>
                         <button class="btn btn-default" onclick="closeIframeReload();">返回</button>
                     </div>
                 </nav>
             </div>
 
-            <div class="col-md-1">
-            </div>
+
 
         </div>
     </form>

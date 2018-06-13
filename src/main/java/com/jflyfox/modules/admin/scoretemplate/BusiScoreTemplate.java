@@ -1,14 +1,9 @@
 package com.jflyfox.modules.admin.scoretemplate;
 
-import com.alibaba.fastjson.annotation.JSONField;
 import com.jflyfox.component.base.BaseProjectModel;
 import com.jflyfox.jfinal.component.annotation.ModelBind;
-import com.jflyfox.modules.admin.activitymanager.BusiActivity;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 /**
  * 〈活动对象〉
@@ -136,6 +131,15 @@ public class BusiScoreTemplate extends BaseProjectModel<BusiScoreTemplate> {
     private String create_id = "create_id";
     private String deleted = "deleted";
     private String remarks = "remarks";
+    private String level="level";
+    public Integer getLevel() {
+        return get(level);
+    }
+
+    public BusiScoreTemplate setLevel(Integer value) {
+        set(level, value);
+        return this;
+    }
 
 
 }

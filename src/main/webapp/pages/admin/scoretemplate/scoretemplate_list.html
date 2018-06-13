@@ -14,7 +14,7 @@ include("/pages/template/head.html"){}
         $('#tree').treeview({
             data: getTree(0), onNodeSelected: function (event, data) {
                 m_parentId = data.id;
-                m_path=data.path;
+                m_path=data.path+","+data.id;
                 var tmpData = getTree(data.id);
                 $('#tbDetail').bootstrapTable('load', {data: tmpData});
             }
