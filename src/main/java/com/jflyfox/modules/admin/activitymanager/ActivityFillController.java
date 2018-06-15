@@ -1,25 +1,11 @@
 package com.jflyfox.modules.admin.activitymanager;
 
-import com.alibaba.fastjson.JSONObject;
 import com.jfinal.plugin.activerecord.Db;
 import com.jflyfox.component.base.BaseProjectController;
-import com.jflyfox.component.util.JFlyFoxUtils;
 import com.jflyfox.jfinal.base.SessionUser;
 import com.jflyfox.jfinal.component.annotation.ControllerBind;
-import com.jflyfox.modules.admin.foldernotice.TbFolderNotice;
-import com.jflyfox.system.config.ConfigService;
-import com.jflyfox.system.department.DepartmentSvc;
 import com.jflyfox.system.dict.DictSvc;
-import com.jflyfox.system.file.model.SysFileUpload;
-import com.jflyfox.system.file.util.FileUploadUtils;
-import com.jflyfox.system.user.SysUser;
-import com.jflyfox.util.DateUtils;
-import jdk.nashorn.internal.ir.ReturnNode;
 import org.apache.commons.lang.StringUtils;
-import sun.misc.Request;
-
-import java.util.Arrays;
-import java.util.List;
 
 
 /**
@@ -120,12 +106,13 @@ public class ActivityFillController extends BaseProjectController {
 
         Integer userid = getSessionUser().getUserid();
         String now = getNow();
-        model.put("update_id", userid);
-        model.put("update_time", now);
         if (model.getId() != null && model.getId() > 0) { // 更新
+            model.set("update_id", userid);
+            model.set("update_time",now);
             model.update();
         } else { // 新增
             model.remove("id");
+            model.put("update_id", userid);
             model.put("create_id", userid);
             model.save();
         }

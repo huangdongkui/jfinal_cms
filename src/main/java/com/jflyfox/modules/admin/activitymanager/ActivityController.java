@@ -1,6 +1,5 @@
 package com.jflyfox.modules.admin.activitymanager;
 
-import com.alibaba.fastjson.JSONObject;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
@@ -8,16 +7,11 @@ import com.jflyfox.component.base.BaseProjectController;
 import com.jflyfox.jfinal.base.SessionUser;
 import com.jflyfox.jfinal.component.annotation.ControllerBind;
 import com.jflyfox.jfinal.component.db.SQLUtils;
-import com.jflyfox.modules.admin.advicefeedback.TbAdviceFeedback;
-import com.jflyfox.modules.admin.contact.TbContact;
 import com.jflyfox.system.department.DepartmentSvc;
 import com.jflyfox.system.user.SysUser;
 import com.jflyfox.util.DateUtils;
 import com.jflyfox.util.StrUtils;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -124,6 +118,9 @@ public class ActivityController extends BaseProjectController {
         Integer threedateid = getParaToInt("threedateid");
 
         if (pid != null && pid > 0) { // 更新
+            model.set("update_id", userid);
+            model.set("update_time",now);
+
             if (model.updateLog()) {
                 //更新赛事时间
                 ActivityService.updateBusiActivitySlaveById(enrolldateid, enrolldate);
