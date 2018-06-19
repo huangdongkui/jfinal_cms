@@ -2,7 +2,6 @@ package com.jflyfox.modules.admin.activitymanager;
 
 import com.jflyfox.component.base.BaseProjectModel;
 import com.jflyfox.jfinal.component.annotation.ModelBind;
-import com.jflyfox.modules.admin.scoretemplate.BusiScoreTemplate;
 
 /**
  * 〈活动对象〉
@@ -256,5 +255,15 @@ public class BusiActivityProject extends BaseProjectModel<BusiActivityProject> {
     private String create_id = "create_id";
     private String remarks = "remarks";
     private String deleted = "deleted";
+    private String project_leader="project_leader";
+
+    public String getProjectLeader() {
+        return get(project_leader);
+    }
+
+    public BusiActivityProject setProjectLeader(String value) {
+        set(project_leader, value);
+        return this;
+    }
 
 }

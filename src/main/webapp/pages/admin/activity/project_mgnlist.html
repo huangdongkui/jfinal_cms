@@ -12,7 +12,11 @@ include("/pages/template/head.html"){}
             width: 800,
             height: 500,
             form: document.form1,
-
+            list: function () {
+                var url = 'admin/activityproject/mnglist';
+                this.form.action = url;
+                this.form.submit();
+            },
             del: function (id) {
                 var url = 'admin/activityproject/delete?id='+id;
                 var title = '确认要删除该报名？';
@@ -96,7 +100,7 @@ var bodyContent = {
                 <th name="realname" class="sorting">项目负责人</th>
                 <th name="project_name" class="sorting">项目名称</th>
                 <th name="tel" class="sorting">联系方式</th>
-                <th name="departname" class="sorting">机构</th>
+                <th name="departname" width="10%">机构</th>
                 <th name="from_belongfields" class="sorting">领域</th>
                 <th name="create_time" class="sorting">报名时间</th>
                 <th>操作</th>
@@ -118,7 +122,7 @@ var bodyContent = {
                 <td>
 
                     <a href="javascript:void(0);" class="btn btn-sm btn-danger" onclick="oper.del(${item.id});">删除</a>
-                    <a href="javascript:void(0);" class="btn btn-sm btn-danger" onclick="oper.view(${item.id});">查看</a>
+                    <a href="javascript:void(0);" class="btn btn-sm btn-primary" onclick="oper.view(${item.id});">查看</a>
 
                 </td>
             </tr>
