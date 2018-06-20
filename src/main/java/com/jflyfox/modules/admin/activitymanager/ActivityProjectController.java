@@ -28,7 +28,7 @@ public class ActivityProjectController extends BaseProjectController {
     public void index() {
         final String busi_activity_id = getPara("busi_activity_id");
         setAttr("busi_activity_id",busi_activity_id);
-
+        setAttr("nowUser",getSessionUser());
         render(path + "project_list.html");
     }
 
