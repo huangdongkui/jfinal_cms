@@ -25,7 +25,7 @@ public class CommonController extends BaseProjectController {
 
 	//创意登陆
 	//public static final String loginPage = "/login.html";
-	public static final String loginPage = "/login/index.html";
+	public static final String loginPage = "/";
 	public static final String firstPage = "/home";
 
 	/**
@@ -161,7 +161,7 @@ public class CommonController extends BaseProjectController {
 		}
 
 		setAttr("msg", "您已退出");
-		renderAuto(loginPage);
+		redirect(loginPage);
 	}
 
 	public void update_cache() {
