@@ -8,7 +8,6 @@ import com.jflyfox.jfinal.component.annotation.ControllerBind;
 import com.jflyfox.modules.admin.folder.FolderService;
 import com.jflyfox.modules.admin.folder.TbFolder;
 import com.jflyfox.modules.admin.site.SessionSite;
-import com.jflyfox.modules.front.Home;
 import com.jflyfox.modules.front.interceptor.FrontInterceptor;
 import com.jflyfox.system.dict.DictCache;
 import com.jflyfox.system.log.SysLog;
@@ -25,8 +24,8 @@ import com.jflyfox.util.StrUtils;
 public class CommonController extends BaseProjectController {
 
 	//创意登陆
-	public static final String loginPage = "/login.html";
-	//public static final String loginPage = "/login/index.html";
+	//public static final String loginPage = "/login.html";
+	public static final String loginPage = "/login/index.html";
 	public static final String firstPage = "/home";
 
 	/**

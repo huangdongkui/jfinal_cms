@@ -18,10 +18,9 @@ include("/pages/template/head.html"){}
                     type: 'POST',
                     url: 'admin/activityfill/save',
                     data: $("form").serialize(),
-                    success: function (busi_activity_id) {
-                        if (busi_activity_id) {
-                           // $("#busi_activity_id").val(busi_activity_id);
-                            $("form").append('<input type="hidden" name="busi_activity_id" value="'+busi_activity_id+'">');
+                    success: function (id) {
+                        if (id) {
+                            $("form").append('<input type="hidden" name="id" value="'+id+'">');
                             Alert("保存成功", function () {
                                 $("form").action = "${BASE_PATH}admin/activityfill";
                                 $("form").submit();
@@ -196,7 +195,7 @@ var bodyContent = {
 <form name="form1" action="" method="post" class="form-horizontal" role="form">
     <input type="hidden" name="model.id" id="modelid" value="${model.id!}"/>
     <input type="hidden" name="model.busi_activity_id" id="busi_activity_id" value="${model.busi_activity_id!}"/>
-
+    <input type="hidden" name="busi_activity_id"  value="${model.busi_activity_id!}"/>
     <input type="hidden" id="modelcore_tech_contents" valid="vtext" validname="核心技术"
            name="model.core_tech_contents" value="${model.core_tech_contents}"/>
 

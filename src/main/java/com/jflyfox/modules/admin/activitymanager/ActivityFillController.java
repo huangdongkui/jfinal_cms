@@ -1,10 +1,13 @@
 package com.jflyfox.modules.admin.activitymanager;
 
 import com.jfinal.plugin.activerecord.Db;
+import com.jfinal.plugin.activerecord.Page;
 import com.jflyfox.component.base.BaseProjectController;
 import com.jflyfox.jfinal.base.SessionUser;
 import com.jflyfox.jfinal.component.annotation.ControllerBind;
+import com.jflyfox.jfinal.component.db.SQLUtils;
 import com.jflyfox.system.dict.DictSvc;
+import com.jflyfox.util.StrUtils;
 import org.apache.commons.lang.StringUtils;
 
 
@@ -26,6 +29,30 @@ public class ActivityFillController extends BaseProjectController {
         edit(busi_activity_id, id);
     }
 
+    public void list(){
+
+        String busi_activity_id = getPara("busi_activity_id");
+        String userid=getSessionUser().getUserid().toString();
+        SQLUtils sql = new SQLUtils(" from busi_activity_project t "
+                + " where deleted = 0 and create_id="+userid);
+
+        sql.setAlias("t");
+
+        // 排序
+        String orderBy = getBaseForm().getOrderBy();
+        if (StrUtils.isEmpty(orderBy)) {
+            sql.append(" order by t.create_time desc ");
+        } else {
+            sql.append(" order by t.").append(orderBy);
+        }
+
+        Page<BusiActivity> page = BusiActivity.dao.paginate(getPaginator(), "select t.* ",
+                sql.toString().toString());
+
+        setAttr("page", page);
+        setAttr("busi_activity_id",busi_activity_id);
+        render(path+"fill_list.html");
+    }
     public void edit(String busi_activity_id, String id) {
 
         if (StringUtils.isEmpty(busi_activity_id) && StringUtils.isEmpty(id)) {
@@ -37,12 +64,12 @@ public class ActivityFillController extends BaseProjectController {
 
         if(StringUtils.isNotBlank(id)){
             model = BusiActivityProject.dao.findFirstByWhere(" where id = ? and deleted=0", id);
-        } else if(StringUtils.isNotBlank(busi_activity_id)) {
-            model = BusiActivityProject.dao.findFirstByWhere(" where busi_activity_id = ? and create_id = ? and deleted=0", busi_activity_id, sessionUser.getUserid().toString());
         }
+//        else if(StringUtils.isNotBlank(busi_activity_id)) {
+//            model = BusiActivityProject.dao.findFirstByWhere(" where busi_activity_id = ? and create_id = ? and deleted=0", busi_activity_id, sessionUser.getUserid().toString());
+//        }
 
-        if (model == null) {
-            model = new BusiActivityProject();
+        if (model.getId() == null) {
             model.set("busi_activity_id", busi_activity_id);
         }
 
@@ -98,12 +125,6 @@ public class ActivityFillController extends BaseProjectController {
 
         BusiActivityProject model = getModel(BusiActivityProject.class);
 
-        final String busi_activity_id = model.get("busi_activity_id").toString();
-        if (busi_activity_id == null) {
-            redirect("/admin/home");
-            return;
-        }
-
         Integer userid = getSessionUser().getUserid();
         String now = getNow();
         if (model.getId() != null && model.getId() > 0) { // 更新
@@ -118,7 +139,7 @@ public class ActivityFillController extends BaseProjectController {
         }
 
         //renderMessage("1");
-        renderText(model.get("busi_activity_id").toString());
+        renderText(model.get("id").toString());
 
     }
 
@@ -127,6 +148,17 @@ public class ActivityFillController extends BaseProjectController {
         final Integer updateCount = Db.update("update busi_activity_project set project_status=1 where id=?", pid);
         renderText(updateCount.toString());
 
+    }
+
+    public void delete() {
+        BusiActivityProject model = new BusiActivityProject();
+        Integer userid = getSessionUser().getUserid();
+        String now = getNow();
+        model.put("update_id", userid);
+        model.put("update_time", now);
+
+        model.deletelogicByIdLog(getParaToInt());
+        list();
     }
 
 }

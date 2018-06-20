@@ -2,10 +2,8 @@ package com.jflyfox.modules.admin.activitymanager;
 
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Record;
-import com.jfinal.template.stat.ast.For;
 import com.jflyfox.jfinal.base.BaseService;
 import com.jflyfox.system.file.model.SysFileUpload;
-import com.jflyfox.system.file.util.FileUploadUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +58,7 @@ public class ActivityService extends BaseService {
         StringBuilder sbFilelist = new StringBuilder();
         final List<SysFileUpload> listSysFileUpload = SysFileUpload.dao.findByWhere("where business_id=?", business_id);
         for (SysFileUpload sysFileUpload : listSysFileUpload) {
-            sbFilelist.append("<li class=\"list-group-item\"><span>" + sysFileUpload.getName() + "</span><a style=\"float: right;\" target=\"_blank\" href=\"" + FileUploadUtils.BASE_PATH + sysFileUpload.getPath() + "\"> <span class=\"badge\">下载</span></a>");
+            sbFilelist.append("<li class=\"list-group-item\"><span>" + sysFileUpload.getName() + "</span><a style=\"float: right;\" target=\"_blank\" href=\"" +sysFileUpload.getPath() + "\"> <span class=\"badge\">下载</span></a>");
 
             if(withDelete){
                 sbFilelist.append("<a style=\"float: right;\" href=\"javascript:(0);\" onclick=\"delfile(" + sysFileUpload.getId() + ",this);return false;\"><span class=\"badge\">删除</span></a></li>");
