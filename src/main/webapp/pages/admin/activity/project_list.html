@@ -7,6 +7,7 @@ include("/pages/template/head.html"){}
     var $bootstrapTable;
     var keyid;
     var oper;
+    var roleids = '${nowUser.busitype}';
     jQuery(function ($) {
         // 页面方法
         oper = {
@@ -171,7 +172,9 @@ var bodyContent = {
             <button type="button" class="btn btn-default" onclick="resetForm();">
                 <span class="glyphicon glyphicon-refresh"></span> 重 置
             </button>
-
+            <button type="button" class="btn btn-default" onclick="oper.add();">
+                <span class="glyphicon glyphicon-add"></span> 添加填报
+            </button>
         </div>
         <div class="panel panel-default">
             <div class="panel-heading">

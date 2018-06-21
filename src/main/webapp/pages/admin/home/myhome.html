@@ -100,7 +100,7 @@ include("/pages/template/head.html"){}
 
     function showPage(busi_activity_id) {
         var projecturl = '${BASE_PATH }admin/activityproject';
-        var fillurl = '${BASE_PATH }admin/activityfill';
+        var fillurl = '${BASE_PATH }admin/activityfill/list';
         $('#busi_activity_id').val(busi_activity_id);
         if (btnText == "填报" ||btnText == "已提交") {
             form1.action = fillurl;
