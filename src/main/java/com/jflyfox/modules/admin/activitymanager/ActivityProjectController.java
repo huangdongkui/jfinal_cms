@@ -143,6 +143,40 @@ public class ActivityProjectController extends BaseProjectController {
 
     }
 
+    /**
+     * 导出excel
+     */
+    private void exportExcel(){
+        String departid=getPara("departid");
+        if(departid==null){
+            departid="-1";
+        }
+        SQLUtils sql = new SQLUtils(" from busi_activity_project t "+
+                "left join busi_activity ba on ba.id=t.busi_activity_id\n" +
+                "left join sys_user u on u.userid=t.create_id\n" +
+                "left join sys_department d on d.id=u.departid\n" +
+                " where t.deleted = 0 and t.project_status=1");
+
+        if(StringUtils.isNotBlank(departid)&&!departid.equals("-1")){
+            sql.whereEquals("departid", departid);
+        }
+
+        sql.setAlias("t");
+
+        // 排序
+        String orderBy = getBaseForm().getOrderBy();
+        if (StrUtils.isEmpty(orderBy)) {
+            sql.append(" order by t.create_time desc ");
+        } else {
+            sql.append(" order by t.").append(orderBy);
+        }
+
+//        Page<BusiActivity> page = BusiActivity.dao.paginate(getPaginator(), "select t.id, t.create_time,activity_name,u.tel,u.realname,d.name as departname,t.project_name,t.from_belongfields ",
+//                sql.toString().toString());
+        final List<BusiActivity> byWhere = BusiActivity.dao.findByWhere(sql.toString());
+    }
+
+
     public void delete(){
         final String id =getPara("id");
 
