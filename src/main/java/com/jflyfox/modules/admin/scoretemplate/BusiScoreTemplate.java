@@ -28,7 +28,7 @@ public class BusiScoreTemplate extends BaseProjectModel<BusiScoreTemplate> {
     }
 
     public BusiScoreTemplate setParentId(Integer value) {
-        set(ID, value);
+        set(parentId, value);
         return this;
     }
 

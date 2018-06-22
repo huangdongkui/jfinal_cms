@@ -7,20 +7,13 @@ include("/pages/template/head.html"){}
 <script type="text/javascript">
     var oper = {
         save: function (id) {
-            if (!validForm()) {
-                return false;
-            }
-            id = id || '0';
-            var url = 'admin/activityproject/save/' + id;
-            form1.action = url;
-            form1.submit();
+
+
             return true;
         }
     };
     $(document).ready(function () {
-        $('.dateRange').daterangepicker(null, function (start, end, label) {
-            //console.log(start.toISOString(), end.toISOString(), label);
-        });
+
 
         $(".btn-second").click(function (o) {
             initTable($(this).val());
@@ -30,6 +23,7 @@ include("/pages/template/head.html"){}
 
             return false;
         });
+        $(".btn-second:first").click();
     });
 
     function closeIframeReload() {
@@ -39,6 +33,7 @@ include("/pages/template/head.html"){}
     }
     var searchData;
     var $bootstrapTable;
+    var projectId=window.location.href.split('/').pop();
     function initTable(path) {
         searchData = path;
         if ($bootstrapTable != null) {
@@ -64,7 +59,8 @@ include("/pages/template/head.html"){}
                 var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
                     limit: params.limit,   //页面大小
                     offset: params.offset,  //页码
-                    path: searchData
+                    path: searchData,
+                    projectId:projectId
                 };
                 return temp;
             }
@@ -100,12 +96,12 @@ include("/pages/template/head.html"){}
                     align: 'center',
                     width: '10%'
                 }, {
-                    field: 'jugde_score',
+                    field: 'hasscore',
                     title: '得分',
                     align: 'center',
                     width: '10%',
-                    formatter: function formatter(value, row, index, field) {
-                        return '<input type="text" class="form-control" id="name_' + index + '" placeholder="0" value="' + value + '">';
+                    formatter: function formatter (value, row, index, field) {
+                        return '<input type="text" class="form-control" id="name_' + row.busi_score_template_relation_score_id + '" placeholder="0" value="' + value + '"/>';
                     }
                 }, {
                     field: 'remarks',
@@ -298,7 +294,7 @@ var bodyContent = {
                 <div style="height: 50px;clear: both;">&nbsp;</div>
                 <nav class="navbar navbar-default navbar-fixed-bottom">
                     <div class="container" style="padding: 5px 0px 5px 0px;text-align: center;">
-                        <button class="btn btn-primary" onclick="oper.save(${model.id!'0'});return false;" id="btnSave">
+                        <button class="btn btn-primary" onclick="oper.save();return false;" id="btnSave">
                             保存
                         </button>
                         <button class="btn btn-default" onclick="closeIframeReload();">返回</button>

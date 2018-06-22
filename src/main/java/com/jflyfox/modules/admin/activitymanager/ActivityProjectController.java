@@ -9,6 +9,7 @@ import com.jflyfox.jfinal.base.SessionUser;
 import com.jflyfox.jfinal.component.annotation.ControllerBind;
 import com.jflyfox.jfinal.component.db.SQLUtils;
 import com.jflyfox.modules.admin.scoretemplate.BusiScoreTemplate;
+import com.jflyfox.modules.admin.scoretemplate.BusiScoreTemplateRelationScore;
 import com.jflyfox.system.department.DepartmentSvc;
 import com.jflyfox.system.department.SysDepartment;
 import com.jflyfox.system.user.SysUser;
@@ -91,20 +92,54 @@ public class ActivityProjectController extends BaseProjectController {
     public void scorelist(){
 
         String path=getPara("path");
+        String userid=getSessionUser().getUserid().toString();
+        String projectId=getPara("projectId");
 
         String sql="select  a.*,\n" +
                 " (select b.scorce_contents\n" +
                 "  from busi_score_template b \n" +
-                "  where b.id=a.parentId) as pre_node, \n" +
-                "   0 as jugde_score  "+
+                "  where b.id=a.parentId) as pre_node, " +
+                "   IFNULL(b.jugde_score,0) as hasscore,b.id as busi_score_template_relation_score_id  "+
                 " from busi_score_template a\n" +
-                "where LOCATE('"+path+"',a.path)=1\n" +
+                " left join busi_score_template_relation_score b \n" +
+                " on b.busi_score_template_id=a.id and b.busi_activity_project_id="+projectId+" and b.userid="+userid+
+                " where LOCATE('"+path+"',a.path)=1\n" +
                 "and length(a.path)>length('"+path+"') and level=3";
 
         List<Record> records = Db.find(sql);
         renderJson(records);
     }
+
+    /**
+     * 保存分数
+     */
     public void save(){
+        final String busi_score_template_relation_score_id = getPara("busi_score_template_relation_score_id");
+        final String busi_score_template_id = getPara("busi_score_template_id");
+        final String jugdescore = getPara("jugdescore");
+        final String projectid = getPara("projectid");
+        final Integer userid = getSessionUser().getUserid();
+        String now = getNow();
+        String busi_activity_slave_id=null;
+        BusiScoreTemplateRelationScore model=new BusiScoreTemplateRelationScore();
+
+        model.put("update_id", userid);
+        model.put("update_time", now);
+        //修改
+        if(StringUtils.isNotBlank(busi_score_template_relation_score_id)){
+            model.setID(Integer.parseInt(busi_score_template_relation_score_id));
+            model.setJugdeScore(Integer.parseInt(jugdescore));
+            model.updateLog();
+
+        }else{//添加
+            model.put("create_id", userid);
+            model.put("create_time", now);
+            model.setBusiActivityProjectId(Integer.parseInt(projectid));
+            model.setBusiActivitySlaveId(Integer.parseInt(busi_activity_slave_id));
+            model.setBusiScoreTemplateId(Integer.parseInt(busi_score_template_id));
+
+            model.saveLog();
+        }
 
     }
 
