@@ -39,6 +39,7 @@ public class UserController extends BaseProjectController {
 			sql.whereLike("realname", model.getStr("realname"));
 			sql.whereEquals("usertype", model.getInt("usertype"));
 			sql.whereEquals("departid", model.getInt("departid"));
+			sql.whereEquals("busitype", model.getInt("busitype"));
 		}
 
 		// 排序

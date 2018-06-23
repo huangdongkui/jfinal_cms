@@ -90,6 +90,16 @@ var bodyContent = {
 
 		</div>
 		<div class="form-group">
+			<select name="attr.busitype" class="form-control" >
+				<option value="-1">--请选择业务类别--</option>
+				<option value="0" ${attr.busitype==0?"selected":"" }>参赛者</option>
+				<option value="1" ${attr.busitype==1?"selected":"" }>评委</option>
+
+			</select>
+
+
+		</div>
+		<div class="form-group">
 			<select name="attr.departid" class="form-control"   >
 				<option value="-1" >--请选择部门--</option>
 				${departSelect}
@@ -119,7 +129,7 @@ var bodyContent = {
 			<th name="realname" class="sorting">真实姓名</th>
 			<th name="usertype" class="sorting">类型</th>
 			<th name="belongfieldtype" class="sorting">所属领域</th>
-			<th name="email" class="sorting">Email</th>
+			<th name="busitype" class="sorting">业务类型</th>
 			<th name="tel" class="sorting">手机号</th>
 			<th name="create_time" class="sorting">创建时间</th>
 			<th>操作</th>
@@ -154,7 +164,14 @@ var bodyContent = {
 				<%	} %>
 			</td>
 			<td>${item.belongfieldName}</td>
-			<td>${item.email}</td>
+			<td>
+				<% if(item.busitype==0) { %>
+				参赛者
+				<%	} %>
+				<% if(item.busitype==1) { %>
+				评委
+				<%	} %>
+			</td>
 			<td>${item.tel}</td>
 			<td>${item.create_time}</td>
 			<td>

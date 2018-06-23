@@ -120,7 +120,7 @@ public class ActivityProjectController extends BaseProjectController {
                 " left join busi_score_template_relation_score b \n" +
                 " on b.busi_score_template_id=a.id and b.busi_activity_project_id=" + projectId + " and b.create_id=" + userid +
                 " where LOCATE('" + path + "',a.path)=1\n" +
-                "and length(a.path)>length('" + path + "') and level=3";
+                "and length(a.path)>length('" + path + "') and level=3 order by a.id,a.path";
 
         List<Record> records = Db.find(sql);
         renderJson(records);
@@ -196,7 +196,7 @@ public class ActivityProjectController extends BaseProjectController {
         final String busi_activity_slave_id = getPara("busi_activity_slave_id");
         final Integer userid = getSessionUser().getUserid();
 
-        String sql = "select sum(jugde_score) as jugde_score from busi_score_template_relation_score\n" +
+        String sql = "select ifnull(sum(jugde_score),0) as jugde_score from busi_score_template_relation_score\n" +
                 "where busi_activity_project_id=" + projectId + " and  busi_activity_slave_id=" + busi_activity_slave_id + " and create_id=" + userid;
 
         Record records = Db.findFirst(sql);
