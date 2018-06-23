@@ -118,6 +118,7 @@ var bodyContent = {
 			<th name="username" class="sorting">登陆名</th>
 			<th name="realname" class="sorting">真实姓名</th>
 			<th name="usertype" class="sorting">类型</th>
+			<th name="belongfieldtype" class="sorting">所属领域</th>
 			<th name="email" class="sorting">Email</th>
 			<th name="tel" class="sorting">手机号</th>
 			<th name="create_time" class="sorting">创建时间</th>
@@ -152,6 +153,7 @@ var bodyContent = {
 				其他用户
 				<%	} %>
 			</td>
+			<td>${item.belongfieldName}</td>
 			<td>${item.email}</td>
 			<td>${item.tel}</td>
 			<td>${item.create_time}</td>

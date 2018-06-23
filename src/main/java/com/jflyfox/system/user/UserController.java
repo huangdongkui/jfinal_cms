@@ -49,7 +49,7 @@ public class UserController extends BaseProjectController {
 			sql.append(" order by ").append(orderBy);
 		}
 		
-		Page<SysUser> page = SysUser.dao.paginate(getPaginator(), "select t.*,d.name as departname ", sql.toString()
+		Page<SysUser> page = SysUser.dao.paginate(getPaginator(), "select t.*,d.name as departname,(select group_concat(s.detail_name) from sys_dict_detail s where s.dict_type='belongfield' and FIND_IN_SET(s.detail_code,t.belongfieldtype)) as belongfieldName ", sql.toString()
 				.toString());
 		// 下拉框
 		setAttr("departSelect", new DepartmentSvc().selectDepart(model.getInt("departid")));

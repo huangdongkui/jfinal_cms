@@ -200,6 +200,9 @@ public class ActivityProjectController extends BaseProjectController {
                 "where busi_activity_project_id=" + projectId + " and  busi_activity_slave_id=" + busi_activity_slave_id + " and create_id=" + userid;
 
         Record records = Db.findFirst(sql);
+        if(records==null){
+            renderText("0");
+        }
         renderText(records.get("jugde_score").toString());
     }
 
