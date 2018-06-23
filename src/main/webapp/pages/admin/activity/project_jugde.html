@@ -5,10 +5,47 @@ include("/pages/template/head.html"){}
 %>
 
 <script type="text/javascript">
+    var searchData;
+    var $bootstrapTable;
+    var projectId = window.location.href.split('/').pop();
+    var busi_score_template_id =${busi_score_template_id};
+    var busi_activity_slave_id =${busi_activity_slave_id};
     var oper = {
         save: function (id) {
 
+            var valid = true;
 
+            $(".inputscore").each(function () {
+                var inputscore = $(this);
+                var maxvalue = inputscore.attr("maxvalue");
+                //检验不能大于满分
+                if (parseInt(maxvalue) < parseInt(inputscore.val())) {
+                    ErrorInfo("第" + inputscore.attr("name") + "行得分不能大于满分");
+                    valid = false;
+                }
+            });
+
+            if (valid == false) {
+                return true;
+            }
+
+            $(".inputscore").each(function () {
+
+                var inputscore = $(this);
+                var oldvalue = inputscore.attr("oldvalue");
+                var score_id = inputscore.attr("id");
+                var jugdescore = inputscore.val();
+
+                //更新过才修改
+                if (oldvalue != jugdescore) {
+                    $.get('admin/activityproject/save', {score_id: score_id, jugdescore: jugdescore}, function () {
+
+                    });
+                }
+            });
+
+            Alert("保存成功");
+            getTotalScore();
             return true;
         }
     };
@@ -18,22 +55,40 @@ include("/pages/template/head.html"){}
         $(".btn-second").click(function (o) {
             initTable($(this).val());
             setTimeout(function () {
-                mergeTable('pre_node','tb_score');
-            },500);
-
+                mergeTable('pre_node', 'tb_score');
+            }, 500);
+            initbBusiScoreTemplateRelationScore()
             return false;
         });
         $(".btn-second:first").click();
+
+        getTotalScore();
     });
 
+    //获取总分
+    function getTotalScore() {
+        $.get('admin/activityproject/getTotalScore', {
+            projectId: projectId,
+            busi_activity_slave_id: busi_activity_slave_id
+        }, function (score) {
+            $("#totalscroe").text(score);
+        });
+    }
+    function initbBusiScoreTemplateRelationScore() {
+        $.get('admin/activityproject/initbBusiScoreTemplateRelationScore', {
+            projectId: projectId,
+            busi_score_template_id: busi_score_template_id,
+            busi_activity_slave_id: busi_activity_slave_id
+        }, function () {
+
+        });
+    }
     function closeIframeReload() {
         var url = 'admin/activityproject';
         form1.action = url;
         form1.submit();
     }
-    var searchData;
-    var $bootstrapTable;
-    var projectId=window.location.href.split('/').pop();
+
     function initTable(path) {
         searchData = path;
         if ($bootstrapTable != null) {
@@ -60,7 +115,7 @@ include("/pages/template/head.html"){}
                     limit: params.limit,   //页面大小
                     offset: params.offset,  //页码
                     path: searchData,
-                    projectId:projectId
+                    projectId: projectId
                 };
                 return temp;
             }
@@ -100,8 +155,8 @@ include("/pages/template/head.html"){}
                     title: '得分',
                     align: 'center',
                     width: '10%',
-                    formatter: function formatter (value, row, index, field) {
-                        return '<input type="text" class="form-control" id="name_' + row.busi_score_template_relation_score_id + '" placeholder="0" value="' + value + '"/>';
+                    formatter: function formatter(value, row, index, field) {
+                        return '<input type="text" name="' + (index + 1) + '" maxvalue="' + row.scorce + '" oldvalue="' + value + '" class="form-control inputscore" id="' + row.busi_score_template_relation_score_id + '" placeholder="0" value="' + value + '"/>';
                     }
                 }, {
                     field: 'remarks',
@@ -188,7 +243,7 @@ var bodyContent = {
                 <fieldset>
 
                     <div id="legend" class="">
-                        <legend class="">当前得分99</legend>
+                        <legend class="">当前得分<span id="totalscroe">0</span></legend>
                     </div>
 
                     <div class="panel panel-default">
@@ -301,7 +356,6 @@ var bodyContent = {
                     </div>
                 </nav>
             </div>
-
 
 
         </div>
