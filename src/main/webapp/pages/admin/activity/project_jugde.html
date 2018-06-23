@@ -11,44 +11,48 @@ include("/pages/template/head.html"){}
     var busi_score_template_id =${busi_score_template_id};
     var busi_activity_slave_id =${busi_activity_slave_id};
     var oper = {
-        save: function (id) {
+        save: function () {
 
-            var valid = true;
-
-            $(".inputscore").each(function () {
-                var inputscore = $(this);
-                var maxvalue = inputscore.attr("maxvalue");
-                //检验不能大于满分
-                if (parseInt(maxvalue) < parseInt(inputscore.val())) {
-                    ErrorInfo("第" + inputscore.attr("name") + "行得分不能大于满分");
-                    valid = false;
-                }
-            });
-
-            if (valid == false) {
-                return true;
-            }
-
-            $(".inputscore").each(function () {
-
-                var inputscore = $(this);
-                var oldvalue = inputscore.attr("oldvalue");
-                var score_id = inputscore.attr("id");
-                var jugdescore = inputscore.val();
-
-                //更新过才修改
-                if (oldvalue != jugdescore) {
-                    $.get('admin/activityproject/save', {score_id: score_id, jugdescore: jugdescore}, function () {
-
-                    });
-                }
-            });
+            baseSave();
 
             Alert("保存成功");
+
             getTotalScore();
             return true;
         }
     };
+    function baseSave() {
+        var valid = true;
+
+        $(".inputscore").each(function () {
+            var inputscore = $(this);
+            var maxvalue = inputscore.attr("maxvalue");
+            //检验不能大于满分
+            if (parseInt(maxvalue) < parseInt(inputscore.val())) {
+                ErrorInfo("第" + inputscore.attr("name") + "行得分不能大于满分");
+                valid = false;
+            }
+        });
+
+        if (valid == false) {
+            return true;
+        }
+
+        $(".inputscore").each(function () {
+
+            var inputscore = $(this);
+            var oldvalue = inputscore.attr("oldvalue");
+            var score_id = inputscore.attr("id");
+            var jugdescore = inputscore.val();
+
+            //更新过才修改
+            if (oldvalue != jugdescore) {
+                $.get('admin/activityproject/save', {score_id: score_id, jugdescore: jugdescore}, function () {
+
+                });
+            }
+        });
+    }
     $(document).ready(function () {
 
 
@@ -57,7 +61,9 @@ include("/pages/template/head.html"){}
             setTimeout(function () {
                 mergeTable('pre_node', 'tb_score');
             }, 500);
+            //初始化评分表
             initbBusiScoreTemplateRelationScore()
+            baseSave();
             return false;
         });
         $(".btn-second:first").click();
