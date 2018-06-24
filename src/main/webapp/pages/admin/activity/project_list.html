@@ -7,7 +7,6 @@ include("/pages/template/head.html"){}
     var $bootstrapTable;
     var keyid;
     var oper;
-    var roleids = '${nowUser.busitype}';
     jQuery(function ($) {
         // 页面方法
         oper = {
@@ -49,12 +48,11 @@ include("/pages/template/head.html"){}
             }
         };
         //显示Menu索引
-        //showMenu('page_advicefeedback');
-        keyid = ${busi_activity_id}
-            initTable();
-//        if (roleids == '1') {
-//            $("#btnAdd").hide();
-//        }
+
+        keyid = '${busi_activity_id!}';
+
+        initTable();
+
     });
 
     //分页

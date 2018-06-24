@@ -33,6 +33,8 @@ public class ActivityFillController extends BaseProjectController {
 
         String busi_activity_id = getPara("busi_activity_id");
         String userid=getSessionUser().getUserid().toString();
+
+
         SQLUtils sql = new SQLUtils(" from busi_activity_project t "
                 + " where deleted = 0 and create_id="+userid);
 

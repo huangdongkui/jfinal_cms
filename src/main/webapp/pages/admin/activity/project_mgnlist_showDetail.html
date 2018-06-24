@@ -1,0 +1,48 @@
+<%
+var headContent = {
+include("/pages/template/head.html"){}
+};
+%>
+
+
+
+<%
+
+var bodyContent = {
+%>
+<form name="form1" action="" method="post" class="form-inline" role="form">
+
+    <div>
+        <!-- 数据列表 -->
+        <table class="table table-striped table-bordered table-hover">
+            <thead>
+            <tr>
+                <th width="10%">序号</th>
+                <% // 列表头部 %>
+
+                <th name="activity_status" class="sorting" width="40%">评委</th>
+                <th name="scorce_contents" class="sorting" width="30%">分数</th>
+                <th name="create_time" class="sorting" width="20%">评分时间</th>
+            </tr>
+            </thead>
+            <tbody>
+            <% for(item in list){ %>
+            <tr>
+                <td>${itemLP.index }</td>
+                <% // 列表内容 %>
+                <td>${item.username}</td>
+                <td>${item.totalScore}</td>
+                <td>${item.create_time}</td>
+            </tr>
+            <% } %>
+            </tbody>
+        </table>
+
+    </div>
+
+</form>
+<%}; %>
+
+
+<% layout("/pages/template/_layout.html",{head:headContent,body:bodyContent}){ %>
+<%} %>

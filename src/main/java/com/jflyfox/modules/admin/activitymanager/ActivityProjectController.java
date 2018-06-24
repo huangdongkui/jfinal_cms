@@ -43,12 +43,22 @@ public class ActivityProjectController extends BaseProjectController {
     public void list() {
 
         final String busi_activity_id = getPara("busi_activity_id");
+        final String belongfieldtype = getSessionUser().get("belongfieldtype").toString();
 
-        String sql = "select a.id,a.project_name,b.realname,c.name as departname,99 as score,a.project_status\n" +
+        String sql = "select a.id,a.project_name,b.realname,c.name as departname," +
+                "(select ROUND(avg(t.jugde_score),2) from \n" +
+                "(select sum(d.jugde_score) as jugde_score,d.busi_activity_project_id,d.create_id\n" +
+                "from busi_score_template_relation_score d\n" +
+                "group by d.create_id,d.busi_activity_project_id) t \n" +
+                "where t.busi_activity_project_id=a.id and t.create_id="+getSessionUser().getUserid()+") " +
+                "as score," +
+                "a.project_status\n" +
                 "from busi_activity_project a\n" +
                 "left join sys_user b on a.create_id=b.userid\n" +
                 "left join sys_department c on b.departid=c.id\n" +
-                "where a.deleted=0 and a.project_status=1 and a.busi_activity_id = " + busi_activity_id;
+                "where a.deleted=0 and a.project_status=1 and a.busi_activity_id = " + busi_activity_id+" and a.from_belongfields REGEXP ('"+belongfieldtype.replace(",","|")+"')";
+
+
         List<Record> records = Db.find(sql);
 
         renderJson(records);
@@ -212,6 +222,9 @@ public class ActivityProjectController extends BaseProjectController {
     public void mnglist() {
 
         String departid = getPara("departid");
+        String project_name = getPara("project_name");
+        String belongfield = getPara("belongfield");
+
         if (departid == null) {
             departid = "-1";
         }
@@ -220,9 +233,15 @@ public class ActivityProjectController extends BaseProjectController {
                 "left join sys_user u on u.userid=t.create_id\n" +
                 "left join sys_department d on d.id=u.departid\n" +
                 " where t.deleted = 0 and t.project_status=1");
-
+        if (StringUtils.isNotBlank(belongfield) && !belongfield.equals("-1")) {
+            sql.append(" and find_in_set('"+belongfield+"',t.from_belongfields) ");
+            setAttr("belongfield",belongfield);
+        }
         if (StringUtils.isNotBlank(departid) && !departid.equals("-1")) {
             sql.whereEquals("departid", departid);
+        }
+        if (StringUtils.isNotBlank(project_name)) {
+            sql.whereEquals("project_name", project_name);
         }
 
         sql.setAlias("t");
@@ -235,7 +254,12 @@ public class ActivityProjectController extends BaseProjectController {
             sql.append(" order by t.").append(orderBy);
         }
 
-        Page<BusiActivity> page = BusiActivity.dao.paginate(getPaginator(), "select t.id, t.create_time,activity_name,u.tel,u.realname,d.name as departname,t.project_name,t.from_belongfields ",
+        Page<BusiActivity> page = BusiActivity.dao.paginate(getPaginator(), "select t.id, t.create_time,activity_name,u.tel,u.realname,d.name as departname,t.project_name,t.from_belongfields, "
+                        +"(select ROUND(avg(tt.jugde_score),2) from (select sum(d.jugde_score) as jugde_score,d.busi_activity_project_id " +
+                        " from busi_score_template_relation_score d " +
+                        " group by d.create_id,d.busi_activity_project_id) tt " +
+                        " where tt.busi_activity_project_id=t.id) " +
+                        " as score",
                 sql.toString().toString());
 
         setAttr("page", page);
@@ -247,6 +271,24 @@ public class ActivityProjectController extends BaseProjectController {
     }
 
     /**
+     * 显示打分详情
+     */
+    public void showDetail(){
+
+        Integer projectid=getParaToInt();
+        String sql="SELECT " +
+                "(select realname from sys_user u where u.userid=d.create_id) as username,\n" +
+                "d.create_time,\n" +
+                "SUM(d.jugde_score) AS totalScore\n" +
+                "FROM busi_score_template_relation_score d\n" +
+                "WHERE d.busi_activity_project_id=?\n" +
+                "GROUP BY d.create_id";
+        final List<Record> records = Db.find(sql, projectid);
+
+        setAttr("list",records);
+        render(path + "project_mgnlist_showDetail.html");
+    }
+    /**
      * 导出excel
      */
     public void exportExcel() {
@@ -254,11 +296,21 @@ public class ActivityProjectController extends BaseProjectController {
         if (departid == null) {
             departid = "-1";
         }
+
+        String belongfield = getPara("belongfield");
+        if (belongfield == null) {
+            departid = "-1";
+        }
         SQLUtils sql = new SQLUtils(" from busi_activity_project t " +
                 "left join busi_activity ba on ba.id=t.busi_activity_id\n" +
                 "left join sys_user u on u.userid=t.create_id\n" +
                 "left join sys_department d on d.id=u.departid\n" +
                 " where t.deleted = 0 and t.project_status=1");
+
+
+        if (StringUtils.isNotBlank(belongfield) && !belongfield.equals("-1")) {
+            sql.append(" and find_in_set('"+belongfield+"',t.from_belongfields) ");
+        }
 
         if (StringUtils.isNotBlank(departid) && !departid.equals("-1")) {
             sql.whereEquals("departid", departid);
