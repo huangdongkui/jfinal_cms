@@ -90,7 +90,7 @@ public class ActivityProjectController extends BaseProjectController {
 
         String selectSql = "select b.busi_score_template_id,\n" +
                 " ( select c.id from busi_activity_slave c \n" +
-                " where c.busi_activity_id=b.id and from_time<=now() and now()<to_time) as busi_activity_slave_id\n" +
+                " where c.busi_activity_id=b.id and from_time<=now() and Date(now())<=Date(to_time)) as busi_activity_slave_id\n" +
                 "from busi_activity_project a\n" +
                 "left join busi_activity b on a.busi_activity_id=b.id\n" +
                 " where a.id=?";

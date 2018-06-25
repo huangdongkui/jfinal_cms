@@ -13,6 +13,9 @@ include("/pages/template/head.html"){}
     var oper = {
         save: function () {
 
+
+
+
             baseSave();
 
             Alert("保存成功");
@@ -47,23 +50,69 @@ include("/pages/template/head.html"){}
 
             //更新过才修改
             if (oldvalue != jugdescore) {
-                $.get('admin/activityproject/save', {score_id: score_id, jugdescore: jugdescore}, function () {
+
+                $.ajax({
+
+                    type: "get",
+
+                    url: "admin/activityproject/save",
+
+                    cache:false,
+
+                    async:false,
+                    data:{score_id: score_id, jugdescore: jugdescore},
+                    success: function(){
+
+
+                    }
 
                 });
+
+                inputscore.attr("oldvalue",jugdescore);
             }
+
+
+
         });
+    }
+    function checkSave() {
+        var isChange=false;
+        $(".inputscore").each(function () {
+
+            var inputscore = $(this);
+            var oldvalue = inputscore.attr("oldvalue");
+            var score_id = inputscore.attr("id");
+            var jugdescore = inputscore.val();
+
+            //更新过才修改
+            if (oldvalue != jugdescore) {
+                isChange=true;
+            }
+
+
+
+        });
+
+        return isChange;
     }
     $(document).ready(function () {
 
+        //初始化评分表
+        initbBusiScoreTemplateRelationScore();
 
         $(".btn-second").click(function (o) {
-            baseSave();
+
+            if(checkSave()){
+                ErrorInfo("已经评分！请保存！");
+                return;
+            }
+
+            //baseSave();
             initTable($(this).val());
             setTimeout(function () {
                 mergeTable('pre_node', 'tb_score');
             }, 500);
-            //初始化评分表
-            initbBusiScoreTemplateRelationScore()
+
 
             return false;
         });
@@ -80,15 +129,41 @@ include("/pages/template/head.html"){}
         }, function (score) {
             $("#totalscroe").text(score);
         });
+
+
+
     }
     function initbBusiScoreTemplateRelationScore() {
-        $.get('admin/activityproject/initbBusiScoreTemplateRelationScore', {
-            projectId: projectId,
-            busi_score_template_id: busi_score_template_id,
-            busi_activity_slave_id: busi_activity_slave_id
-        }, function () {
+//        $.get('admin/activityproject/initbBusiScoreTemplateRelationScore', {
+//            projectId: projectId,
+//            busi_score_template_id: busi_score_template_id,
+//            busi_activity_slave_id: busi_activity_slave_id
+//        }, function () {
+//
+//        });
+
+
+        $.ajax({
+
+            type: "get",
+
+            url: 'admin/activityproject/initbBusiScoreTemplateRelationScore',
+
+            cache:false,
+
+            async:false,
+            data:{
+                projectId: projectId,
+                busi_score_template_id: busi_score_template_id,
+                busi_activity_slave_id: busi_activity_slave_id
+            },
+            success: function(){
+
+
+            }
 
         });
+
     }
     function closeIframeReload() {
         var url = 'admin/activityproject';
