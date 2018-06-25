@@ -71,6 +71,7 @@ public class ActivityController extends BaseProjectController {
         final Integer userid = sessionUser.getUserid();
 
         String sql = "select a.id,a.nodeid,"+
+                "(case when date(now())>=date(a.from_time) and date(now())<=date(a.to_time) then a.id else 0 end) as slaveid, "+
                 //"(select c.project_status from busi_activity_project c \n" +
                // "where c.busi_activity_id=a.busi_activity_id and c.create_id="+userid+" and c.deleted=0) "
                 "0 as project_status, \n" +

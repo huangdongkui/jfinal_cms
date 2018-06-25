@@ -35,7 +35,10 @@ public class ActivityProjectController extends BaseProjectController {
 
     public void index() {
         final String busi_activity_id = getPara("busi_activity_id");
+        final String busi_activity_slave_id = getPara("busi_activity_slave_id");
         setAttr("busi_activity_id", busi_activity_id);
+        setAttr("busi_activity_slave_id", busi_activity_slave_id);
+
         setAttr("nowUser", getSessionUser());
         render(path + "project_list.html");
     }
@@ -44,6 +47,7 @@ public class ActivityProjectController extends BaseProjectController {
 
         final String busi_activity_id = getPara("busi_activity_id");
         final String belongfieldtype = getSessionUser().get("belongfieldtype").toString();
+        final String busi_activity_slave_id = getPara("busi_activity_slave_id");
 
         String sql = "select a.id,a.project_name,b.realname,c.name as departname," +
                 "(select ROUND(avg(t.jugde_score),2) from \n" +
@@ -54,6 +58,7 @@ public class ActivityProjectController extends BaseProjectController {
                 "as score," +
                 "a.project_status\n" +
                 "from busi_activity_project a\n" +
+                " inner join busi_activity_slave s on s.id="+busi_activity_slave_id+" and find_in_set('"+getSessionUser().getUserid()+"',s.JudgesUid) "+
                 "left join sys_user b on a.create_id=b.userid\n" +
                 "left join sys_department c on b.departid=c.id\n" +
                 "where a.deleted=0 and a.project_status=1 and a.busi_activity_id = " + busi_activity_id+" and a.from_belongfields REGEXP ('"+belongfieldtype.replace(",","|")+"')";

@@ -98,10 +98,13 @@ include("/pages/template/head.html"){}
 
     }
 
-    function showPage(busi_activity_id) {
+    function showPage(busi_activity_id,busi_activity_slave_id) {
+
         var projecturl = '${BASE_PATH }admin/activityproject';
         var fillurl = '${BASE_PATH }admin/activityfill/list';
         $('#busi_activity_id').val(busi_activity_id);
+        $('#busi_activity_slave_id').val(busi_activity_slave_id);
+
         if (btnText == "填报" ||btnText == "已提交") {
             form1.action = fillurl;
         } else if (btnText == "评分") {
@@ -112,6 +115,32 @@ include("/pages/template/head.html"){}
     }
 
     function initTable(tableid, data) {
+        var columnVal = {
+            field: 'id',
+            title: '是否入围',
+            align: 'center',
+            width: '10%',
+            formatter: function formatter(value, row, index, field) {
+                var values = ['否', '是']
+                return values[0];
+            }
+        };
+        if(roleids=='1'){
+            columnVal={
+                field: 'id',
+                title: '评分',
+                align: 'center',
+                width: '10%',
+                formatter: function formatter(value, row, index, field) {
+                    if(row.slaveid!=0) {
+                        return '</br><a href="javascript:void(0);" class="btn btn-sm btn-warning" onclick="showPage(' + row.busi_activity_id + ',' + row.id + ');">评分 </a>';
+                    }else{
+                        return '';
+                    }
+                }
+            };
+        }
+
         $bootstrapTable = $('#' + tableid).bootstrapTable({
 
             sidePagination: "client",           //分页方式：client客户端分页，server服务端分页（*）
@@ -133,8 +162,12 @@ include("/pages/template/head.html"){}
                         if (row.project_status == "1" && btnText == "填报") {
                             btnText = "已提交";
                         }
-
-                        return value + '</br><a href="javascript:void(0);" class="btn btn-sm btn-warning" onclick="showPage(' + row.busi_activity_id + ');">' + btnText + '</a>';
+                        if(btnText!="评分"){
+                            return value + '</br><a href="javascript:void(0);" class="btn btn-sm btn-warning" onclick="showPage(' + row.busi_activity_id + ');">' + btnText + '</a>';
+                        }
+                        else{
+                           return value;
+                        }
                     }
                 }, {
                     field: 'nodeid',
@@ -156,17 +189,7 @@ include("/pages/template/head.html"){}
                     align: 'center',
                     width: '20%'
                 }
-                , {
-                    field: 'id',
-                    title: '是否入围',
-                    align: 'center',
-                    width: '10%',
-                    formatter: function formatter(value, row, index, field) {
-                        var values = ['否', '是']
-                        return values[0];
-                    }
-
-                }
+                , columnVal
             ], data: data
         });
 
@@ -215,6 +238,8 @@ var sessionUserId = isEmpty(session.session_user) ? 0: session.session_user.user
                     <form class="form-horizontal" name="form1" action="" method="post">
 
                         <input type="hidden" name="busi_activity_id" id="busi_activity_id">
+                        <input type="hidden" name="busi_activity_slave_id" id="busi_activity_slave_id">
+
                         <div class="form-group">
                             <label class="col-sm-2 control-label">登录名</label>
                             <div class="col-sm-9">${nowUser.username!''}
