@@ -2,6 +2,7 @@ package com.jflyfox.modules.admin.scoretemplate;
 
 import com.jflyfox.component.base.BaseProjectController;
 import com.jflyfox.jfinal.component.annotation.ControllerBind;
+import org.apache.commons.lang.StringUtils;
 
 import java.util.List;
 
@@ -79,11 +80,13 @@ public class ScoreTemplateController extends BaseProjectController {
             model.put("create_time", getNow());
 
             String path=model.getPath();
-            if(path.startsWith("null")){//去除null
+            if(StringUtils.isNotBlank(path)&&path.startsWith("null")){//去除null
                 path=path.replace("null,","");
+                model.setLevel(path.split(",").length);
+                model.setPath(path);
             }
-            model.setPath(path);
-            model.setLevel(path.split(",").length);
+
+
             model.save();
         }
         renderMessage("保存成功");
