@@ -112,6 +112,7 @@ public class UserController extends BaseProjectController {
 		String now = getNow();
 		model.put("update_id", userid);
 		model.put("update_time", now);
+		model.put("busitype",0);
 		if (pid != null && pid > 0) { // 更新
 			model.update();
 		} else { // 新增

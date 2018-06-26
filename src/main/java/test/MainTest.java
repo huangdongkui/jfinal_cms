@@ -3,10 +3,12 @@ package test;
 import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.entity.ExportParams;
 import cn.afterturn.easypoi.excel.entity.params.ExcelExportEntity;
+import com.jflyfox.component.util.JFlyFoxUtils;
 import com.jflyfox.modules.admin.activitymanager.BusiActivitySlave;
 import com.jflyfox.system.userrole.SysUserRole;
 import com.jflyfox.util.DateUtils;
 import com.jflyfox.util.easypoi.ExcelExportUtils;
+import com.jflyfox.util.encrypt.Md5Utils;
 import org.apache.poi.ss.usermodel.Workbook;
 
 import java.io.FileNotFoundException;
@@ -46,23 +48,27 @@ public class MainTest {
 //        }
         //test();
 
-        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+        //List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 
-        List<ExcelExportEntity> beanList = new ArrayList<ExcelExportEntity>();
+//        List<ExcelExportEntity> beanList = new ArrayList<ExcelExportEntity>();
+//
+////            beanList.add(new ExcelExportEntity(new ExcelExportEntity("学生姓名", "name"));
+//        beanList.add(new ExcelExportEntity("学生性别", "sex"));
+//        beanList.add(new ExcelExportEntity("进校日期", "registrationDate"));
+//        //if(needBirthday()){
+//        beanList .add(new ExcelExportEntity("出生日期", "birthday"));
+//        // }
+//        Map<String, Object> map=new HashMap<>();
+//        map.put("sex","男");
+//        map.put("registrationDate","2018-6-21");
+//
+//        list.add(map);
+//
+//        System.out.println(ExcelExportUtils.export(beanList, list));
 
-//            beanList.add(new ExcelExportEntity(new ExcelExportEntity("学生姓名", "name"));
-        beanList.add(new ExcelExportEntity("学生性别", "sex"));
-        beanList.add(new ExcelExportEntity("进校日期", "registrationDate"));
-        //if(needBirthday()){
-        beanList .add(new ExcelExportEntity("出生日期", "birthday"));
-        // }
-        Map<String, Object> map=new HashMap<>();
-        map.put("sex","男");
-        map.put("registrationDate","2018-6-21");
-
-        list.add(map);
-
-        System.out.println(ExcelExportUtils.export(beanList, list));
+        //final String s = JFlyFoxUtils.passwordDecrypt("fKwKfTnr+qE=");
+        System.out.println(JFlyFoxUtils.passwordEncrypt("gddw@1234"));
+        // new Md5Utils().getMD5(decryptPassword).toLowerCase();
     }
 
     public static void test() {

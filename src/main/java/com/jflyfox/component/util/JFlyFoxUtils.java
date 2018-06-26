@@ -164,7 +164,7 @@ public class JFlyFoxUtils {
 	 * @return
 	 */
 	public static String getDefaultPassword() {
-		String defaultPassword = "123456";
+		String defaultPassword = "gddw@1234";
 		return passwordEncrypt(defaultPassword);
 	}
 
