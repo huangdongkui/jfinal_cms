@@ -18,9 +18,11 @@ include("/pages/template/head.html"){}
 
             baseSave();
 
-            Alert("保存成功");
+            Alert("保存成功",function () {
+                getTotalScore();
+            });
 
-            getTotalScore();
+
             return true;
         }
     };
@@ -134,13 +136,7 @@ include("/pages/template/head.html"){}
 
     }
     function initbBusiScoreTemplateRelationScore() {
-//        $.get('admin/activityproject/initbBusiScoreTemplateRelationScore', {
-//            projectId: projectId,
-//            busi_score_template_id: busi_score_template_id,
-//            busi_activity_slave_id: busi_activity_slave_id
-//        }, function () {
-//
-//        });
+
 
 
         $.ajax({
@@ -166,7 +162,6 @@ include("/pages/template/head.html"){}
 
     }
     function closeIframeReload() {
-        window.location.href = document.referrer;
         window.history.back(-1);
     }
 
@@ -433,7 +428,7 @@ var bodyContent = {
                         <button class="btn btn-primary" onclick="oper.save();return false;" id="btnSave">
                             保存
                         </button>
-                        <button class="btn btn-default" onclick="closeIframeReload(); return false;">返回</button>
+                        <a href="javascript:(0);" class="btn btn-default" onclick="closeIframeReload(); return false;">返回</a>
                     </div>
                 </nav>
             </div>

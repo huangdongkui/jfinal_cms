@@ -132,7 +132,7 @@ include("/pages/template/head.html"){}
                 align: 'center',
                 width: '10%',
                 formatter: function formatter(value, row, index, field) {
-                    if(row.slaveid!=0) {
+                    if(row.slaveid!=0&&index>0) {
                         return '</br><a href="javascript:void(0);" class="btn btn-sm btn-warning" onclick="showPage(' + row.busi_activity_id + ',' + row.id + ');">评分 </a>';
                     }else{
                         return '';
