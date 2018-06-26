@@ -166,9 +166,9 @@ include("/pages/template/head.html"){}
 
     }
     function closeIframeReload() {
-        var url = 'admin/activityproject';
-        form1.action = url;
-        form1.submit();
+
+        window.location.href = document.referrer;
+        window.history.back(-1);
     }
 
     function initTable(path) {
@@ -434,7 +434,7 @@ var bodyContent = {
                         <button class="btn btn-primary" onclick="oper.save();return false;" id="btnSave">
                             保存
                         </button>
-                        <button class="btn btn-default" onclick="closeIframeReload();">返回</button>
+                        <button class="btn btn-default" onclick="closeIframeReload(); return false;">返回</button>
                     </div>
                 </nav>
             </div>
