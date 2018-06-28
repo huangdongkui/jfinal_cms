@@ -60,6 +60,7 @@ var bodyContent = {
 %>
 <form name="form1" action="" method="post" class="form-inline" role="form">
     <input type="hidden" name="id" id="id" value="${id}">
+
     <input type="hidden" name="JudgesUid" id="JudgesUid" value="${JudgesUid!}">
     <div class="tableSearch row">
         <% //查询列表 %>
@@ -130,7 +131,7 @@ var bodyContent = {
                 </table>
             </div>
         </div>
-        <%include("/pages/includes/paginator.html"){} %>
+
 </form>
 <%}; %>
 

@@ -162,8 +162,7 @@ include("/pages/template/head.html"){}
 
     }
     function closeIframeReload() {
-        window.history.back(-1);
-        location.reload();
+        self.location='${BASE_PATH }admin/activityproject'+'/?busi_activity_id='+'${model.busi_activity_id}&busi_activity_slave_id='+busi_activity_slave_id;
     }
 
     function initTable(path) {
@@ -297,6 +296,9 @@ include("/pages/template/head.html"){}
 
     }
 
+    function download(filePath) {
+        window.location='admin/filemanager/downloadfile';
+    }
 </script>
 
 <%

@@ -1,13 +1,12 @@
 package com.jflyfox.modules.filemanager;
 
-import java.io.UnsupportedEncodingException;
-
-import javax.servlet.http.HttpServletRequest;
-
 import com.alibaba.fastjson.JSONObject;
 import com.jfinal.log.Log;
 import com.jflyfox.component.base.BaseProjectController;
 import com.jflyfox.jfinal.component.annotation.ControllerBind;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
 
 /**
  * 文件管理
@@ -163,4 +162,11 @@ public class FileManagerController extends BaseProjectController {
 		return getSessionUser() != null && getSessionUser().getInt("usertype") == 1;
 	}
 
+	public void downloadfile(){
+		FileManager fileManager=new FileManager(getRequest());
+		String repath=getPara("repath");
+		String filename=getPara("filename");
+		fileManager.downloadfile(getResponse(),repath,filename);
+
+	}
 }

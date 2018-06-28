@@ -7,6 +7,7 @@ import com.jflyfox.component.util.JFlyFoxUtils;
 import com.jflyfox.jfinal.component.annotation.ControllerBind;
 import com.jflyfox.jfinal.component.db.SQLUtils;
 import com.jflyfox.system.department.DepartmentSvc;
+import com.jflyfox.system.dict.DictSvc;
 import com.jflyfox.system.role.SysRole;
 import com.jflyfox.util.StrUtils;
 import com.jflyfox.util.encrypt.Md5Utils;
@@ -34,6 +35,7 @@ public class UserController extends BaseProjectController {
 				+ " left join sys_department d on d.id = t.departid " //
 				+ " where 1 = 1 and userid != 1 ");
 
+		sql.setAlias("t");
 		if (model.getAttrValues().length != 0) {
 			sql.whereLike("username", model.getStr("username"));
 			sql.whereLike("realname", model.getStr("realname"));
@@ -47,7 +49,7 @@ public class UserController extends BaseProjectController {
 		if (StrUtils.isEmpty(orderBy)) {
 			sql.append(" order by userid desc");
 		} else {
-			sql.append(" order by ").append(orderBy);
+			sql.append(" order by t.").append(orderBy);
 		}
 		
 		Page<SysUser> page = SysUser.dao.paginate(getPaginator(), "select t.*,d.name as departname,(select group_concat(s.detail_name) from sys_dict_detail s where s.dict_type='belongfield' and FIND_IN_SET(s.detail_code,t.belongfieldtype)) as belongfieldName ", sql.toString()
@@ -98,6 +100,7 @@ public class UserController extends BaseProjectController {
 		SysUser model = SysUser.dao.findById(getParaToInt());
 
 		setAttr("departSelect", new DepartmentSvc().selectDepart(model.getInt("departid")));
+		setAttr("belongfieldselect", new DictSvc().checkboxSysDictDetail(model.getStr("belongfieldtype"), "belongfield"));
 
 		setAttr("model", model);
 		render(path + "edit.html");
@@ -112,7 +115,7 @@ public class UserController extends BaseProjectController {
 		String now = getNow();
 		model.put("update_id", userid);
 		model.put("update_time", now);
-		model.put("busitype",0);
+
 		if (pid != null && pid > 0) { // 更新
 			model.update();
 		} else { // 新增

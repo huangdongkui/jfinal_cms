@@ -9,6 +9,14 @@ include("/pages/template/head.html"){}
             if(!validForm()) {
                 return false;
             }
+
+            var arrIds = [];
+            $("#divbelongfieldtype :checked").each(function (o) {
+                arrIds.push($(this).val())
+            });
+
+            $("#belongfieldtype").val(arrIds.join(","));
+
             id = id || '0';
             var url = 'system/user/save/'+id;
             form1.action = url;
@@ -44,6 +52,32 @@ var bodyContent = {
                     <option value="4" ${model.usertype==4?"selected":"" }>第三方用户</option>
                     <option value="9" ${model.usertype==9?"selected":"" }>其他用户</option>
 				</select>
+			</td>
+		</tr>
+		<tr>
+			<td>业务类型</td>
+			<td>
+				<select name="model.busitype" class="form-control">
+					<option value="0" ${model.busitype==0?"selected":"" }>参赛者</option>
+					<option value="1" ${model.busitype==1?"selected":"" }>评委</option>
+
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td>所属领域</td>
+			<td>
+		<div class="form-group">
+
+			<div class="col-sm-10" id="divbelongfieldtype">
+				<input name="model.belongfieldtype" id="belongfieldtype"
+					   value="${model.belongfieldtype!}" type="hidden">
+
+				${belongfieldselect}
+
+			</div>
+
+		</div>
 			</td>
 		</tr>
 		<tr>

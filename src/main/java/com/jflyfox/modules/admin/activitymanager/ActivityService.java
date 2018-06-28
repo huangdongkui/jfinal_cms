@@ -58,7 +58,8 @@ public class ActivityService extends BaseService {
         StringBuilder sbFilelist = new StringBuilder();
         final List<SysFileUpload> listSysFileUpload = SysFileUpload.dao.findByWhere("where business_id=?", business_id);
         for (SysFileUpload sysFileUpload : listSysFileUpload) {
-            sbFilelist.append("<li class=\"list-group-item\"><span>" + sysFileUpload.getName() + "</span><a style=\"float: right;\" target=\"_blank\" href=\"" +sysFileUpload.getPath() + "\"> <span class=\"badge\">下载</span></a>");
+           String path="admin/filemanager/downloadfile/?repath="+sysFileUpload.getPath()+"&filename="+sysFileUpload.getName();
+            sbFilelist.append("<li class=\"list-group-item\"><span>" + sysFileUpload.getName() + "</span><a style=\"float: right;\" target=\"_blank\" href=\"" +path + "\"> <span class=\"badge\">下载</span></a>");
 
             if(withDelete){
                 sbFilelist.append("<a style=\"float: right;\" href=\"javascript:(0);\" onclick=\"delfile(" + sysFileUpload.getId() + ",this);return false;\"><span class=\"badge\">删除</span></a></li>");

@@ -2,14 +2,13 @@ package com.jflyfox.modules.admin.activitymanager;
 
 import com.jfinal.plugin.activerecord.Page;
 import com.jflyfox.component.base.BaseProjectController;
+import com.jflyfox.jfinal.base.Paginator;
 import com.jflyfox.jfinal.component.annotation.ControllerBind;
 import com.jflyfox.jfinal.component.db.SQLUtils;
 import com.jflyfox.system.department.DepartmentSvc;
 import com.jflyfox.system.user.SysUser;
 import com.jflyfox.util.StrUtils;
 import org.apache.commons.lang.StringUtils;
-
-import java.util.List;
 
 /**
  * 〈一句话功能简述〉<br>
@@ -49,7 +48,10 @@ public class ActivitySelectController extends BaseProjectController {
             sql.append(" order by ").append(orderBy);
         }
 
-        Page<SysUser> page = SysUser.dao.paginate(getPaginator(), "select t.*,d.name as departname ", sql.toString()
+        final Paginator paginator = getPaginator();
+        paginator.setPageSize(100);
+
+        Page<SysUser> page = SysUser.dao.paginate(paginator, "select t.*,d.name as departname ", sql.toString()
                 .toString());
         // 下拉框
         setAttr("departSelect", new DepartmentSvc().selectDepartByParentId(0, 10));

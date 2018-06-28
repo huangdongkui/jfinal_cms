@@ -7,34 +7,6 @@
  */
 package com.jflyfox.modules.filemanager;
 
-import java.awt.Dimension;
-import java.awt.Image;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.swing.ImageIcon;
-
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileItemFactory;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
-
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.jfinal.kit.PathKit;
@@ -42,6 +14,19 @@ import com.jfinal.log.Log;
 import com.jflyfox.util.Config;
 import com.jflyfox.util.NumberUtils;
 import com.jflyfox.util.StrUtils;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileItemFactory;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.swing.*;
+import java.awt.*;
+import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.List;
 
 public class FileManager {
 
@@ -591,6 +576,23 @@ public class FileManager {
 		}
 	}
 
+	public void downloadfile(HttpServletResponse resp,String repath,String fileName) {
+
+		String path = this.fileRoot + repath;
+		String filePath= FileManagerUtils.rebulid(path);
+		File file = new File(filePath);
+		if (path != null && file.exists()&&fileName!=null) {
+			resp.setHeader("Content-type", "application/force-download");
+			resp.setHeader("Content-Disposition", "inline;filename=\"" + fileRoot + this.get.get("path") + "\"");
+			resp.setHeader("Content-Transfer-Encoding", "Binary");
+			resp.setHeader("Content-length", "" + file.length());
+			resp.setHeader("Content-Type", "application/octet-stream");
+			resp.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+			readFile(resp, file);
+		} else {
+			this.error(sprintf(lang("FILE_DOES_NOT_EXIST"), filePath));
+		}
+	}
 	private void readFile(HttpServletResponse resp, File file) {
 		OutputStream os = null;
 		FileInputStream fis = null;
