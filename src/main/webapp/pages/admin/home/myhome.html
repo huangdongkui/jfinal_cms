@@ -105,9 +105,9 @@ include("/pages/template/head.html"){}
         $('#busi_activity_id').val(busi_activity_id);
         $('#busi_activity_slave_id').val(busi_activity_slave_id);
 
-        if (btnText == "填报" ||btnText == "查看") {
+        if (roleids=="0"){
             form1.action = fillurl;
-        } else if (btnText == "评分") {
+        } else if (roleids=="1") {
             form1.action = projecturl;
         }
 
@@ -163,25 +163,17 @@ include("/pages/template/head.html"){}
                     align: 'center',
                     width: '15%',
                     formatter: function (value, row, index, field) {
-
-//                        if (row.project_status == "1" && btnText == "填报") {
-//                            btnText = "已提交";
-//                        }
-//
-//                        if(btnText!="评分"){
-//                            return value + '</br><a href="javascript:void(0);" class="btn btn-sm btn-warning" onclick="showPage(' + row.busi_activity_id + ');">' + btnText + '</a>';
-//                        }
-//                        else{
-//                           return value;
-//                        }
-
                         if(row.slaveid!=0&&index==0) {
                             btnText="填报";
                         }else{
                             btnText="查看";
                         }
-
-                        return value + '</br><a href="javascript:void(0);" class="btn btn-sm btn-warning" onclick="showPage(' + row.busi_activity_id + ');">' + btnText + '</a>';
+                        if(roleids=="0") {
+                            return value + '</br><a href="javascript:void(0);" class="btn btn-sm btn-warning" onclick="showPage(' + row.busi_activity_id + ');">' + btnText + '</a>';
+                        }else
+                        {
+                            return value;
+                        }
                     }
                 }, {
                     field: 'nodeid',
