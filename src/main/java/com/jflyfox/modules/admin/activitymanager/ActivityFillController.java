@@ -32,6 +32,7 @@ public class ActivityFillController extends BaseProjectController {
     public void list(){
 
         String busi_activity_id = getPara("busi_activity_id");
+        String busi_activity_slave_id = getPara("busi_activity_slave_id");
         String userid=getSessionUser().getUserid().toString();
 
 
@@ -53,6 +54,7 @@ public class ActivityFillController extends BaseProjectController {
 
         setAttr("page", page);
         setAttr("busi_activity_id",busi_activity_id);
+        setAttr("busi_activity_slave_id",busi_activity_slave_id);
         render(path+"fill_list.html");
     }
     public void edit(String busi_activity_id, String id) {

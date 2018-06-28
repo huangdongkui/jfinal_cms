@@ -48,8 +48,10 @@ include("/pages/template/head.html"){}
 
 
         };
-        //显示Menu索引
-        //showMenu('page_advicefeedback');
+
+        if ('${busi_activity_slave_id!}' == '') {
+            $("#btnAdd").hide();
+        }
 
     });
 
@@ -89,7 +91,7 @@ var bodyContent = {
         <button type="button" class="btn btn-default" onclick="resetForm();">
             <span class="glyphicon glyphicon-refresh"></span> 重 置
         </button>
-        <button type="button" class="btn btn-default" onclick="oper.add();">
+        <button type="button" id="btnAdd" class="btn btn-default" onclick="oper.add();">
             <span class="glyphicon glyphicon-plus"></span> 新 增
         </button>
     </div>

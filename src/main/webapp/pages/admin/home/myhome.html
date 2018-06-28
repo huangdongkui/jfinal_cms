@@ -105,7 +105,7 @@ include("/pages/template/head.html"){}
         $('#busi_activity_id').val(busi_activity_id);
         $('#busi_activity_slave_id').val(busi_activity_slave_id);
 
-        if (btnText == "填报" ||btnText == "已提交") {
+        if (btnText == "填报" ||btnText == "查看") {
             form1.action = fillurl;
         } else if (btnText == "评分") {
             form1.action = projecturl;
@@ -121,8 +121,13 @@ include("/pages/template/head.html"){}
             align: 'center',
             width: '10%',
             formatter: function formatter(value, row, index, field) {
-                var values = ['否', '是']
-                return values[0];
+                var values = ['待评审', '是'];
+                if(index==0){
+                    return '已报名';
+                }else{
+                    return values[0];
+                }
+
             }
         };
         if(roleids=='1'){
@@ -159,15 +164,24 @@ include("/pages/template/head.html"){}
                     width: '15%',
                     formatter: function (value, row, index, field) {
 
-                        if (row.project_status == "1" && btnText == "填报") {
-                            btnText = "已提交";
+//                        if (row.project_status == "1" && btnText == "填报") {
+//                            btnText = "已提交";
+//                        }
+//
+//                        if(btnText!="评分"){
+//                            return value + '</br><a href="javascript:void(0);" class="btn btn-sm btn-warning" onclick="showPage(' + row.busi_activity_id + ');">' + btnText + '</a>';
+//                        }
+//                        else{
+//                           return value;
+//                        }
+
+                        if(row.slaveid!=0&&index==0) {
+                            btnText="填报";
+                        }else{
+                            btnText="查看";
                         }
-                        if(btnText!="评分"){
-                            return value + '</br><a href="javascript:void(0);" class="btn btn-sm btn-warning" onclick="showPage(' + row.busi_activity_id + ');">' + btnText + '</a>';
-                        }
-                        else{
-                           return value;
-                        }
+
+                        return value + '</br><a href="javascript:void(0);" class="btn btn-sm btn-warning" onclick="showPage(' + row.busi_activity_id + ');">' + btnText + '</a>';
                     }
                 }, {
                     field: 'nodeid',
