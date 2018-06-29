@@ -2,6 +2,8 @@ package com.jflyfox.modules.front.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.jfinal.aop.Before;
+import com.jfinal.plugin.activerecord.Db;
+import com.jfinal.plugin.activerecord.Record;
 import com.jflyfox.component.base.BaseProjectController;
 import com.jflyfox.component.util.ImageCode;
 import com.jflyfox.component.util.JFlyFoxUtils;
@@ -47,11 +49,11 @@ public class RegistController extends BaseProjectController {
 		}
 		setAttr("pre_page", prePage);
 
-		SysUser user = (SysUser) getSessionUser();
-		// 如果已经登录了~您就别注册啦
-		if (user != null) {
-			redirect(prePage);
-		} else {
+//		SysUser user = (SysUser) getSessionUser();
+//		// 如果已经登录了~您就别注册啦
+//		if (user != null) {
+//			redirect(prePage);
+//		} else {
 			setAttr("departSelect", new DepartmentSvc().selectDepartByParentId(0,10));
 
 			//List<String> listValue=new ArrayList<>();
@@ -59,7 +61,7 @@ public class RegistController extends BaseProjectController {
 			setAttr("belongfieldselect", new DictSvc().checkboxSysDictDetail(null,"belongfield"));
 
 			renderAuto(path + "show_regist.html");
-		}
+		//}
 	}
 
 	/**
@@ -151,5 +153,17 @@ public class RegistController extends BaseProjectController {
 		json.put("status", 1);// 成功
 
 		renderJson(json.toJSONString());
+	}
+
+
+	public void checkTel(){
+		Boolean isExist=false;
+		final String tel = getPara("tel");
+
+		final Record first = Db.findFirst("select * from sys_user where tel=?", tel);
+		if(first!=null){
+			isExist=true;
+		}
+		renderText(isExist.toString());
 	}
 }

@@ -82,7 +82,22 @@ function oper_save() {
     });
 
     $("#belongfieldtype").val(arrIds.join(","));
-
+debugger;
+    var isPass=false;
+    jQuery.ajax({
+        type: 'POST',
+        url: jflyfox.BASE_PATH + 'front/regist/checkTel',
+        async: false,
+        data:{tel:phonenumbers},
+        success:function (data) {
+            if(data=="true") {
+                alert("手机号已经注册过!");
+            }else{
+                isPass=true;
+            }
+        }
+    });
+    if(isPass==true){
     jQuery.ajax({
         type: 'POST',
         url: jflyfox.BASE_PATH + 'front/regist/save',
@@ -102,7 +117,7 @@ function oper_save() {
             if (flag) console.log("服务器忙，提交数据失败，代码:" + html.status + "，请联系管理员！");
             alert("服务器忙，提交数据失败，请联系管理员！");
         }
-    });
+    });}
 }
 
 var max = 60;
