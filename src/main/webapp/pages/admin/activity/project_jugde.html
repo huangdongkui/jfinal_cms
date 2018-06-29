@@ -129,7 +129,7 @@ include("/pages/template/head.html"){}
             projectId: projectId,
             busi_activity_slave_id: busi_activity_slave_id
         }, function (score) {
-            $("#totalscroe").text(score);
+            $("#totalscroe").text("当前得分:"+score);
         });
 
 
@@ -321,15 +321,14 @@ var bodyContent = {
 
                 <fieldset>
 
-                    <div id="legend" class="">
-                        <legend class="">当前得分<span id="totalscroe">0</span></legend>
-                    </div>
+
 
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <h3 class="panel-title">
                                 项目基本信息
                             </h3>
+
                         </div>
                         <div class="panel-body">
                             <div class="form-group">
@@ -382,15 +381,17 @@ var bodyContent = {
                             <h3 class="panel-title">
                                 评分列表
                             </h3>
+
                         </div>
                         <div class="panel-body">
                             <div class="btn-group btn-group-lg">
-                                <!--<button type="button" class="btn btn-info btn-second" value="1,4">技术</button>-->
-                                <!--<button type="button" class="btn btn-info btn-second">团队</button>-->
-                                <!--<button type="button" class="btn btn-info btn-second">市场</button>-->
+
 
                                 ${secendType}
+
+
                             </div>
+                            <div style="float: right;"><h3 id="totalscroe">当前得分</h3></div>
                             <div class="form-group">
                                 <table data-mobile-responsive="true"
                                        class="table-bordered table-condensed table-hover table" id="tb_score">

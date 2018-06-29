@@ -578,12 +578,18 @@ public class FileManager {
 
 	public void downloadfile(HttpServletResponse resp,String repath,String fileName) {
 
+		try {
+			fileName=new String(fileName.getBytes("utf-8"),"iso-8859-1");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+
 		String path = this.fileRoot + repath;
 		String filePath= FileManagerUtils.rebulid(path);
 		File file = new File(filePath);
 		if (path != null && file.exists()&&fileName!=null) {
 			resp.setHeader("Content-type", "application/force-download");
-			resp.setHeader("Content-Disposition", "inline;filename=\"" + fileRoot + this.get.get("path") + "\"");
+			resp.setHeader("Content-Disposition", "inline;filename=\"" + path + "\"");
 			resp.setHeader("Content-Transfer-Encoding", "Binary");
 			resp.setHeader("Content-length", "" + file.length());
 			resp.setHeader("Content-Type", "application/octet-stream");

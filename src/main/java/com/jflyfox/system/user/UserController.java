@@ -64,7 +64,7 @@ public class UserController extends BaseProjectController {
 
 	public void add() {
 		setAttr("departSelect", new DepartmentSvc().selectDepart(0));
-
+		setAttr("belongfieldselect", new DictSvc().checkboxSysDictDetail("", "belongfield"));
 		render(path + "add.html");
 	}
 
