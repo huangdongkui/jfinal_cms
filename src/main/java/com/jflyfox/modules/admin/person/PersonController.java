@@ -13,10 +13,6 @@ import com.jflyfox.util.StrUtils;
 import com.jflyfox.util.encrypt.Md5Utils;
 import com.jflyfox.util.extend.RandomStrUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 /**
  * 个人信息
  * 
@@ -86,6 +82,10 @@ public class PersonController extends BaseProjectController {
 //			}
 //		}
 
+		String newpassword = getPara("newpassword");
+		if(StrUtils.isNotEmpty(newpassword)){
+			model.set("password", JFlyFoxUtils.passwordEncrypt(newpassword));
+		}
 
 		if (StrUtils.isNotEmpty(model.getStr("email")) && model.getStr("email").indexOf("@") < 0) {
 			json.put("msg", "email格式错误！");
