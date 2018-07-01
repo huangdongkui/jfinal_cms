@@ -14,6 +14,7 @@ include("/pages/template/head.html"){}
             form: document.form1,
             list: function () {
                 var url = 'admin/activityproject/mnglist';
+
                 this.form.action = url;
                 this.form.submit();
             },
@@ -56,6 +57,7 @@ include("/pages/template/head.html"){}
     var $bootstrapTable;
     var keyid;
 
+
     function selectActivity(id) {
         keyid = id;
         $bootstrapTable.bootstrapTable("refresh");
@@ -71,6 +73,11 @@ include("/pages/template/head.html"){}
             window.location.href='${BASE_PATH }'+o;
         });
 
+    }
+
+    function findWhere() {
+        $("#paginator_pageno").val(1);
+        oper.list();
     }
 </script>
 
@@ -112,7 +119,7 @@ var bodyContent = {
                 <option value="9">其他</option>
             </select>
         </div>
-        <button type="button" class="btn btn-default" onclick="oper.list();" name="search">
+        <button type="button" class="btn btn-default" onclick="findWhere();" name="search">
             <span class="glyphicon glyphicon-search"></span> 查询
         </button>
         <button type="button" class="btn btn-default" onclick="resetForm();">
@@ -149,7 +156,9 @@ var bodyContent = {
                 <td>${item.activity_name}</td>
                 <td>${item.realname}</td>
                 <td>${item.project_name}</td>
-                <td>${item.score}</td>
+                <td>
+                    ${item.score}
+                </td>
                 <td>${item.tel}</td>
                 <td>${item.departname}</td>
                 <td>${item.from_belongfields}</td>

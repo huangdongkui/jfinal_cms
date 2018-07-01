@@ -276,6 +276,21 @@ public class ActivityProjectController extends BaseProjectController {
     }
 
     /**
+     * 评分统计表
+     */
+    public void project_scorelist(){
+
+        SQLUtils sql = new SQLUtils("select c.activity_name,d.project_name,b.nodeid \n" +
+                ",sum(a.jugde_score)\n" +
+                "from busi_score_template_relation_score a\n" +
+                "left join busi_activity_slave b on b.id=a.busi_activity_slave_id\n" +
+                "left join busi_activity c on c.id=b.busi_activity_id\n" +
+                "left join busi_activity_project d  on d.id=a.busi_activity_project_id\n" +
+                "group by a.busi_activity_project_id,a.busi_activity_slave_id");
+
+        render(path + "project_scorelist.html");
+    }
+    /**
      * 显示打分详情
      */
     public void showDetail(){
@@ -309,7 +324,7 @@ public class ActivityProjectController extends BaseProjectController {
         SQLUtils sql = new SQLUtils(" from busi_activity_project t " +
                 "left join busi_activity ba on ba.id=t.busi_activity_id\n" +
                 "left join sys_user u on u.userid=t.create_id\n" +
-                "left join sys_department d on d.id=u.departid\n" +
+                "left join sys_department dd on dd.id=u.departid\n" +
                 " where t.deleted = 0 and t.project_status=1");
 
 
@@ -331,10 +346,15 @@ public class ActivityProjectController extends BaseProjectController {
             sql.append(" order by t.").append(orderBy);
         }
 
-        String selectFields = "select t.id, t.create_time,activity_name,u.tel,u.realname,d.name as departname," +
+        String selectFields = "select t.id, t.create_time,activity_name,u.tel,u.realname,dd.name as departname," +
                 "t.project_name, (select group_concat(s.detail_name) from sys_dict_detail s\n" +
                 " where s.dict_type='belongfield' \n" +
-                " and FIND_IN_SET(s.detail_code,t.from_belongfields)) as from_belongfields ";
+                " and FIND_IN_SET(s.detail_code,t.from_belongfields)) as from_belongfields, "
+                +"(select ROUND(avg(tt.jugde_score),2) from (select sum(d.jugde_score) as jugde_score,d.busi_activity_project_id " +
+                " from busi_score_template_relation_score d " +
+                " group by d.create_id,d.busi_activity_project_id) tt " +
+                " where tt.busi_activity_project_id=t.id) " +
+                " as score ";
 
         final List<BusiActivity> byWhere = BusiActivity.dao.find(selectFields + sql.toString());
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
@@ -363,7 +383,7 @@ public class ActivityProjectController extends BaseProjectController {
             map.put("realname", busiActivity.get("realname"));
             map.put("tel", busiActivity.get("tel"));
             map.put("project_leader", busiActivity.get("project_leader"));
-            map.put("score", 0);
+            map.put("score", busiActivity.get("score"));
             map.put("remarks", busiActivity.get("remarks"));
             list.add(map);
         }

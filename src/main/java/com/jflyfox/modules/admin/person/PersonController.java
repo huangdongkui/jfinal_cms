@@ -11,7 +11,6 @@ import com.jflyfox.system.user.SysUser;
 import com.jflyfox.system.user.UserCache;
 import com.jflyfox.util.StrUtils;
 import com.jflyfox.util.encrypt.Md5Utils;
-import com.jflyfox.util.extend.RandomStrUtils;
 
 /**
  * 个人信息
@@ -129,7 +128,7 @@ public class PersonController extends BaseProjectController {
 		}
 
 		// 第三方用户不需要密码
-		String password = RandomStrUtils.randomAlphabetic(6);
+		String password = "gddw@1234";//RandomStrUtils.randomAlphabetic(6);
 		model.set("password", JFlyFoxUtils.passwordEncrypt(password));
 		// 日志添加
 		model.put("update_id", getSessionUser().getUserid());

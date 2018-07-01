@@ -31,7 +31,12 @@ var bodyContent = {
                 <td>${itemLP.index }</td>
                 <% // 列表内容 %>
                 <td>${item.username}</td>
-                <td>${item.totalScore}</td>
+                <td>
+
+                    <% if(item.totalScore!=null&&item.totalScore>0) { %>
+                    ${item.totalScore!}
+                    <%	} %>
+                </td>
                 <td>${item.create_time}</td>
             </tr>
             <% } %>
