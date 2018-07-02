@@ -99,6 +99,31 @@ public class ActivityProjectController extends BaseProjectController {
         setAttr("busi_score_template_id",first.get("busi_score_template_id"));
         setAttr("busi_activity_slave_id",first.get("busi_activity_slave_id"));
 
+
+        String tempsql="\n" +
+                "select \n" +
+                "\n" +
+                "(select count(*) from busi_activity_project p \n" +
+                "where p.busi_activity_id=17 and p.deleted=0\n" +
+                " and func_splitString(u.belongfieldtype,',',p.from_belongfields)>0 ) as total,\n" +
+                "\n" +
+                "u.realname,\n" +
+                "m.activity_name,\n" +
+                "(case s.nodeid\n" +
+                "                        when 0 then '填报'\n" +
+                "                        when 1 then '初赛'\n" +
+                "                        when 2 then '复赛'\n" +
+                "                        when 3 then '决赛'\n" +
+                "                        end) as nodename,\n" +
+                "                        u.userid\n" +
+                "               \n" +
+                "          \n" +
+                " from sys_user u\n" +
+                "left join busi_activity_slave s \n" +
+                "left join busi_activity m on m.id=s.busi_activity_id\n" +
+                "on s.busi_activity_id=17  and s.id=26 \n" +
+                "\n" +
+                "where find_in_set(u.userid,s.JudgesUid)";
         render(path + "project_jugde.html");
     }
 
@@ -294,6 +319,7 @@ public class ActivityProjectController extends BaseProjectController {
         sql.append(" group by a.busi_activity_project_id,a.busi_activity_slave_id,a.create_id");
 
         sql.setAlias("t");
+
 
         Page<BusiActivity> page = BusiActivity.dao.paginate(getPaginator(), "select c.activity_name,d.project_name,d.project_leader,\n" +
                         "  (case b.nodeid\n" +

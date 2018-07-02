@@ -51,7 +51,8 @@ include("/pages/template/head.html"){}
         $bootstrapTable.bootstrapTable("refresh");
 
     }
-    //导出
+
+    //导出评分统计表
     function exportData() {
         var url='${BASE_PATH }admin/activityproject/exportScoreExcel/';
 
@@ -60,7 +61,6 @@ include("/pages/template/head.html"){}
         });
 
     }
-
     function findWhere() {
         $("#paginator_pageno").val(1);
         oper.list();
@@ -102,9 +102,9 @@ var bodyContent = {
         <button type="button" class="btn btn-default" onclick="resetForm();">
             <span class="glyphicon glyphicon-refresh"></span> 重置
         </button>
-        <!--<button type="button" class="btn btn-default" onclick="exportData();">-->
-            <!--<span class="glyphicon glyphicon-refresh"></span> 导出-->
-        <!--</button>-->
+        <button type="button" class="btn btn-default" onclick="exportData();">
+            <span class="glyphicon glyphicon-refresh"></span> 导出
+        </button>
 
     </div>
     <div>
