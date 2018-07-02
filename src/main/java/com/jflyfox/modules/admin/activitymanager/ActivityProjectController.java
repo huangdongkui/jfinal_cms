@@ -279,14 +279,40 @@ public class ActivityProjectController extends BaseProjectController {
      * 评分统计表
      */
     public void project_scorelist(){
+        String belongfield = getPara("belongfield");
 
-        SQLUtils sql = new SQLUtils("select c.activity_name,d.project_name,b.nodeid \n" +
-                ",sum(a.jugde_score)\n" +
-                "from busi_score_template_relation_score a\n" +
+
+        SQLUtils sql = new SQLUtils(" from busi_score_template_relation_score a\n" +
                 "left join busi_activity_slave b on b.id=a.busi_activity_slave_id\n" +
                 "left join busi_activity c on c.id=b.busi_activity_id\n" +
-                "left join busi_activity_project d  on d.id=a.busi_activity_project_id\n" +
-                "group by a.busi_activity_project_id,a.busi_activity_slave_id");
+                "left join busi_activity_project d  on d.id=a.busi_activity_project_id where d.deleted = 0\n");
+        if (StringUtils.isNotBlank(belongfield) && !belongfield.equals("-1")) {
+            sql.append(" and find_in_set('"+belongfield+"',d.from_belongfields) ");
+            setAttr("belongfield",belongfield);
+        }
+
+        sql.append(" group by a.busi_activity_project_id,a.busi_activity_slave_id,a.create_id");
+
+        sql.setAlias("t");
+
+        Page<BusiActivity> page = BusiActivity.dao.paginate(getPaginator(), "select c.activity_name,d.project_name,d.project_leader,\n" +
+                        "  (case b.nodeid\n" +
+                        "when 0 then '填报' \n" +
+                        "when 1 then '初赛'\n" +
+                        "when 2 then '复赛' \n" +
+                        "when 3 then '决赛'\n" +
+                        "end) nodename\n" +
+                        ",sum(a.jugde_score) as score,\n" +
+                        "  (select s.realname from sys_user s where s.userid=a.create_id) as Judges\n" +
+                        " ,max(a.create_time) as create_time, "+" (select sd.name from sys_user su\n" +
+                        "INNER join  sys_department sd on su.departid=sd.id\n" +
+                        "where su.userid=d.create_id) as departname,"+
+                        "(select group_concat(s.detail_name) from sys_dict_detail s " +
+                        " where s.dict_type='belongfield' \n" +
+                        " and FIND_IN_SET(s.detail_code,d.from_belongfields)) as from_belongfields ",
+                sql.toString().toString());
+
+        setAttr("page", page);
 
         render(path + "project_scorelist.html");
     }
@@ -308,6 +334,78 @@ public class ActivityProjectController extends BaseProjectController {
         setAttr("list",records);
         render(path + "project_mgnlist_showDetail.html");
     }
+    /**
+     * 导出excel
+     */
+    public void exportScoreExcel() {
+        String belongfield = getPara("belongfield");
+
+
+        SQLUtils sql = new SQLUtils(" from busi_score_template_relation_score a\n" +
+                "left join busi_activity_slave b on b.id=a.busi_activity_slave_id\n" +
+                "left join busi_activity c on c.id=b.busi_activity_id\n" +
+                "left join busi_activity_project d  on d.id=a.busi_activity_project_id where d.deleted = 0\n");
+        if (StringUtils.isNotBlank(belongfield) && !belongfield.equals("-1")) {
+            sql.append(" and find_in_set('"+belongfield+"',d.from_belongfields) ");
+            setAttr("belongfield",belongfield);
+        }
+
+        sql.append(" group by a.busi_activity_project_id,a.busi_activity_slave_id,a.create_id");
+
+        sql.setAlias("t");
+
+
+        String selectFields = "select c.activity_name,d.project_name,d.project_leader,\n" +
+                "  (case b.nodeid\n" +
+                "when 0 then '填报' \n" +
+                "when 1 then '初赛'\n" +
+                "when 2 then '复赛' \n" +
+                "when 3 then '决赛'\n" +
+                "end) nodename\n" +
+                ",sum(a.jugde_score) as score,\n" +
+                "  (select s.realname from sys_user s where s.userid=a.create_id) as Judges\n" +
+                " ,max(a.create_time) as create_time, "+" (select sd.name from sys_user su\n" +
+                "INNER join  sys_department sd on su.departid=sd.id\n" +
+                "where su.userid=d.create_id) as departname,"+
+                "(select group_concat(s.detail_name) from sys_dict_detail s " +
+                " where s.dict_type='belongfield' \n" +
+                " and FIND_IN_SET(s.detail_code,d.from_belongfields)) as from_belongfields ";
+
+        final List<BusiActivity> byWhere = BusiActivity.dao.find(selectFields + sql.toString());
+        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+
+        List<ExcelExportEntity> beanList = new ArrayList<ExcelExportEntity>();
+
+        beanList.add(new ExcelExportEntity("序号", "no"));
+        beanList.add(new ExcelExportEntity("项目名称", "project_name"));
+        beanList.add(new ExcelExportEntity("单位", "departname"));
+        beanList.add(new ExcelExportEntity("领域", "from_belongfields"));
+        beanList.add(new ExcelExportEntity("评委", "Judges"));
+        beanList.add(new ExcelExportEntity("赛事", "nodename"));
+        beanList.add(new ExcelExportEntity("负责人", "project_leader"));
+        beanList.add(new ExcelExportEntity("分数", "score"));
+        beanList.add(new ExcelExportEntity("评分时间", "create_time"));
+
+        // }
+
+        int i = 1;
+        for (BusiActivity busiActivity : byWhere) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("no", i++);
+            map.put("project_name", busiActivity.get("project_name"));
+            map.put("departname", busiActivity.get("departname"));
+            map.put("from_belongfields", busiActivity.get("from_belongfields"));
+            map.put("Judges", busiActivity.get("Judges"));
+            map.put("nodename", busiActivity.get("nodename"));
+            map.put("project_leader", busiActivity.get("project_leader"));
+            map.put("score", busiActivity.get("score"));
+            map.put("create_time", busiActivity.get("create_time"));
+            list.add(map);
+        }
+
+        renderText(ExcelExportUtils.export(beanList, list));
+    }
+
     /**
      * 导出excel
      */
@@ -390,7 +488,6 @@ public class ActivityProjectController extends BaseProjectController {
 
         renderText(ExcelExportUtils.export(beanList, list));
     }
-
 
     public void delete() {
         final String id = getPara("id");
