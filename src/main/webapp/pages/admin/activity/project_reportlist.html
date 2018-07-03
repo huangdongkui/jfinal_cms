@@ -1,0 +1,234 @@
+<%
+var headContent = {
+include("/pages/template/head.html"){}
+%>
+
+<script type="text/javascript">
+
+    var oper;
+    jQuery(function ($) {
+        // 页面方法
+        oper = {
+            width: 800,
+            height: 500,
+            form: document.form1,
+            list: function () {
+
+                if ($bootstrapTable) {
+                    $bootstrapTable.bootstrapTable("refresh");
+                } else {
+                    $bootstrapTable = $('#tblist').bootstrapTable({
+                        url: 'admin/report/reportbyJudges',         //请求后台的URL（*）
+                        method: 'get',                      //请求方式（*）//striped: true,
+                        onLoadSuccess: function (data) {
+
+                        },
+                        //是否显示行间隔色
+                        queryParams: function (params) {
+                            var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                                limit: params.limit,   //页面大小
+                                offset: params.offset,  //页码
+                                busi_activity_id: $("#busi_activity_id").val(),
+                                busi_activity_slave_id: $("#busi_activity_slave_id").val(),
+                                belongfield: $("#belongfield").val()
+                            };
+                            return temp;
+                        }
+                        ,//传递参数（*）
+                        sidePagination: "client",           //分页方式：client客户端分页，server服务端分页（*）
+
+                        clickToSelect: true,                //是否启用点击选中行                    //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                        uniqueId: "id",                     //每一行的唯一标识，一般为主键列
+
+                        columns: [{
+                            field: 'id',
+                            title: '序号',
+                            align: 'center',
+                            width: '10%',
+                            formatter: function formatter(value, row, index, field) {
+                                return index + 1;
+                            }
+                        },
+                            {
+                                field: 'activity_name',
+                                title: '活动名称',
+                                align: 'center',
+                                width: '30%'
+
+                            }, {
+                                field: 'nodename',
+                                title: '赛事',
+                                align: 'center',
+                                width: '10%'
+                            }, {
+                                field: 'realname',
+                                title: '评委',
+                                align: 'center',
+                                width: '10%'
+                            }, {
+                                field: 'total',
+                                title: '评分项目数量',
+                                align: 'center',
+                                width: '10%'
+
+                            }, {
+                                field: 'scorecount',
+                                title: '已评分项目数量',
+                                align: 'center',
+                                width: '10%'
+                            }, {
+                                field: 'noscorecount',
+                                title: '未评分数量',
+                                align: 'center',
+                                width: '10%'
+                            }
+                            , {
+                                field: '',
+                                title: '操作',
+                                align: 'center',
+                                width: '10%'
+                            }
+
+
+                        ]
+                    });
+                }
+            }
+
+
+        };
+
+        $.get("api/activityslist", [], function (data) {
+            for (i in data) {
+                $("#busi_activity_id").append('<option value="' + data[i].id + '">' + data[i].activity_name + '</option>');
+            }
+
+
+        });
+
+
+        $("#busi_activity_slave_id").append('<option value="-1">--请选择赛事--</option>');
+
+        $("#busi_activity_id").click(function () {
+            $("#busi_activity_slave_id").children().remove();
+            $("#busi_activity_slave_id").append('<option value="-1">--请选择赛事--</option>');
+            $.get("api/busiActivitySlaveList", {busi_activity_id: $(this).val()}, function (data) {
+                for (i in data) {
+                    $("#busi_activity_slave_id").append('<option value="' + data[i].id + '">' + data[i].nodename + '</option>');
+                }
+
+
+            });
+        });
+
+
+    });
+
+    //分页
+    var paginator = function (page) {
+        oper.list();
+    };
+    var $bootstrapTable;
+    var keyid;
+
+
+    function selectActivity(id) {
+        keyid = id;
+        $bootstrapTable.bootstrapTable("refresh");
+
+    }
+
+    //导出评分统计表
+    function exportData() {
+        var url = '${BASE_PATH }admin/activityproject/exportScoreExcel/';
+
+        $.get(url, {belongfield: $("#belongfield").val()}, function (o) {
+            window.location.href = '${BASE_PATH }' + o;
+        });
+
+    }
+
+    function findWhere() {
+        $("#paginator_pageno").val(1);
+        oper.list();
+    }
+</script>
+
+<%
+};
+
+var bodyContent = {
+%>
+<form name="form1" action="" method="post" class="form-inline" role="form">
+
+    <!-- 菜单 -->
+    <% include("/pages/template/menu.html"){} %>
+
+    <div class="tableSearch">
+        <% //查询列表 %>
+        <div class="form-group">
+            <select name="busi_activity_id" id="busi_activity_id" class="form-control">
+                <option value="-1">--请选择活动--</option>
+
+            </select>
+        </div>
+
+        <div class="form-group">
+            <select name="busi_activity_slave_id" id="busi_activity_slave_id" class="form-control">
+
+            </select>
+        </div>
+        <div class="form-group">
+            <select name="belongfield" id="belongfield" class="form-control">
+                <option value="-1">--请选择领域--</option>
+                <option value="0">新一代配网技术</option>
+                <option value="1">主网技术</option>
+                <option value="2">新一代用电技术</option>
+                <option value="3">智能作业工器具</option>
+                <option value="4">综合能源技术</option>
+                <option value="5">机器人及人工智能技术</option>
+                <option value="6">节能环保技术</option>
+                <option value="7">电工新材料技术</option>
+                <option value="8">电力通信技术</option>
+                <option value="9">其他</option>
+            </select>
+        </div>
+        <button type="button" class="btn btn-default" onclick="findWhere();" name="search">
+            <span class="glyphicon glyphicon-search"></span> 查询
+        </button>
+        <button type="button" class="btn btn-default" onclick="resetForm();">
+            <span class="glyphicon glyphicon-refresh"></span> 重置
+        </button>
+        <button type="button" class="btn btn-default" onclick="exportData();">
+            <span class="glyphicon glyphicon-refresh"></span> 导出
+        </button>
+
+    </div>
+    <div>
+        <!-- 数据列表 -->
+        <table data-mobile-responsive="true"
+               class="table-bordered table-condensed table-hover table" id="tblist">
+            <thead>
+            <tr>
+                <th>序号</th>
+                <% // 列表头部 %>
+                <th name="activity_name">活动名称</th>
+
+                <th name="nodeid">赛事</th>
+
+                <th name="realname">评委</th>
+                <th name="total">评分项目数量</th>
+                <th name="scorecount">已评分项目数量</th>
+                <th name="noscorecount">未评分数量</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+
+
+    </div>
+</form>
+<%}; %>
+
+
+<% layout("/pages/template/_layout.html",{head:headContent,body:bodyContent}){ %>
+<%} %>

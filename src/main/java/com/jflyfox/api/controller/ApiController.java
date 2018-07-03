@@ -9,10 +9,14 @@ import com.jflyfox.api.service.ApiService;
 import com.jflyfox.api.util.ApiUtils;
 import com.jflyfox.component.base.BaseProjectController;
 import com.jflyfox.jfinal.component.annotation.ControllerBind;
+import com.jflyfox.modules.admin.activitymanager.BusiActivity;
+import com.jflyfox.modules.admin.activitymanager.BusiActivitySlave;
 import com.jflyfox.util.StrUtils;
 
+import java.util.List;
+
 @ControllerBind(controllerKey = "/api")
-@Before(ApiInterceptor.class)
+//@Before(ApiInterceptor.class)
 public class ApiController extends BaseProjectController {
 
 	ApiService service = new ApiService();
@@ -72,5 +76,25 @@ public class ApiController extends BaseProjectController {
 		ApiForm form = getBean(ApiForm.class, null);
 		return form;
 	}
+
+	public void activityslist(){
+		final List<BusiActivity> byWhereAndColumns = BusiActivity.dao.findByWhereAndColumns("where deleted=?", "id,activity_name", 0);
+		renderJson(byWhereAndColumns);
+	}
+
+	public void busiActivitySlaveList(){
+
+		String busi_activity_id=getPara("busi_activity_id");
+
+		final List<BusiActivitySlave> byWhere = BusiActivitySlave.dao.findByWhereAndColumns("where busi_activity_id=?", "id,(case nodeid\n" +
+				"                        when 0 then '填报'\n" +
+				"                        when 1 then '初赛'\n" +
+				"                        when 2 then '复赛'\n" +
+				"                        when 3 then '决赛'\n" +
+				"                        end) as nodename", busi_activity_id);
+
+		renderJson(byWhere);
+	}
+
 
 }
