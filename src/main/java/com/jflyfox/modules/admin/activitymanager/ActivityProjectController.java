@@ -1,5 +1,6 @@
 package com.jflyfox.modules.admin.activitymanager;
 
+import cn.afterturn.easypoi.excel.entity.ExportParams;
 import cn.afterturn.easypoi.excel.entity.params.ExcelExportEntity;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
@@ -12,6 +13,7 @@ import com.jflyfox.modules.admin.scoretemplate.BusiScoreTemplate;
 import com.jflyfox.modules.admin.scoretemplate.BusiScoreTemplateRelationScore;
 import com.jflyfox.system.department.DepartmentSvc;
 import com.jflyfox.system.department.SysDepartment;
+import com.jflyfox.system.dict.SysDictDetail;
 import com.jflyfox.system.user.SysUser;
 import com.jflyfox.util.StrUtils;
 import com.jflyfox.util.easypoi.ExcelExportUtils;
@@ -21,6 +23,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static java.lang.String.valueOf;
 
 /**
  * 〈评委评分项目列表〉
@@ -432,19 +436,65 @@ public class ActivityProjectController extends BaseProjectController {
         renderText(ExcelExportUtils.export(beanList, list));
     }
 
+
     /**
      * 导出excel
      */
     public void exportExcel() {
-        String departid = getPara("departid");
-        if (departid == null) {
-            departid = "-1";
+
+        List<Map<String,Object>> exportList=new ArrayList<Map<String,Object>>();
+        List<SysDictDetail> listSysDictDetail = new ArrayList<SysDictDetail>();
+
+        listSysDictDetail = SysDictDetail.dao.find("select detail_code,detail_name from sys_dict_detail where dict_type='belongfield'");
+        SysDictDetail tempSysDictDetail=new SysDictDetail();
+        tempSysDictDetail.put("detail_code","-1");
+        tempSysDictDetail.put("detail_name","总表");
+        listSysDictDetail.add(0,tempSysDictDetail);
+        //遍历所有领域
+        for (SysDictDetail sysDictDetail : listSysDictDetail) {
+
+            List<BusiActivity> listBusiActivity=getRecordbyfield(valueOf(sysDictDetail.get("detail_code")));
+
+            List<ExportEntity> listExportEntity=new ArrayList<>();
+            Integer i=1;
+            for (BusiActivity busiActivity : listBusiActivity) {
+
+                ExportEntity map=new ExportEntity();
+                map.setNo(i++);
+                map.setProject_name(valueOf(busiActivity.get("project_name")));
+                map.setDepartname(valueOf(busiActivity.get("departname")));
+                map.setFrom_belongfields(valueOf(busiActivity.get("from_belongfields")));
+                map.setRealname(valueOf(busiActivity.get("realname")));
+                map.setTel(valueOf(busiActivity.get("tel")));
+                map.setProject_leader(valueOf(busiActivity.get("project_leader")));
+                if(busiActivity.get("score")!=null) {
+                    map.setScore(Float.parseFloat(valueOf(busiActivity.get("score"))));
+                }
+                map.setRemarks(valueOf(busiActivity.get("remarks")));
+                listExportEntity.add(map);
+            }
+
+            Map<String,Object> mapData=new HashMap<String, Object>();
+            ExportParams params = new ExportParams();
+            params.setSheetName(sysDictDetail.get("detail_name").toString());
+            mapData.put("title",params);
+            mapData.put("entity",ExportEntity.class);
+            mapData.put("data",listExportEntity);
+            exportList.add(mapData);
         }
 
-        String belongfield = getPara("belongfield");
-        if (belongfield == null) {
-            departid = "-1";
-        }
+
+        renderText(ExcelExportUtils.exportMulitSheet(exportList));
+    }
+
+    /**
+     * 按领域获取评分
+     * @param belongfield
+     * @return
+     */
+    private List<BusiActivity> getRecordbyfield(String belongfield){
+
+
         SQLUtils sql = new SQLUtils(" from busi_activity_project t " +
                 "left join busi_activity ba on ba.id=t.busi_activity_id\n" +
                 "left join sys_user u on u.userid=t.create_id\n" +
@@ -454,10 +504,6 @@ public class ActivityProjectController extends BaseProjectController {
 
         if (StringUtils.isNotBlank(belongfield) && !belongfield.equals("-1")) {
             sql.append(" and find_in_set('"+belongfield+"',t.from_belongfields) ");
-        }
-
-        if (StringUtils.isNotBlank(departid) && !departid.equals("-1")) {
-            sql.whereEquals("departid", departid);
         }
 
         sql.setAlias("t");
@@ -479,40 +525,9 @@ public class ActivityProjectController extends BaseProjectController {
                 " group by d.create_id,d.busi_activity_project_id) tt " +
                 " where tt.busi_activity_project_id=t.id) " +
                 " as score ";
-
         final List<BusiActivity> byWhere = BusiActivity.dao.find(selectFields + sql.toString());
-        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 
-        List<ExcelExportEntity> beanList = new ArrayList<ExcelExportEntity>();
-
-        beanList.add(new ExcelExportEntity("序号", "no"));
-        beanList.add(new ExcelExportEntity("项目名称", "project_name"));
-        beanList.add(new ExcelExportEntity("单位", "departname"));
-        beanList.add(new ExcelExportEntity("领域", "from_belongfields"));
-        beanList.add(new ExcelExportEntity("申请人", "realname"));
-        beanList.add(new ExcelExportEntity("联系方式", "tel"));
-        beanList.add(new ExcelExportEntity("负责人", "project_leader"));
-        beanList.add(new ExcelExportEntity("分数", "score"));
-        beanList.add(new ExcelExportEntity("备注", "remarks"));
-
-        // }
-
-        int i = 1;
-        for (BusiActivity busiActivity : byWhere) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("no", i++);
-            map.put("project_name", busiActivity.get("project_name"));
-            map.put("departname", busiActivity.get("departname"));
-            map.put("from_belongfields", busiActivity.get("from_belongfields"));
-            map.put("realname", busiActivity.get("realname"));
-            map.put("tel", busiActivity.get("tel"));
-            map.put("project_leader", busiActivity.get("project_leader"));
-            map.put("score", busiActivity.get("score"));
-            map.put("remarks", busiActivity.get("remarks"));
-            list.add(map);
-        }
-
-        renderText(ExcelExportUtils.export(beanList, list));
+        return byWhere;
     }
 
     public void delete() {

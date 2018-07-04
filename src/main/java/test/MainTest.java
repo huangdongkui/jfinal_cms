@@ -2,23 +2,13 @@ package test;
 
 import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.annotation.Excel;
-import cn.afterturn.easypoi.excel.annotation.ExcelTarget;
 import cn.afterturn.easypoi.excel.entity.ExportParams;
 import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
-import cn.afterturn.easypoi.excel.entity.params.ExcelExportEntity;
-import cn.afterturn.easypoi.excel.export.styler.ExcelExportStylerBorderImpl;
-import com.jflyfox.component.util.JFlyFoxUtils;
-import com.jflyfox.modules.admin.activitymanager.BusiActivitySlave;
-import com.jflyfox.system.userrole.SysUserRole;
-import com.jflyfox.util.DateUtils;
-import com.jflyfox.util.easypoi.ExcelExportUtils;
-import com.jflyfox.util.encrypt.Md5Utils;
 import org.apache.poi.ss.usermodel.Workbook;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -479,42 +469,19 @@ public class MainTest {
     public static void test() {
         try {
 
-            List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-
-            List<ExcelExportEntity> beanList = new ArrayList<ExcelExportEntity>();
-
-//            beanList.add(new ExcelExportEntity(new ExcelExportEntity("学生姓名", "name"));
-            beanList.add(new ExcelExportEntity("学生性别", "sex"));
-            beanList.add(new ExcelExportEntity("进校日期", "registrationDate"));
-            //if(needBirthday()){
-            beanList .add(new ExcelExportEntity("出生日期", "birthday"));
-            // }
-
-
-            Map<String, Object> map=new HashMap<>();
-//            map.put("sex","男");
-//            map.put("registrationDate","2018-6-21");
-            map.put("name","wolf");
-            list.add(map);
-
             List<CustomerEntity> listCourseEntity = new ArrayList<CustomerEntity>();
-//            CourseEntity newobj=new CourseEntity();
-//            newobj.setId("c002");
-//            newobj.setName("wolf");
-//            listCourseEntity.add(newobj);
+
             List<Map<String,Object>> schoolCourseList=new ArrayList<Map<String,Object>>();
 
             for(int i=1;i<=2;i++){
                 Map<String,Object> mapData=new HashMap<String, Object>();
-                ExportParams params = new ExportParams("0328课程表", "六年"+i+"班");
-                //params.setStyle(ExcelExportStylerBorderImpl.class);
+                ExportParams params = new ExportParams();
+                params.setSheetName("六年"+i+"班");
                 mapData.put("title",params);
                 mapData.put("entity",CustomerEntity.class);
                 mapData.put("data",listCourseEntity);
                 schoolCourseList.add(mapData);
             }
-//             Workbook workbook = ExcelExportUtil.exportExcel(new ExportParams(), beanList ,
-//                     list);
              Workbook workbook = ExcelExportUtil.exportExcel(schoolCourseList, ExcelType.HSSF);
             FileOutputStream fos = new FileOutputStream("D:/excel/ExcelExportForMap.xls");
             workbook.write(fos);

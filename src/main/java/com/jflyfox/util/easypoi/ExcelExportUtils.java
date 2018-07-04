@@ -2,6 +2,7 @@ package com.jflyfox.util.easypoi;
 
 import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.entity.ExportParams;
+import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
 import cn.afterturn.easypoi.excel.entity.params.ExcelExportEntity;
 import com.jflyfox.system.file.util.FileUploadUtils;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -33,6 +34,27 @@ public class ExcelExportUtils {
         try {
             Workbook workbook = ExcelExportUtil.exportExcel(new ExportParams(),column,data);
 
+            FileOutputStream fos = new FileOutputStream(path);
+            workbook.write(fos);
+            fos.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return fileName;
+    }
+
+
+    public static String exportMulitSheet(List<Map<String,Object>> list){
+
+        String fileName=FileUploadUtils.getBasePath()+"TempExpotFile\\报名总表.xls";
+        String path  = FileUploadUtils.getRootPath()+fileName;
+        try {
+
+            Workbook workbook = ExcelExportUtil.exportExcel(list, ExcelType.HSSF);
             FileOutputStream fos = new FileOutputStream(path);
             workbook.write(fos);
             fos.close();
