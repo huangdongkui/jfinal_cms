@@ -86,12 +86,7 @@ public class ApiController extends BaseProjectController {
 
 		String busi_activity_id=getPara("busi_activity_id");
 
-		final List<BusiActivitySlave> byWhere = BusiActivitySlave.dao.findByWhereAndColumns("where busi_activity_id=?", "id,(case nodeid\n" +
-				"                        when 0 then '填报'\n" +
-				"                        when 1 then '初赛'\n" +
-				"                        when 2 then '复赛'\n" +
-				"                        when 3 then '决赛'\n" +
-				"                        end) as nodename", busi_activity_id);
+		final List<BusiActivitySlave> byWhere = BusiActivitySlave.dao.findByWhereAndColumns("where busi_activity_id=?", "id,nodeid,(select detail_name from sys_dict_detail where dict_type='activitystage' and detail_code=nodeid) as nodename", busi_activity_id);
 
 		renderJson(byWhere);
 	}
