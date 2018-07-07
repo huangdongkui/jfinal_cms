@@ -76,9 +76,19 @@ public class ActivityController extends BaseProjectController {
                // "where c.busi_activity_id=a.busi_activity_id and c.create_id="+userid+" and c.deleted=0) "
                 "0 as project_status, \n" +
                 "a.busi_activity_id,\n" +
-                "a.from_time,a.to_time,b.activity_name\n" +
-                "from busi_activity_slave a\n" +
-                "left join busi_activity b on b.id=a.busi_activity_id" +
+                "a.from_time,a.to_time,b.activity_name," +
+                " (\n" +
+                "SELECT COUNT(*)\n" +
+                "FROM busi_actitity_promotion c\n" +
+                "INNER JOIN busi_activity_project p ON p.id=c.busi_activity_project_id\n" +
+                "WHERE c.busi_activity_save_id=a.id AND p.create_id="+userid+") AS isover,\n" +
+                " (\n" +
+                "SELECT COUNT(*)\n" +
+                "FROM busi_actitity_promotion c\n" +
+                "INNER JOIN busi_activity_project p ON p.id=c.busi_activity_project_id\n" +
+                "WHERE c.busi_activity_save_id=a.id AND p.busi_activity_id=b.id AND p.create_id="+userid+") AS isoverandpass "+
+                " from busi_activity_slave a\n" +
+                " left join busi_activity b on b.id=a.busi_activity_id" +
                 " where b.deleted=0";
         List<Record> records = Db.find(sql);
         renderJson(records);

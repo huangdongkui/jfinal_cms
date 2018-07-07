@@ -85,6 +85,21 @@ include("/pages/template/head.html"){}
                                 sortable: true
                             }
                             , {
+                                field: 'promotionid',
+                                title: '是否晋级',
+                                align: 'center',
+                                width: '10%',
+                                sortable: true,
+                                formatter: function formatter(value, row, index, field) {
+                                    var showtext = '未晋级';
+
+                                    if (value != null) {
+                                        showtext = '晋级';
+                                    }
+                                    return showtext
+                                }
+                            }
+                            , {
                                 field: '',
                                 title: '操作',
                                 align: 'center',
@@ -97,7 +112,7 @@ include("/pages/template/head.html"){}
                                         showtext = '不能晋级';
                                     }
                                     return '<a href="javascript:void(0);" class="btn btn-sm btn' +
-                                        '-primary" onclick="pass(' + row.promotionid + ','+row.save_id+','+row.projectid+')">showtext</a>';
+                                        '-primary" onclick="pass(' + row.promotionid + ','+row.save_id+','+row.projectid+')">'+showtext+'</a>';
 
 
                                 }
@@ -112,13 +127,7 @@ include("/pages/template/head.html"){}
 
         };
 
-        //晋级
-        function pass(promotionid,save_id,projectid) {
-            $.get("admin/activitypromotion/pass", {promotionid:promotionid,save_id:save_id,projectid:projectid}, function (data) {
 
-            });
-
-        }
 
         $.get("api/activityslist", [], function (data) {
             for (i in data) {
@@ -146,7 +155,15 @@ include("/pages/template/head.html"){}
 
     var $bootstrapTable;
     var keyid;
+    //晋级
+    function pass(promotionid,save_id,projectid) {
+        $.get("admin/activitypromotion/pass", {promotionid:promotionid,save_id:save_id,projectid:projectid}, function (data) {
+            if(data=="true"){
+                oper.list();
+            }
+        });
 
+    }
 
     function findWhere() {
         if ($("#busi_activity_id").val() == "-1") {
@@ -214,9 +231,9 @@ var bodyContent = {
         <button type="button" class="btn btn-default" onclick="resetForm();">
             <span class="glyphicon glyphicon-refresh"></span> 重置
         </button>
-        <button type="button" class="btn btn-default" onclick="exportData();">
-            <span class="glyphicon glyphicon-refresh"></span> 导出
-        </button>
+        <!--<button type="button" class="btn btn-default" onclick="exportData();">-->
+            <!--<span class="glyphicon glyphicon-refresh"></span> 导出-->
+        <!--</button>-->
 
     </div>
     <div>
@@ -233,6 +250,7 @@ var bodyContent = {
                 <th name="project_leader">负责人</th>
                 <th name="belongfields">领域</th>
                 <th name="scored" class="sorting">得分</th>
+                <th class="sorting">是否晋级</th>
                 <th>操作</th>
             </tr>
             </thead>

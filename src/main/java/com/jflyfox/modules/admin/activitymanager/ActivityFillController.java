@@ -49,7 +49,8 @@ public class ActivityFillController extends BaseProjectController {
             sql.append(" order by t.").append(orderBy);
         }
 
-        Page<BusiActivity> page = BusiActivity.dao.paginate(getPaginator(), "select t.* ",
+        Page<BusiActivity> page = BusiActivity.dao.paginate(getPaginator(), "select t.*,exists(select * from  busi_actitity_promotion b\n" +
+                        "where a.id=b.busi_activity_project_id) as ispass ",
                 sql.toString().toString());
 
         setAttr("page", page);

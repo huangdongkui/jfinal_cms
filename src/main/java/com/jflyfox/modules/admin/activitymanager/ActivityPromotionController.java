@@ -1,6 +1,8 @@
 package com.jflyfox.modules.admin.activitymanager;
 
+import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
+import com.jfinal.plugin.activerecord.Record;
 import com.jflyfox.component.base.BaseProjectController;
 import com.jflyfox.jfinal.base.Paginator;
 import com.jflyfox.jfinal.component.annotation.ControllerBind;
@@ -81,10 +83,18 @@ public class ActivityPromotionController extends BaseProjectController {
         String promotionid = getPara("promotionid");
         String save_id = getPara("save_id");
         String projectid = getPara("projectid");
-        if(StrUtils.isEmpty(promotionid.trim())){//晋级
+        Boolean success = false;
 
-        }else{//不能晋级
-
+        if (StrUtils.isEmpty(promotionid.trim())) {//晋级
+            Record record = new Record();
+            record.set("busi_activity_save_id", save_id);
+            record.set("busi_activity_project_id", projectid);
+            record.set("create_id", getSessionUser().getUserid());
+            success = Db.save("busi_actitity_promotion", record);
+        } else {//不能晋级
+            success = Db.deleteById("busi_actitity_promotion", promotionid);
         }
+
+        renderText(success.toString());
     }
 }

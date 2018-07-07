@@ -117,16 +117,25 @@ include("/pages/template/head.html"){}
     function initTable(tableid, data) {
         var columnVal = {
             field: 'id',
-            title: '是否入围',
+            title: '是否晋级',
             align: 'center',
             width: '10%',
             formatter: function formatter(value, row, index, field) {
-                var values = ['待评审', '是'];
+
                 if(index==0){
                     return '已报名';
-                }else{
-                    return values[0];
+                }else {
+
+                    var showtext = '待评审';
+
+                    if (row.isover > 0 && row.isoverandpass > 0) {
+                        showtext = '晋级';
+                    }
+                    else if (row.isover > 0) {
+                        showtext = '未晋级';
+                    }
                 }
+                return showtext
 
             }
         };
