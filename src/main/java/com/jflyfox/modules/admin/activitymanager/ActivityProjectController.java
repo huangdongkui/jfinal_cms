@@ -55,17 +55,19 @@ public class ActivityProjectController extends BaseProjectController {
 
         String sql = "select a.id,a.project_name,b.realname,c.name as departname," +
                 "(select ROUND(avg(t.jugde_score),2) from \n" +
-                "(select sum(d.jugde_score) as jugde_score,d.busi_activity_project_id,d.create_id\n" +
+                "(select sum(d.jugde_score) as jugde_score,d.busi_activity_project_id,d.create_id,d.busi_activity_slave_id \n" +
                 "from busi_score_template_relation_score d\n" +
-                "group by d.create_id,d.busi_activity_project_id) t \n" +
-                "where t.busi_activity_project_id=a.id and t.create_id="+getSessionUser().getUserid()+") " +
+                "group by d.create_id,d.busi_activity_slave_id,d.busi_activity_project_id) t \n" +
+                "where t.busi_activity_project_id=a.id and t.create_id="+getSessionUser().getUserid()+" and t.busi_activity_slave_id="+busi_activity_slave_id+") " +
                 "as score," +
                 "a.project_status\n" +
                 "from busi_activity_project a\n" +
                 " inner join busi_activity_slave s on s.id="+busi_activity_slave_id+" and find_in_set('"+getSessionUser().getUserid()+"',s.JudgesUid) "+
                 "left join sys_user b on a.create_id=b.userid\n" +
                 "left join sys_department c on b.departid=c.id\n" +
-                "where a.deleted=0 and a.project_status=1 and a.busi_activity_id = " + busi_activity_id+" and a.from_belongfields REGEXP ('"+belongfieldtype.replace(",","|")+"')";
+                "where a.deleted=0 and a.project_status=1 and a.busi_activity_id = " + busi_activity_id+" and a.from_belongfields REGEXP ('"+belongfieldtype.replace(",","|")+"')"+
+                "and not exists(select * from busi_actitity_promotion p\n" +
+                "  where s.id=(p.busi_activity_save_id+1) and a.id=p.busi_activity_project_id)";
 
 
         List<Record> records = Db.find(sql);
