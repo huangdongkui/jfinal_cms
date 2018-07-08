@@ -27,9 +27,9 @@ public class ExcelExportUtils {
      * @param data
      * @return 路径
      */
-    public static String export(List<ExcelExportEntity> column, List<Map<String, Object>> data){
+    public static String export(List<ExcelExportEntity> column, List<Map<String, Object>> data,String filename){
 
-        String fileName=FileUploadUtils.getBasePath()+"TempExpotFile\\统计报表.xls";
+        String fileName=FileUploadUtils.getBasePath()+"TempExpotFile\\"+filename+".xls";
         String path  = FileUploadUtils.getRootPath()+fileName;
         try {
             Workbook workbook = ExcelExportUtil.exportExcel(new ExportParams(),column,data);

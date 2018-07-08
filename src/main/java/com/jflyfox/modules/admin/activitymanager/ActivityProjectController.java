@@ -66,8 +66,8 @@ public class ActivityProjectController extends BaseProjectController {
                 "left join sys_user b on a.create_id=b.userid\n" +
                 "left join sys_department c on b.departid=c.id\n" +
                 "where a.deleted=0 and a.project_status=1 and a.busi_activity_id = " + busi_activity_id+" and a.from_belongfields REGEXP ('"+belongfieldtype.replace(",","|")+"')"+
-                "and not exists(select * from busi_actitity_promotion p\n" +
-                "  where s.id=(p.busi_activity_save_id+1) and a.id=p.busi_activity_project_id)";
+                "and exists(select * from busi_actitity_promotion p\n" +
+                "  where (s.id-1)=p.busi_activity_save_id and a.id=p.busi_activity_project_id)";
 
 
         List<Record> records = Db.find(sql);
@@ -435,7 +435,7 @@ public class ActivityProjectController extends BaseProjectController {
             list.add(map);
         }
 
-        renderText(ExcelExportUtils.export(beanList, list));
+        renderText(ExcelExportUtils.export(beanList, list,"报名统计"));
     }
 
 

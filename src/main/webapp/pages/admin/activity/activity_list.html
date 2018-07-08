@@ -44,6 +44,11 @@ include("/pages/template/head.html"){}
                 var url = 'admin/activityselect/' + id;
                 var title = '选择评委';
                 Iframe(url, this.width, this.height, title);
+            },
+            lookPromotion:function (id) {
+                var url = 'admin/activitypromotion/summaryIndex/?busi_activity_id='+keyid+'&busi_activity_save_id='+id;
+                var title = '晋级情况';
+                Iframe(url, 1000, 800, title);
             }
 
 
@@ -109,12 +114,12 @@ include("/pages/template/head.html"){}
                 field: 'from_time',
                 title: '开始日期',
                 align:'center',
-                width:'20%'
+                width:'15%'
             }, {
                 field: 'to_time',
                 title: '结束日期',
                 align:'center',
-                width:'20%'
+                width:'15%'
             }, {
                 field: 'judges_names',
                 title: '专家列表',
@@ -124,9 +129,10 @@ include("/pages/template/head.html"){}
                 field: 'id',
                 title: '操作',
                 align:'center',
-                width:'10%',
+                width:'20%',
                 formatter:function formatter (value, row, index, field) {
-            return '<a href="javascript:void(0);" class="btn btn-sm btn-primary" onclick="oper.selectPerson('+value+')">选择评委</a>';
+                    var elment='<a href="javascript:void(0);" class="btn btn-sm btn-primary" onclick="oper.lookPromotion('+value+')">晋级情况</a>';
+            return '<a href="javascript:void(0);" class="btn btn-sm btn-primary" onclick="oper.selectPerson('+value+')">选择评委</a>'+elment;
         }
 
 
