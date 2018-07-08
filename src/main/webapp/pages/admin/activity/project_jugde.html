@@ -13,9 +13,6 @@ include("/pages/template/head.html"){}
     var oper = {
         save: function () {
 
-
-
-
             baseSave();
 
             Alert("保存成功",function () {
@@ -171,7 +168,9 @@ include("/pages/template/head.html"){}
             $bootstrapTable.bootstrapTable('refresh', {
                 queryParams: function (params) {
                     var temp = {
-                        path: searchData
+                        path: searchData,
+                        projectId: projectId,
+                        busi_activity_slave_id:busi_activity_slave_id
                     };
                     return temp;
                 }
@@ -191,7 +190,9 @@ include("/pages/template/head.html"){}
                     limit: params.limit,   //页面大小
                     offset: params.offset,  //页码
                     path: searchData,
-                    projectId: projectId
+                    projectId: projectId,
+                    busi_activity_slave_id:busi_activity_slave_id
+
                 };
                 return temp;
             }

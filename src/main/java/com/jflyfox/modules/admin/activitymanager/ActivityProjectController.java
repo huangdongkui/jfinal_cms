@@ -156,6 +156,7 @@ public class ActivityProjectController extends BaseProjectController {
         String path = getPara("path");
         String userid = getSessionUser().getUserid().toString();
         String projectId = getPara("projectId");
+        String busi_activity_slave_id=getPara("busi_activity_slave_id");
 
         String sql = "select  a.*,\n" +
                 " (select b.scorce_contents\n" +
@@ -165,6 +166,7 @@ public class ActivityProjectController extends BaseProjectController {
                 " from busi_score_template a\n" +
                 " left join busi_score_template_relation_score b \n" +
                 " on b.busi_score_template_id=a.id and b.busi_activity_project_id=" + projectId + " and b.create_id=" + userid +
+                " and b.busi_activity_slave_id = "+busi_activity_slave_id+
                 " where LOCATE('" + path + "',a.path)=1\n" +
                 "and length(a.path)>length('" + path + "') and level=3 order by a.id,a.path";
 
