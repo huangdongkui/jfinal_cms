@@ -36,6 +36,30 @@ include("/pages/template/head.html"){}
 
 
         $("#belongfield").val("${belongfield!'-1'}");
+
+
+        $.get("api/activityslist", [], function (data) {
+            for (i in data) {
+                $("#busi_activity_id").append('<option value="' + data[i].id + '">' + data[i].activity_name + '</option>');
+            }
+
+
+        });
+
+
+        $("#busi_activity_slave_id").append('<option value="-1">--请选择赛事--</option>');
+
+        $("#busi_activity_id").click(function () {
+            $("#busi_activity_slave_id").children().remove();
+            $("#busi_activity_slave_id").append('<option value="-1">--请选择赛事--</option>');
+            $.get("api/busiActivitySlaveList", {busi_activity_id: $(this).val()}, function (data) {
+                for (i in data) {
+                    $("#busi_activity_slave_id").append('<option value="' + data[i].id + '">' + data[i].nodename + '</option>');
+                }
+
+
+            });
+        });
     });
 
     //分页
@@ -80,7 +104,17 @@ var bodyContent = {
 
     <div class="tableSearch">
         <% //查询列表 %>
+        <div class="form-group">
+            <select name="busi_activity_id" id="busi_activity_id" class="form-control">
+                <option value="-1">--请选择活动--</option>
 
+            </select>
+        </div>
+        <div class="form-group">
+            <select name="busi_activity_slave_id" id="busi_activity_slave_id" class="form-control">
+
+            </select>
+        </div>
         <div class="form-group">
             <select name="belongfield" id="belongfield" class="form-control">
                 <option value="-1">--请选择领域--</option>

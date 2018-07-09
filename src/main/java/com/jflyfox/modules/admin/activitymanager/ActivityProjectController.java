@@ -58,14 +58,14 @@ public class ActivityProjectController extends BaseProjectController {
                 "(select sum(d.jugde_score) as jugde_score,d.busi_activity_project_id,d.create_id,d.busi_activity_slave_id \n" +
                 "from busi_score_template_relation_score d\n" +
                 "group by d.create_id,d.busi_activity_slave_id,d.busi_activity_project_id) t \n" +
-                "where t.busi_activity_project_id=a.id and t.create_id="+getSessionUser().getUserid()+" and t.busi_activity_slave_id="+busi_activity_slave_id+") " +
+                "where t.busi_activity_project_id=a.id and t.create_id=" + getSessionUser().getUserid() + " and t.busi_activity_slave_id=" + busi_activity_slave_id + ") " +
                 "as score," +
                 "a.project_status\n" +
                 "from busi_activity_project a\n" +
-                " inner join busi_activity_slave s on s.id="+busi_activity_slave_id+" and find_in_set('"+getSessionUser().getUserid()+"',s.JudgesUid) "+
+                " inner join busi_activity_slave s on s.id=" + busi_activity_slave_id + " and find_in_set('" + getSessionUser().getUserid() + "',s.JudgesUid) " +
                 "left join sys_user b on a.create_id=b.userid\n" +
                 "left join sys_department c on b.departid=c.id\n" +
-                "where a.deleted=0 and a.project_status=1 and a.busi_activity_id = " + busi_activity_id+" and a.from_belongfields REGEXP ('"+belongfieldtype.replace(",","|")+"')"+
+                "where a.deleted=0 and a.project_status=1 and a.busi_activity_id = " + busi_activity_id + " and a.from_belongfields REGEXP ('" + belongfieldtype.replace(",", "|") + "')" +
                 "and exists(select * from busi_actitity_promotion p\n" +
                 "  where (s.id-1)=p.busi_activity_save_id and a.id=p.busi_activity_project_id)";
 
@@ -102,11 +102,11 @@ public class ActivityProjectController extends BaseProjectController {
                 " where a.id=?";
 
         final Record first = Db.findFirst(selectSql, pid);
-        setAttr("busi_score_template_id",first.get("busi_score_template_id"));
-        setAttr("busi_activity_slave_id",first.get("busi_activity_slave_id"));
+        setAttr("busi_score_template_id", first.get("busi_score_template_id"));
+        setAttr("busi_activity_slave_id", first.get("busi_activity_slave_id"));
 
 
-        String tempsql="\n" +
+        String tempsql = "\n" +
                 "select \n" +
                 "\n" +
                 "(select count(*) from busi_activity_project p \n" +
@@ -156,7 +156,7 @@ public class ActivityProjectController extends BaseProjectController {
         String path = getPara("path");
         String userid = getSessionUser().getUserid().toString();
         String projectId = getPara("projectId");
-        String busi_activity_slave_id=getPara("busi_activity_slave_id");
+        String busi_activity_slave_id = getPara("busi_activity_slave_id");
 
         String sql = "select  a.*,\n" +
                 " (select b.scorce_contents\n" +
@@ -166,7 +166,7 @@ public class ActivityProjectController extends BaseProjectController {
                 " from busi_score_template a\n" +
                 " left join busi_score_template_relation_score b \n" +
                 " on b.busi_score_template_id=a.id and b.busi_activity_project_id=" + projectId + " and b.create_id=" + userid +
-                " and b.busi_activity_slave_id = "+busi_activity_slave_id+
+                " and b.busi_activity_slave_id = " + busi_activity_slave_id +
                 " where LOCATE('" + path + "',a.path)=1\n" +
                 "and length(a.path)>length('" + path + "') and level=3 order by a.id,a.path";
 
@@ -248,7 +248,7 @@ public class ActivityProjectController extends BaseProjectController {
                 "where busi_activity_project_id=" + projectId + " and  busi_activity_slave_id=" + busi_activity_slave_id + " and create_id=" + userid;
 
         Record records = Db.findFirst(sql);
-        if(records==null){
+        if (records == null) {
             renderText("0");
         }
         renderText(records.get("jugde_score").toString());
@@ -272,8 +272,8 @@ public class ActivityProjectController extends BaseProjectController {
                 "left join sys_department d on d.id=u.departid\n" +
                 " where t.deleted = 0 and t.project_status=1");
         if (StringUtils.isNotBlank(belongfield) && !belongfield.equals("-1")) {
-            sql.append(" and find_in_set('"+belongfield+"',t.from_belongfields) ");
-            setAttr("belongfield",belongfield);
+            sql.append(" and find_in_set('" + belongfield + "',t.from_belongfields) ");
+            setAttr("belongfield", belongfield);
         }
         if (StringUtils.isNotBlank(departid) && !departid.equals("-1")) {
             sql.whereEquals("departid", departid);
@@ -293,7 +293,7 @@ public class ActivityProjectController extends BaseProjectController {
         }
 
         Page<BusiActivity> page = BusiActivity.dao.paginate(getPaginator(), "select t.id, t.create_time,activity_name,u.tel,u.realname,d.name as departname,t.project_name,t.from_belongfields, "
-                        +"(select ROUND(avg(tt.jugde_score),2) from (select sum(d.jugde_score) as jugde_score,d.busi_activity_project_id " +
+                        + "(select ROUND(avg(tt.jugde_score),2) from (select sum(d.jugde_score) as jugde_score,d.busi_activity_project_id " +
                         " from busi_score_template_relation_score d " +
                         " group by d.create_id,d.busi_activity_project_id) tt " +
                         " where tt.busi_activity_project_id=t.id) " +
@@ -311,52 +311,58 @@ public class ActivityProjectController extends BaseProjectController {
     /**
      * 评分统计表
      */
-    public void project_scorelist(){
+    public void project_scorelist() {
         String belongfield = getPara("belongfield");
+        String busi_activity_slave_id = getPara("busi_activity_slave_id");
+
+        if (StringUtils.isNotBlank(busi_activity_slave_id) && StringUtils.isNotBlank(belongfield)) {
+
+            SQLUtils sql = new SQLUtils(" from busi_score_template_relation_score a\n" +
+                    "left join busi_activity_slave b on b.id=a.busi_activity_slave_id\n" +
+                    "left join busi_activity c on c.id=b.busi_activity_id\n" +
+                    "left join busi_activity_project d  on d.id=a.busi_activity_project_id where d.deleted = 0\n" +
+                    " and d.project_status=1 and s.busi_activity_slave_id=" + busi_activity_slave_id);
+            if (StringUtils.isNotBlank(belongfield) && !belongfield.equals("-1")) {
+                sql.append(" and find_in_set('" + belongfield + "',d.from_belongfields) ");
+                setAttr("belongfield", belongfield);
+            }
+
+            sql.append(" group by a.busi_activity_project_id,a.busi_activity_slave_id,a.create_id");
+
+            sql.setAlias("t");
 
 
-        SQLUtils sql = new SQLUtils(" from busi_score_template_relation_score a\n" +
-                "left join busi_activity_slave b on b.id=a.busi_activity_slave_id\n" +
-                "left join busi_activity c on c.id=b.busi_activity_id\n" +
-                "left join busi_activity_project d  on d.id=a.busi_activity_project_id where d.deleted = 0\n");
-        if (StringUtils.isNotBlank(belongfield) && !belongfield.equals("-1")) {
-            sql.append(" and find_in_set('"+belongfield+"',d.from_belongfields) ");
-            setAttr("belongfield",belongfield);
+            Page<BusiActivity> page = BusiActivity.dao.paginate(getPaginator(), "select c.activity_name,d.project_name,d.project_leader,\n" +
+                            "  (case b.nodeid\n" +
+                            "when 0 then '填报' \n" +
+                            "when 1 then '初赛'\n" +
+                            "when 2 then '复赛' \n" +
+                            "when 3 then '决赛'\n" +
+                            "end) nodename\n" +
+                            ",sum(a.jugde_score) as score,\n" +
+                            "  (select s.realname from sys_user s where s.userid=a.create_id) as Judges\n" +
+                            " ,max(a.create_time) as create_time, " + " (select sd.name from sys_user su\n" +
+                            "INNER join  sys_department sd on su.departid=sd.id\n" +
+                            "where su.userid=d.create_id) as departname," +
+                            "(select group_concat(s.detail_name) from sys_dict_detail s " +
+                            " where s.dict_type='belongfield' \n" +
+                            " and FIND_IN_SET(s.detail_code,d.from_belongfields)) as from_belongfields ",
+                    sql.toString().toString());
+
+            setAttr("page", page);
+
         }
-
-        sql.append(" group by a.busi_activity_project_id,a.busi_activity_slave_id,a.create_id");
-
-        sql.setAlias("t");
-
-
-        Page<BusiActivity> page = BusiActivity.dao.paginate(getPaginator(), "select c.activity_name,d.project_name,d.project_leader,\n" +
-                        "  (case b.nodeid\n" +
-                        "when 0 then '填报' \n" +
-                        "when 1 then '初赛'\n" +
-                        "when 2 then '复赛' \n" +
-                        "when 3 then '决赛'\n" +
-                        "end) nodename\n" +
-                        ",sum(a.jugde_score) as score,\n" +
-                        "  (select s.realname from sys_user s where s.userid=a.create_id) as Judges\n" +
-                        " ,max(a.create_time) as create_time, "+" (select sd.name from sys_user su\n" +
-                        "INNER join  sys_department sd on su.departid=sd.id\n" +
-                        "where su.userid=d.create_id) as departname,"+
-                        "(select group_concat(s.detail_name) from sys_dict_detail s " +
-                        " where s.dict_type='belongfield' \n" +
-                        " and FIND_IN_SET(s.detail_code,d.from_belongfields)) as from_belongfields ",
-                sql.toString().toString());
-
-        setAttr("page", page);
 
         render(path + "project_scorelist.html");
     }
+
     /**
      * 显示打分详情
      */
-    public void showDetail(){
+    public void showDetail() {
 
-        Integer projectid=getParaToInt();
-        String sql="SELECT " +
+        Integer projectid = getParaToInt();
+        String sql = "SELECT " +
                 "(select realname from sys_user u where u.userid=d.create_id) as username,\n" +
                 "d.create_time,\n" +
                 "SUM(d.jugde_score) AS totalScore\n" +
@@ -365,9 +371,10 @@ public class ActivityProjectController extends BaseProjectController {
                 "GROUP BY d.create_id";
         final List<Record> records = Db.find(sql, projectid);
 
-        setAttr("list",records);
+        setAttr("list", records);
         render(path + "project_mgnlist_showDetail.html");
     }
+
     /**
      * 导出excel
      */
@@ -380,8 +387,8 @@ public class ActivityProjectController extends BaseProjectController {
                 "left join busi_activity c on c.id=b.busi_activity_id\n" +
                 "left join busi_activity_project d  on d.id=a.busi_activity_project_id where d.deleted = 0\n");
         if (StringUtils.isNotBlank(belongfield) && !belongfield.equals("-1")) {
-            sql.append(" and find_in_set('"+belongfield+"',d.from_belongfields) ");
-            setAttr("belongfield",belongfield);
+            sql.append(" and find_in_set('" + belongfield + "',d.from_belongfields) ");
+            setAttr("belongfield", belongfield);
         }
 
         sql.append(" group by a.busi_activity_project_id,a.busi_activity_slave_id,a.create_id");
@@ -398,9 +405,9 @@ public class ActivityProjectController extends BaseProjectController {
                 "end) nodename\n" +
                 ",sum(a.jugde_score) as score,\n" +
                 "  (select s.realname from sys_user s where s.userid=a.create_id) as Judges\n" +
-                " ,max(a.create_time) as create_time, "+" (select sd.name from sys_user su\n" +
+                " ,max(a.create_time) as create_time, " + " (select sd.name from sys_user su\n" +
                 "INNER join  sys_department sd on su.departid=sd.id\n" +
-                "where su.userid=d.create_id) as departname,"+
+                "where su.userid=d.create_id) as departname," +
                 "(select group_concat(s.detail_name) from sys_dict_detail s " +
                 " where s.dict_type='belongfield' \n" +
                 " and FIND_IN_SET(s.detail_code,d.from_belongfields)) as from_belongfields ";
@@ -437,7 +444,7 @@ public class ActivityProjectController extends BaseProjectController {
             list.add(map);
         }
 
-        renderText(ExcelExportUtils.export(beanList, list,"报名统计"));
+        renderText(ExcelExportUtils.export(beanList, list, "报名统计"));
     }
 
 
@@ -446,24 +453,24 @@ public class ActivityProjectController extends BaseProjectController {
      */
     public void exportExcel() {
 
-        List<Map<String,Object>> exportList=new ArrayList<Map<String,Object>>();
+        List<Map<String, Object>> exportList = new ArrayList<Map<String, Object>>();
         List<SysDictDetail> listSysDictDetail = new ArrayList<SysDictDetail>();
 
         listSysDictDetail = SysDictDetail.dao.find("select detail_code,detail_name from sys_dict_detail where dict_type='belongfield'");
-        SysDictDetail tempSysDictDetail=new SysDictDetail();
-        tempSysDictDetail.put("detail_code","-1");
-        tempSysDictDetail.put("detail_name","总表");
-        listSysDictDetail.add(0,tempSysDictDetail);
+        SysDictDetail tempSysDictDetail = new SysDictDetail();
+        tempSysDictDetail.put("detail_code", "-1");
+        tempSysDictDetail.put("detail_name", "总表");
+        listSysDictDetail.add(0, tempSysDictDetail);
         //遍历所有领域
         for (SysDictDetail sysDictDetail : listSysDictDetail) {
 
-            List<BusiActivity> listBusiActivity=getRecordbyfield(valueOf(sysDictDetail.get("detail_code")));
+            List<BusiActivity> listBusiActivity = getRecordbyfield(valueOf(sysDictDetail.get("detail_code")));
 
-            List<ExportEntity> listExportEntity=new ArrayList<>();
-            Integer i=1;
+            List<ExportEntity> listExportEntity = new ArrayList<>();
+            Integer i = 1;
             for (BusiActivity busiActivity : listBusiActivity) {
 
-                ExportEntity map=new ExportEntity();
+                ExportEntity map = new ExportEntity();
                 map.setNo(i++);
                 map.setProject_name(valueOf(busiActivity.get("project_name")));
                 map.setDepartname(valueOf(busiActivity.get("departname")));
@@ -471,19 +478,19 @@ public class ActivityProjectController extends BaseProjectController {
                 map.setRealname(valueOf(busiActivity.get("realname")));
                 map.setTel(valueOf(busiActivity.get("tel")));
                 map.setProject_leader(valueOf(busiActivity.get("project_leader")));
-                if(busiActivity.get("score")!=null) {
+                if (busiActivity.get("score") != null) {
                     map.setScore(Float.parseFloat(valueOf(busiActivity.get("score"))));
                 }
                 map.setRemarks(valueOf(busiActivity.get("remarks")));
                 listExportEntity.add(map);
             }
 
-            Map<String,Object> mapData=new HashMap<String, Object>();
+            Map<String, Object> mapData = new HashMap<String, Object>();
             ExportParams params = new ExportParams();
             params.setSheetName(sysDictDetail.get("detail_name").toString());
-            mapData.put("title",params);
-            mapData.put("entity",ExportEntity.class);
-            mapData.put("data",listExportEntity);
+            mapData.put("title", params);
+            mapData.put("entity", ExportEntity.class);
+            mapData.put("data", listExportEntity);
             exportList.add(mapData);
         }
 
@@ -493,10 +500,11 @@ public class ActivityProjectController extends BaseProjectController {
 
     /**
      * 按领域获取评分
+     *
      * @param belongfield
      * @return
      */
-    private List<BusiActivity> getRecordbyfield(String belongfield){
+    private List<BusiActivity> getRecordbyfield(String belongfield) {
 
 
         SQLUtils sql = new SQLUtils(" from busi_activity_project t " +
@@ -507,7 +515,7 @@ public class ActivityProjectController extends BaseProjectController {
 
 
         if (StringUtils.isNotBlank(belongfield) && !belongfield.equals("-1")) {
-            sql.append(" and find_in_set('"+belongfield+"',t.from_belongfields) ");
+            sql.append(" and find_in_set('" + belongfield + "',t.from_belongfields) ");
         }
 
         sql.setAlias("t");
@@ -524,7 +532,7 @@ public class ActivityProjectController extends BaseProjectController {
                 "t.project_name, (select group_concat(s.detail_name) from sys_dict_detail s\n" +
                 " where s.dict_type='belongfield' \n" +
                 " and FIND_IN_SET(s.detail_code,t.from_belongfields)) as from_belongfields, "
-                +"(select ROUND(avg(tt.jugde_score),2) from (select sum(d.jugde_score) as jugde_score,d.busi_activity_project_id " +
+                + "(select ROUND(avg(tt.jugde_score),2) from (select sum(d.jugde_score) as jugde_score,d.busi_activity_project_id " +
                 " from busi_score_template_relation_score d " +
                 " group by d.create_id,d.busi_activity_project_id) tt " +
                 " where tt.busi_activity_project_id=t.id) " +
