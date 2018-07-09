@@ -35,15 +35,19 @@ include("/pages/template/head.html"){}
         };
 
 
-        $("#belongfield").val("${belongfield!'-1'}");
-
-
         $.get("api/activityslist", [], function (data) {
             for (i in data) {
                 $("#busi_activity_id").append('<option value="' + data[i].id + '">' + data[i].activity_name + '</option>');
             }
 
+            $("#busi_activity_id").val("${busi_activity_id!'-1'}");
+            $.get("api/busiActivitySlaveList", {busi_activity_id: $("#busi_activity_id").val()}, function (data) {
+                for (i in data) {
+                    $("#busi_activity_slave_id").append('<option value="' + data[i].id + '">' + data[i].nodename + '</option>');
+                }
 
+                $("#busi_activity_slave_id").val("${busi_activity_slave_id!'-1'}");
+            });
         });
 
 
@@ -57,9 +61,14 @@ include("/pages/template/head.html"){}
                     $("#busi_activity_slave_id").append('<option value="' + data[i].id + '">' + data[i].nodename + '</option>');
                 }
 
-
+                $("#busi_activity_slave_id").val("${busi_activity_slave_id!'-1'}");
             });
         });
+
+
+        $("#belongfield").val("${belongfield!'-1'}");
+
+
     });
 
     //分页
@@ -161,7 +170,7 @@ var bodyContent = {
             </tr>
             </thead>
             <tbody>
-            <% for(item in page.list){ %>
+            <% if(page!=null){ for(item in page.list){ %>
             <tr>
                 <td>${itemLP.index }</td>
                 <% // 列表内容 %>
@@ -184,7 +193,7 @@ var bodyContent = {
 
                 </td>
             </tr>
-            <% } %>
+            <% } }%>
             </tbody>
         </table>
 

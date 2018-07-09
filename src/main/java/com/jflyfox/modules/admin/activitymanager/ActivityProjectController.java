@@ -314,25 +314,36 @@ public class ActivityProjectController extends BaseProjectController {
     public void project_scorelist() {
         String belongfield = getPara("belongfield");
         String busi_activity_slave_id = getPara("busi_activity_slave_id");
-
-        if (StringUtils.isNotBlank(busi_activity_slave_id) && StringUtils.isNotBlank(belongfield)) {
-
-            SQLUtils sql = new SQLUtils(" from busi_score_template_relation_score a\n" +
-                    "left join busi_activity_slave b on b.id=a.busi_activity_slave_id\n" +
-                    "left join busi_activity c on c.id=b.busi_activity_id\n" +
-                    "left join busi_activity_project d  on d.id=a.busi_activity_project_id where d.deleted = 0\n" +
-                    " and d.project_status=1 and s.busi_activity_slave_id=" + busi_activity_slave_id);
-            if (StringUtils.isNotBlank(belongfield) && !belongfield.equals("-1")) {
-                sql.append(" and find_in_set('" + belongfield + "',d.from_belongfields) ");
-                setAttr("belongfield", belongfield);
-            }
-
-            sql.append(" group by a.busi_activity_project_id,a.busi_activity_slave_id,a.create_id");
-
-            sql.setAlias("t");
+        String busi_activity_id = getPara("busi_activity_id");
+        Page<BusiActivity> page = new Page<BusiActivity>();
 
 
-            Page<BusiActivity> page = BusiActivity.dao.paginate(getPaginator(), "select c.activity_name,d.project_name,d.project_leader,\n" +
+        SQLUtils sql = new SQLUtils(" from busi_score_template_relation_score a\n" +
+                "left join busi_activity_slave b on b.id=a.busi_activity_slave_id\n" +
+                "left join busi_activity c on c.id=b.busi_activity_id\n" +
+                "left join busi_activity_project d  on d.id=a.busi_activity_project_id where d.deleted = 0\n" +
+                " and d.project_status=1");
+        if (StringUtils.isNotBlank(belongfield) && !belongfield.equals("-1")) {
+            sql.append(" and find_in_set('" + belongfield + "',d.from_belongfields) ");
+            setAttr("belongfield", belongfield);
+        }
+
+        if (StringUtils.isNotBlank(busi_activity_slave_id)) {
+            sql.whereEquals("busi_activity_slave_id",busi_activity_slave_id);
+            setAttr("busi_activity_slave_id", busi_activity_slave_id);
+        }else{
+
+                sql.whereEquals("1","0");
+
+        }
+
+
+        sql.append(" group by a.busi_activity_project_id,a.busi_activity_slave_id,a.create_id");
+
+        sql.setAlias("t");
+
+
+            page = BusiActivity.dao.paginate(getPaginator(), "select c.activity_name,d.project_name,d.project_leader,\n" +
                             "  (case b.nodeid\n" +
                             "when 0 then '填报' \n" +
                             "when 1 then '初赛'\n" +
@@ -349,10 +360,10 @@ public class ActivityProjectController extends BaseProjectController {
                             " and FIND_IN_SET(s.detail_code,d.from_belongfields)) as from_belongfields ",
                     sql.toString().toString());
 
-            setAttr("page", page);
 
-        }
 
+        setAttr("page", page);
+        setAttr("busi_activity_id",busi_activity_id);
         render(path + "project_scorelist.html");
     }
 
