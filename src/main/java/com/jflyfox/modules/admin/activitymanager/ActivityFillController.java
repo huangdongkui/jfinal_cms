@@ -50,7 +50,7 @@ public class ActivityFillController extends BaseProjectController {
         }
 
         Page<BusiActivity> page = BusiActivity.dao.paginate(getPaginator(), "select t.*,exists(select * from  busi_actitity_promotion b\n" +
-                        "where .id=b.busi_activity_project_id) as ispass ",
+                        "where b.id=b.busi_activity_project_id) as ispass ",
                 sql.toString().toString());
 
         setAttr("page", page);

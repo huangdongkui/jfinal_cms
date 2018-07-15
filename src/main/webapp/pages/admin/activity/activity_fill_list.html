@@ -126,10 +126,10 @@ var bodyContent = {
                     <% } %>
                 </td>
                 <td>
-                    <% if(item.project_status==0) { %>
+                    <% if(item.ispass==0) { %>
                     未晋级
                     <% } %>
-                    <% if(item.project_status==1) { %>
+                    <% else if(item.ispass==1) { %>
                     晋级
                     <% } %>
                 </td>
